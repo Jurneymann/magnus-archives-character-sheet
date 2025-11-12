@@ -1,0 +1,2919 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Magnus Archives - Character Sheet</title>
+    <link rel="icon" href="assets/favicon.png" type="image/png" />
+    <link rel="stylesheet" href="styles/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Libre+Baskerville&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <img
+      src="assets/MagnusHeader.png"
+      alt="https://images.steamusercontent.com/ugc/1658972820362899540/C807B188BF468B57BC6ED24CECDDBE50610019ED/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true"
+      class="header-image"
+    />
+
+    <div class="sheet">
+      <h1 id="pageTitle">The Magnus Archives – Character Sheet</h1>
+
+      <div class="tab-container">
+        <div class="tab-buttons">
+          <button class="tab-button active" data-tab="character">
+            Character
+          </button>
+          <button class="tab-button" data-tab="stats">Stats</button>
+          <button class="tab-button" data-tab="skills">
+            Skills & Abilities
+          </button>
+          <button class="tab-button" data-tab="equipment">Equipment</button>
+          <button class="tab-button" data-tab="stress-injury">
+            Stress & Injury
+          </button>
+          <button class="tab-button" data-tab="advancement">Advancement</button>
+          <button class="tab-button" data-tab="calculators">Calculators</button>
+          <button
+            class="tab-button"
+            id="avatarTabBtn"
+            data-tab="avatar"
+            style="display: none"
+          >
+            Avatar
+          </button>
+        </div>
+
+        <!-- Character Tab -->
+        <div id="character" class="tab-content active">
+          <!-- Character Statement -->
+          <div class="section character-identity-section">
+            <h2>Character Identity</h2>
+
+            <div class="character-identity">
+              <div class="identity-fields">
+                <!-- Name Field -->
+                <div class="identity-field">
+                  <label for="charName">
+                    Character Name<span class="required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="charName"
+                    placeholder="Enter your character's name..."
+                    oninput="updateCharacterStatement(); validateCharacterOptions();"
+                  />
+                </div>
+
+                <!-- Descriptor Field -->
+                <div class="identity-field">
+                  <label for="descriptor">
+                    Descriptor<span class="required">*</span>
+                  </label>
+                  <select
+                    id="descriptor"
+                    onchange="updateCharacterStatement(); validateCharacterOptions();"
+                  >
+                    <option value="">-- Select Descriptor --</option>
+                    <option value="Bold">Bold</option>
+                    <option value="Brave">Brave</option>
+                    <option value="Caring">Caring</option>
+                    <option value="Cautious">Cautious</option>
+                    <option value="Cheerful">Cheerful</option>
+                    <option value="Cynical">Cynical</option>
+                    <option value="Enigmatic">Enigmatic</option>
+                    <option value="Fastidious">Fastidious</option>
+                    <option value="Fearless">Fearless</option>
+                    <option value="Ferocious">Ferocious</option>
+                    <option value="Hopeful">Hopeful</option>
+                    <option value="Inquisitive">Inquisitive</option>
+                    <option value="Intimidating">Intimidating</option>
+                    <option value="Likeable">Likeable</option>
+                    <option value="Muscular">Muscular</option>
+                    <option value="Nervous">Nervous</option>
+                    <option value="No-Nonsense">No-Nonsense</option>
+                    <option value="Obsessive">Obsessive</option>
+                    <option value="Pretentious">Pretentious</option>
+                    <option value="Quick">Quick</option>
+                    <option value="Ruthless">Ruthless</option>
+                    <option value="Scholarly">Scholarly</option>
+                    <option value="Smart">Smart</option>
+                    <option value="Sturdy">Sturdy</option>
+                    <option value="Superstitious">Superstitious</option>
+                    <option value="Suspicious">Suspicious</option>
+                    <option value="Tech-Savvy">Tech-Savvy</option>
+                  </select>
+                </div>
+
+                <!-- Type Field -->
+                <div class="identity-field">
+                  <label for="type">
+                    Type<span class="required">*</span>
+                  </label>
+                  <select
+                    id="type"
+                    onchange="updateCharacterStatement(); validateCharacterOptions();"
+                  >
+                    <option value="">-- Select Type --</option>
+                    <option value="Investigator">Investigator</option>
+                    <option value="Protector">Protector</option>
+                    <option value="Elocutionist">Elocutionist</option>
+                    <option value="Occultist">Occultist</option>
+                  </select>
+                </div>
+
+                <!-- Focus Field -->
+                <div class="identity-field">
+                  <label for="focus1">
+                    Focus<span class="required">*</span>
+                  </label>
+                  <select
+                    id="focus1"
+                    onchange="updateCharacterStatement(); validateCharacterOptions();"
+                  >
+                    <option value="">-- Select Focus --</option>
+                    <option value="Carries a Gun">Carries a Gun</option>
+                    <option value="Does a Bit of This and That">
+                      Does a Bit of This and That
+                    </option>
+                    <option value="Explores Dark Places">
+                      Explores Dark Places
+                    </option>
+                    <option value="Fights Dirty">Fights Dirty</option>
+                    <option value="Helps Their Friends">
+                      Helps Their Friends
+                    </option>
+                    <option value="Infiltrates">Infiltrates</option>
+                    <option value="Leads">Leads</option>
+                    <option value="Learns Quickly">Learns Quickly</option>
+                    <option value="Looks for Trouble">Looks for Trouble</option>
+                    <option value="Moves Like a Cat">Moves Like a Cat</option>
+                    <option value="Needs No Weapon">Needs No Weapon</option>
+                    <option value="Never Says Die">Never Says Die</option>
+                    <option value="Practically Lives Online">
+                      Practically Lives Online
+                    </option>
+                    <option value="Runs Away">Runs Away</option>
+                    <option value="Solves Mysteries">Solves Mysteries</option>
+                    <option value="Wears a Badge">Wears a Badge</option>
+                    <option value="Works the Back Alleys">
+                      Works the Back Alleys
+                    </option>
+                    <option value="Would Rather Be Reading">
+                      Would Rather Be Reading
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Statement Preview -->
+              <div
+                class="character-statement-preview"
+                id="characterStatementPreview"
+              >
+                <p>Your Character Statement:</p>
+                <div class="statement-text" id="characterStatementPreviewText">
+                  <span class="incomplete"
+                    >[Fill in the fields above to see your character
+                    statement]</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Confirm Button Section -->
+            <div class="identity-confirm-section">
+              <button
+                class="confirm-identity-btn"
+                id="confirmIdentityBtn"
+                onclick="confirmIdentity()"
+                disabled
+              >
+                Confirm Character Identity
+              </button>
+            </div>
+          </div>
+
+          <!-- Character Statement Showcase (shown after confirmation) -->
+          <div
+            class="character-statement-showcase"
+            id="characterStatementShowcase"
+            style="display: none"
+          >
+            <div class="character-statement-content">
+              <p class="character-statement-text" id="charStatement"></p>
+              <span class="avatar-badge" id="avatarBadge" style="display: none">
+                Avatar of <span id="avatarEntityName"></span>
+              </span>
+            </div>
+          </div>
+
+          <div class="section background-section">
+            <div class="background-header">
+              <h2>Background</h2>
+            </div>
+
+            <div class="background-content">
+              <div class="background-text-wrapper">
+                <textarea
+                  id="characterBackground"
+                  class="background-textarea"
+                  placeholder="Tell us your character's story... Where did they come from? What drives them? What secrets do they keep?"
+                  onchange="updateCharacterBackground(this.value)"
+                  oninput="updateBackgroundCharCount(this)"
+                  maxlength="5000"
+                ></textarea>
+                <span class="background-char-count" id="backgroundCharCount"
+                  >0 / 5000</span
+                >
+              </div>
+
+              <div class="background-info">
+                <p>
+                  <strong>Your character's backstory</strong> helps define who
+                  they are. Consider their past, their motivations, and what
+                  brought them to this point.
+                </p>
+              </div>
+
+              <details class="background-tips">
+                <summary class="background-tips-header">
+                  Background Writing Tips
+                </summary>
+                <div class="background-tips-content">
+                  <ul>
+                    <li>
+                      <strong>Origin:</strong> Where did your character come
+                      from? What was their life like before?
+                    </li>
+                    <li>
+                      <strong>Motivation:</strong> What drives them to
+                      investigate the supernatural?
+                    </li>
+                    <li>
+                      <strong>Connection:</strong> How did they first encounter
+                      the Institute or the paranormal?
+                    </li>
+                    <li>
+                      <strong>Fears & Secrets:</strong> What keeps them up at
+                      night? What do they hide from others?
+                    </li>
+                    <li>
+                      <strong>Goals:</strong> What do they hope to achieve or
+                      discover?
+                    </li>
+                  </ul>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <div class="section connections-section">
+            <h2>Connections</h2>
+
+            <div class="connections-content">
+              <!-- Filter Bar -->
+              <div class="connections-filter-bar">
+                <div class="connections-filter-group">
+                  <label for="connectionsFilterName">Search by Name:</label>
+                  <input
+                    type="text"
+                    id="connectionsFilterName"
+                    placeholder="Filter names..."
+                    oninput="updateConnectionsFilters()"
+                  />
+                </div>
+
+                <div class="connections-filter-group">
+                  <label for="connectionsFilterAffiliation"
+                    >Search by Affiliation:</label
+                  >
+                  <input
+                    type="text"
+                    id="connectionsFilterAffiliation"
+                    placeholder="Filter affiliations..."
+                    oninput="updateConnectionsFilters()"
+                  />
+                </div>
+
+                <div class="connections-filter-group">
+                  <label for="connectionsSortBy">Sort by:</label>
+                  <select
+                    id="connectionsSortBy"
+                    onchange="updateConnectionsFilters()"
+                  >
+                    <option value="name">Name (A-Z)</option>
+                    <option value="affiliation">Affiliation (A-Z)</option>
+                    <option value="none">Order Added</option>
+                  </select>
+                </div>
+
+                <div class="connections-filter-actions">
+                  <button
+                    class="clear-connections-filter-btn"
+                    onclick="clearConnectionsFilters()"
+                  >
+                    Clear Filters
+                  </button>
+                </div>
+              </div>
+
+              <!-- Connections List -->
+              <div class="connections-list">
+                <!-- Cards will be populated by JavaScript -->
+              </div>
+
+              <!-- Add Connection Button -->
+              <button class="add-connection-btn" onclick="addConnectionRow()">
+                + Add Connection
+              </button>
+            </div>
+          </div>
+
+          <!-- Character Arcs Section -->
+          <div class="section character-arcs-section">
+            <h2>Character Arc</h2>
+
+            <!-- Arc Status Display -->
+            <div class="arc-status-display">
+              <div class="arc-status-item">
+                <span class="arc-status-label">Current Arc:</span>
+                <span class="arc-status-value" id="currentArcName">None</span>
+              </div>
+              <div class="arc-status-item">
+                <span class="arc-status-label">Arcs Completed:</span>
+                <span class="arc-status-value" id="arcsCompletedCount">0</span>
+              </div>
+            </div>
+
+            <div class="character-arc-info">
+              <p class="arc-info-text">
+                <strong>First arc is free!</strong> Changing or selecting a new
+                arc costs <strong>1 XP</strong>. Completing an arc awards
+                <strong>4 XP</strong>.
+              </p>
+            </div>
+
+            <div class="character-arc-container">
+              <!-- Arc Selection -->
+              <div class="arc-selection-row">
+                <label for="characterArcSelect">Select Character Arc:</label>
+                <select
+                  id="characterArcSelect"
+                  onchange="updateArcDescription()"
+                >
+                  <option value="">-- No Arc Selected --</option>
+                </select>
+              </div>
+
+              <!-- Arc Description (Read-only) -->
+              <div class="arc-description-row">
+                <label for="characterArcDescription">Description:</label>
+                <textarea
+                  id="characterArcDescription"
+                  readonly
+                  placeholder="Select a character arc to see its description..."
+                ></textarea>
+              </div>
+
+              <!-- Arc Notes (Player editable) -->
+              <div class="arc-notes-row">
+                <label for="characterArcNotes">Your Notes:</label>
+                <textarea
+                  id="characterArcNotes"
+                  placeholder="Add your notes about your character arc progress, goals, and developments..."
+                  oninput="saveArcNotes()"
+                ></textarea>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="arc-action-buttons">
+                <button
+                  class="button primary-button"
+                  onclick="selectCharacterArc()"
+                >
+                  Select/Change Arc
+                </button>
+                <button
+                  class="button success-button"
+                  onclick="completeCharacterArc()"
+                >
+                  ✓ Complete Arc
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Tab Content -->
+        <div id="stats" class="tab-content">
+          <!-- ==================== TIER SECTION ==================== -->
+          <div class="tier-showcase-section">
+            <div class="tier-showcase-container">
+              <div class="tier-main-display">
+                <div class="tier-label">Current Tier</div>
+                <div class="tier-number-large" id="tierDisplay">1</div>
+                <div class="tier-subtitle">Level of Power & Experience</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================== STATS SECTION ==================== -->
+          <section id="statsSection" class="card">
+            <h2>Stat Pools</h2>
+
+            <div id="statsContainer" class="stats-grid-redesigned">
+              <!-- Might Stat Box -->
+              <div class="stat-box-redesigned might-stat" id="mightBox">
+                <div class="stat-header">
+                  <h3>Might</h3>
+                  <div class="stat-icon">💪</div>
+                </div>
+
+                <div class="stat-values-display">
+                  <div class="stat-value-item">
+                    <span class="stat-value-label">Current</span>
+                    <span class="stat-value-number current" id="mightPool"
+                      >10</span
+                    >
+                  </div>
+                  <div class="stat-divider">/</div>
+                  <div class="stat-value-item">
+                    <span class="stat-value-label">Max</span>
+                    <span class="stat-value-number max" id="mightMax">10</span>
+                  </div>
+                </div>
+
+                <div class="stat-edge-display">
+                  <span class="edge-label">Edge</span>
+                  <span class="edge-value" id="mightEdge">0</span>
+                </div>
+              </div>
+
+              <!-- Speed Stat Box -->
+              <div class="stat-box-redesigned speed-stat" id="speedBox">
+                <div class="stat-header">
+                  <h3>Speed</h3>
+                  <div class="stat-icon">⚡</div>
+                </div>
+
+                <div class="stat-values-display">
+                  <div class="stat-value-item">
+                    <span class="stat-value-label">Current</span>
+                    <span class="stat-value-number current" id="speedPool"
+                      >10</span
+                    >
+                  </div>
+                  <div class="stat-divider">/</div>
+                  <div class="stat-value-item">
+                    <span class="stat-value-label">Max</span>
+                    <span class="stat-value-number max" id="speedMax">10</span>
+                  </div>
+                </div>
+
+                <div class="stat-edge-display">
+                  <span class="edge-label">Edge</span>
+                  <span class="edge-value" id="speedEdge">0</span>
+                </div>
+              </div>
+
+              <!-- Intellect Stat Box -->
+              <div class="stat-box-redesigned intellect-stat" id="intellectBox">
+                <div class="stat-header">
+                  <h3>Intellect</h3>
+                  <div class="stat-icon">🧠</div>
+                </div>
+
+                <div class="stat-values-display">
+                  <div class="stat-value-item">
+                    <span class="stat-value-label">Current</span>
+                    <span class="stat-value-number current" id="intellectPool"
+                      >10</span
+                    >
+                  </div>
+                  <div class="stat-divider">/</div>
+                  <div class="stat-value-item">
+                    <span class="stat-value-label">Max</span>
+                    <span class="stat-value-number max" id="intellectMax"
+                      >10</span
+                    >
+                  </div>
+                </div>
+
+                <div class="stat-edge-display">
+                  <span class="edge-label">Edge</span>
+                  <span class="edge-value" id="intellectEdge">0</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Temporary Stat Bonuses -->
+            <div id="temporaryBoostContainer" style="margin-top: 20px">
+              <div style="margin-top: 30px">
+                <h3
+                  style="
+                    color: #317e30;
+                    border-bottom: 2px solid #317e30;
+                    padding-bottom: 10px;
+                  "
+                >
+                  Temporary Ability Boosts
+                </h3>
+                <!-- Boost cards will be dynamically added here -->
+              </div>
+            </div>
+
+            <!-- Stat Allocation Section -->
+            <div
+              id="statAllocation"
+              class="stat-allocation"
+              style="display: none"
+            >
+              <h3>Allocate Additional Stat Points</h3>
+              <p class="points-remaining">
+                Points Remaining: <span id="pointsRemaining">6</span>
+              </p>
+
+              <div class="stat-allocate">
+                <span>Might:</span>
+                <span id="mightBonus">0</span>
+                <div>
+                  <button onclick="allocatePoint('Might', 1)">+</button>
+                  <button onclick="allocatePoint('Might', -1)">-</button>
+                </div>
+              </div>
+
+              <div class="stat-allocate">
+                <span>Speed:</span>
+                <span id="speedBonus">0</span>
+                <div>
+                  <button onclick="allocatePoint('Speed', 1)">+</button>
+                  <button onclick="allocatePoint('Speed', -1)">-</button>
+                </div>
+              </div>
+
+              <div class="stat-allocate">
+                <span>Intellect:</span>
+                <span id="intellectBonus">0</span>
+                <div>
+                  <button onclick="allocatePoint('Intellect', 1)">+</button>
+                  <button onclick="allocatePoint('Intellect', -1)">-</button>
+                </div>
+              </div>
+
+              <button
+                id="confirmStats"
+                class="confirm-stats-button"
+                onclick="confirmStatAllocation()"
+                disabled
+              >
+                Confirm Stat Allocation
+              </button>
+            </div>
+          </section>
+
+          <!-- ==================== EFFORT SECTION ==================== -->
+          <div class="section effort-section">
+            <h2>Effort</h2>
+
+            <div class="effort-container">
+              <div class="effort-display-box">
+                <div class="effort-label">Current Effort Level</div>
+                <div class="effort-value" id="effortLevel">1</div>
+              </div>
+
+              <div class="effort-info-box">
+                <details class="effort-details">
+                  <summary>How Effort Works</summary>
+                  <div class="effort-details-content">
+                    <ul>
+                      <li>
+                        <strong>Apply Effort</strong> to an action to ease the
+                        difficulty
+                      </li>
+                      <li>
+                        <strong>First level of Effort:</strong> Costs 3 points
+                        from the relevant Stat Pool
+                      </li>
+                      <li>
+                        <strong>Each additional level:</strong> Costs 2 more
+                        points
+                      </li>
+                      <li>
+                        <strong>Your Edge</strong> in the relevant Stat reduces
+                        the cost of applying Effort
+                      </li>
+                      <li>
+                        <strong>Maximum Effort:</strong> You can apply Effort up
+                        to your current Effort level
+                      </li>
+                    </ul>
+
+                    <div
+                      style="
+                        margin-top: 15px;
+                        padding: 10px;
+                        background: #1a1a1a;
+                        border-radius: 4px;
+                        border-left: 3px solid #317e30;
+                      "
+                    >
+                      <strong style="color: #4caf50">Example:</strong><br />
+                      If you have Effort 2 and Might Edge 1:<br />
+                      • 1st level of Effort: 3 - 1 =
+                      <strong>2 Might points</strong><br />
+                      • 2nd level of Effort: 2 - 1 =
+                      <strong>1 Might point</strong><br />
+                      • Total cost: <strong>3 Might points</strong>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================== RECOVERY SECTION ==================== -->
+          <div class="section">
+            <h2>Recovery Rolls</h2>
+
+            <div class="recovery-container">
+              <!-- Recovery Overview Stats -->
+              <div class="recovery-overview">
+                <div class="recovery-formula-section">
+                  <div class="recovery-formula-main">
+                    <label>Recovery Roll Formula</label>
+                    <div class="formula-display">
+                      1d6 + <span id="recoveryTierValue">1</span> +
+                      <span id="recoveryBonusValueFormula">0</span>
+                    </div>
+                    <div class="formula-breakdown">
+                      (Tier: <span id="recoveryTierBreakdown">1</span> + Bonus:
+                      <span id="recoveryBonusBreakdown">+0</span>)
+                    </div>
+                  </div>
+
+                  <div class="recovery-rules-compact">
+                    <details class="recovery-rules-details">
+                      <summary>Recovery Roll Rules</summary>
+                      <div class="recovery-rules-content">
+                        <ul>
+                          <li>
+                            <strong>Roll 1d6</strong> and add your Tier + any
+                            recovery bonuses from advancements
+                          </li>
+                          <li>
+                            <strong>Distribute points</strong> between Might,
+                            Speed, and Intellect pools (cannot exceed maximum)
+                          </li>
+                          <li>
+                            You get <strong>4 recovery rolls per day</strong> -
+                            each requires different time/effort
+                          </li>
+                          <li>
+                            <strong>Rest benefits:</strong> 1 Hour rest reduces
+                            1 Stress, 10 Hours reduces 10 Stress
+                          </li>
+                          <li>
+                            <strong>Increase Recovery Bonus:</strong> Purchase
+                            the advancement in Advancement tab to add +1 to all
+                            rolls
+                          </li>
+                        </ul>
+                      </div>
+                    </details>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recovery Rolls Grid -->
+              <div class="recovery-rolls-section">
+                <h3>Recovery Roll Types</h3>
+
+                <div class="recovery-rolls-grid">
+                  <!-- Action Recovery -->
+                  <div class="recovery-card" id="recoveryCard-action">
+                    <div class="recovery-card-header">
+                      <div class="recovery-card-title">Action Recovery</div>
+                      <div class="recovery-status" id="statusBadge-action">
+                        Available
+                      </div>
+                    </div>
+
+                    <div class="recovery-card-body">
+                      <div class="recovery-detail">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">1 Action</span>
+                      </div>
+                      <div class="recovery-detail">
+                        <span class="detail-label">Benefit:</span>
+                        <span class="detail-value">Standard recovery roll</span>
+                      </div>
+                    </div>
+
+                    <div class="recovery-card-footer">
+                      <button
+                        onclick="performRecovery('action')"
+                        class="recovery-use-btn"
+                        id="recoveryBtn-action"
+                      >
+                        Use Recovery Roll
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- 10 Minutes Recovery -->
+                  <div class="recovery-card" id="recoveryCard-tenMinutes">
+                    <div class="recovery-card-header">
+                      <div class="recovery-card-title">Short Rest</div>
+                      <div class="recovery-status" id="statusBadge-tenMinutes">
+                        Available
+                      </div>
+                    </div>
+
+                    <div class="recovery-card-body">
+                      <div class="recovery-detail">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">10 Minutes</span>
+                      </div>
+                      <div class="recovery-detail">
+                        <span class="detail-label">Benefit:</span>
+                        <span class="detail-value">Standard recovery roll</span>
+                      </div>
+                    </div>
+
+                    <div class="recovery-card-footer">
+                      <button
+                        onclick="performRecovery('tenMinutes')"
+                        class="recovery-use-btn"
+                        id="recoveryBtn-tenMinutes"
+                      >
+                        Use Recovery Roll
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- 1 Hour Recovery -->
+                  <div class="recovery-card" id="recoveryCard-oneHour">
+                    <div class="recovery-card-header">
+                      <div class="recovery-card-title">Long Rest</div>
+                      <div class="recovery-status" id="statusBadge-oneHour">
+                        Available
+                      </div>
+                    </div>
+
+                    <div class="recovery-card-body">
+                      <div class="recovery-detail">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">1 Hour</span>
+                      </div>
+                      <div class="recovery-detail">
+                        <span class="detail-label">Benefit:</span>
+                        <span class="detail-value stress-benefit"
+                          >Recovery Roll + Reduce 1 Stress</span
+                        >
+                      </div>
+                    </div>
+
+                    <div class="recovery-card-footer">
+                      <button
+                        onclick="performRecovery('oneHour')"
+                        class="recovery-use-btn"
+                        id="recoveryBtn-oneHour"
+                      >
+                        Use Recovery Roll
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- 10 Hours Recovery -->
+                  <div class="recovery-card" id="recoveryCard-tenHours">
+                    <div class="recovery-card-header">
+                      <div class="recovery-card-title">Full Rest</div>
+                      <div class="recovery-status" id="statusBadge-tenHours">
+                        Available
+                      </div>
+                    </div>
+
+                    <div class="recovery-card-body">
+                      <div class="recovery-detail">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">10 Hours</span>
+                      </div>
+                      <div class="recovery-detail">
+                        <span class="detail-label">Benefit:</span>
+                        <span class="detail-value stress-benefit"
+                          >Recovery Roll + Reduce 10 Stress</span
+                        >
+                      </div>
+                    </div>
+
+                    <div class="recovery-card-footer">
+                      <button
+                        onclick="performRecovery('tenHours')"
+                        class="recovery-use-btn"
+                        id="recoveryBtn-tenHours"
+                      >
+                        Use Recovery Roll
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Reset Section -->
+              <div class="recovery-actions">
+                <button onclick="resetRecovery()" class="recovery-reset-btn">
+                  Reset All Recovery Rolls (New Day)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--Skills, Abilities and Cyphers-->
+        <div id="skills" class="tab-content">
+          <!-- Skills Table Section -->
+          <div class="section">
+            <h2>Skills</h2>
+            <div class="skills-table-container">
+              <table class="skills-table">
+                <thead>
+                  <tr>
+                    <th>Skill</th>
+                    <th>Stat</th>
+                    <th>Ability</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="skillsTableBody">
+                  <!-- Rows will be added here dynamically -->
+                </tbody>
+              </table>
+              <button class="add-skill-btn" onclick="addSkillRow()">
+                + Add Skill
+              </button>
+            </div>
+          </div>
+
+          <!-- Type Abilities Section -->
+          <div class="section">
+            <div class="type-abilities-section">
+              <h2>Type Abilities</h2>
+
+              <!-- Add this filter section -->
+              <div class="type-abilities-filter" style="margin-bottom: 15px">
+                <div
+                  class="filter-buttons"
+                  style="display: flex; gap: 10px; align-items: center"
+                >
+                  <span style="color: #ddd; font-weight: 500">View:</span>
+                  <button
+                    id="typeAbilitiesShowAll"
+                    class="filter-btn active"
+                    onclick="toggleTypeAbilitiesView('all')"
+                  >
+                    Show All Available
+                  </button>
+                  <button
+                    id="typeAbilitiesShowSelected"
+                    class="filter-btn"
+                    onclick="toggleTypeAbilitiesView('selected')"
+                  >
+                    Show Selected Only
+                  </button>
+                </div>
+              </div>
+
+              <p id="typeAbilityCounter">Selected: 0/0</p>
+              <table class="abilities-table type-abilities-table">
+                <thead>
+                  <tr>
+                    <th style="width: 60px">Select</th>
+                    <th style="width: 110px">Name</th>
+                    <th style="width: 40px">Tier</th>
+                    <th style="width: 60px">Stat</th>
+                    <th style="width: 50px">Points</th>
+                    <th style="width: 50px">Stress</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody id="typeAbilitiesTableBody">
+                  <!-- Abilities will be populated here -->
+                </tbody>
+              </table>
+            </div>
+            <div style="margin: 15px 0">
+              <button
+                id="confirmTypeAbilitiesBtn"
+                onclick="confirmTypeAbilities()"
+                class="confirm-button"
+                style="width: 100%; padding: 12px; font-size: 1.1em"
+              >
+                Select Abilities First
+              </button>
+            </div>
+          </div>
+
+          <!-- Focus Abilities Section -->
+          <div class="section">
+            <div class="focus-abilities-section">
+              <!-- Content will be populated by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Cyphers Section -->
+          <div class="section">
+            <h2>Cyphers</h2>
+
+            <div class="cypher-section-header">
+              <div class="cypher-slots-display">
+                <div class="cypher-slots-label">Cypher Slots</div>
+                <div class="cypher-slots-numbers">
+                  <span class="cypher-slots-used" id="cypherSlotsUsed">0</span>
+                  <span class="cypher-slots-separator">/</span>
+                  <span class="cypher-slots-total" id="cypherSlotsDisplay"
+                    >0</span
+                  >
+                </div>
+              </div>
+              <button class="draw-cypher-btn" onclick="drawCypher()">
+                🎴 Draw Cypher
+              </button>
+            </div>
+
+            <div class="cyphers-table-wrapper">
+              <table class="cyphers-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Action</th>
+                    <th>Level</th>
+                    <th>Effect</th>
+                  </tr>
+                </thead>
+                <tbody id="cyphersTableBody">
+                  <!-- Rows will be populated by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Cypher Roll Effect Table (Hidden by default) -->
+          <div
+            id="cypherRollEffectSection"
+            style="
+              display: none;
+              margin-top: 30px;
+              padding: 20px;
+              background: #2a2a2a;
+              border: 2px solid #317e30;
+              border-radius: 8px;
+            "
+          >
+            <!-- Content will be dynamically inserted here -->
+          </div>
+        </div>
+
+        <!-- Equipment -->
+        <div id="equipment" class="tab-content">
+          <div class="section">
+            <div class="equipment-table-container">
+              <details class="equipment-info-details">
+                <summary class="equipment-info-summary">
+                  <span class="info-icon">ℹ️</span>
+                  <span>Equipment Guidelines</span>
+                </summary>
+
+                <div class="equipment-info-content">
+                  <!-- Starting Equipment -->
+                  <div class="info-subsection">
+                    <h4>Starting Equipment</h4>
+                    <p>
+                      A character's starting equipment is nearly as important as
+                      their starting skills and abilities. Every character
+                      starts with:
+                    </p>
+                    <ul>
+                      <li>Appropriate clothing</li>
+                      <li>
+                        <strong style="color: #2196f3"
+                          >3 expensive items</strong
+                        >
+                      </li>
+                      <li>
+                        <strong style="color: #4caf50"
+                          >2 moderately priced items</strong
+                        >
+                      </li>
+                      <li>
+                        <strong style="color: #fff"
+                          >Up to 4 inexpensive items</strong
+                        >
+                      </li>
+                    </ul>
+                    <p style="color: #888; font-size: 0.95em">
+                      Characters very likely have access (at home, for example)
+                      to up to 10 useful inexpensive items.
+                    </p>
+                  </div>
+
+                  <!-- Money and Income -->
+                  <div class="info-subsection">
+                    <h4>Money and Income</h4>
+                    <p>
+                      The price categories suggest that this game isn't about
+                      money. Characters working for the Magnus Institute or a
+                      similar organization likely don't get paid too much.
+                    </p>
+                    <p>
+                      <strong>Monthly Income:</strong> After paying for monthly
+                      expenses, an average PC earns enough to purchase
+                      <strong style="color: #4caf50"
+                        >4 moderately priced items</strong
+                      >
+                      in a month.
+                    </p>
+                    <p>
+                      <strong>Savings & Credit:</strong> The average PC has
+                      enough in savings to purchase a single
+                      <strong style="color: #2196f3">expensive item</strong>,
+                      and enough credit to purchase
+                      <strong style="color: #2196f3">3 such items</strong>.
+                    </p>
+                    <p style="color: #ff6b6b; font-style: italic">
+                      ⚠️ However, a character with zero savings and maxed out
+                      credit cards will very likely regret it later.
+                    </p>
+                  </div>
+
+                  <!-- Repairs -->
+                  <div class="info-subsection">
+                    <h4>Repairs</h4>
+                    <p>
+                      The cost to repair a damaged item is
+                      <strong>one category lower</strong> than the item's value.
+                    </p>
+                    <p style="color: #888; font-size: 0.95em">
+                      Example: Repairing an
+                      <span style="color: #2196f3">expensive</span> item costs
+                      <span style="color: #4caf50">moderately priced</span>
+                      resources.
+                    </p>
+                  </div>
+
+                  <!-- Weapons -->
+                  <div class="info-subsection">
+                    <h4>Weapons</h4>
+                    <p>
+                      <strong>
+                        The Magnus Archives RPG is not a game about weapons and
+                        combat.
+                      </strong>
+                      PCs who regularly engage in combat probably don't last
+                      very long. Even more important, shooting one's way out of
+                      a situation isn't very appropriate to the types of stories
+                      being told in this game.
+                    </p>
+                    <p><strong>Familiarity by Type:</strong></p>
+                    <ul>
+                      <li>
+                        <strong>Protectors:</strong> Know their way around most
+                        varieties of weapons
+                      </li>
+                      <li>
+                        <strong
+                          >Investigators, Elocutionists, Occultists:</strong
+                        >
+                        Prefer light or medium weapons, assuming they pick up a
+                        weapon at all
+                      </li>
+                    </ul>
+                    <p class="weapon-warning">
+                      <strong>Unfamiliarity:</strong> If a character uses a
+                      weapon they have no experience with, an attack with that
+                      weapon is <strong>hindered</strong>. Having experience
+                      with a weapon is called being
+                      <strong>practiced</strong> with the weapon.
+                    </p>
+                  </div>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <!-- Items Section -->
+          <div class="section">
+            <h2>Items</h2>
+            <div class="equipment-table-container">
+              <div
+                style="
+                  display: flex;
+                  gap: 10px;
+                  margin-bottom: 10px;
+                  justify-content: flex-end;
+                "
+              >
+                <button
+                  id="itemsShowAll"
+                  class="view-toggle-btn active"
+                  onclick="toggleItemsView('all')"
+                  style="
+                    padding: 8px 16px;
+                    background: #317e30;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-weight: bold;
+                  "
+                >
+                  Show All
+                </button>
+                <button
+                  id="itemsShowSelected"
+                  class="view-toggle-btn"
+                  onclick="toggleItemsView('selected')"
+                  style="
+                    padding: 8px 16px;
+                    background: #555;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-weight: bold;
+                  "
+                >
+                  Show Selected
+                </button>
+              </div>
+              <table class="equipment-table">
+                <thead>
+                  <tr>
+                    <th>Select</th>
+                    <th>Item</th>
+                    <th>Value</th>
+                    <th>Notes</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="itemsTableBody">
+                  <!-- Rows will be added here dynamically -->
+                </tbody>
+              </table>
+              <button class="add-equipment-btn" onclick="addItemRow()">
+                + Add Custom Item
+              </button>
+            </div>
+          </div>
+          <!-- Weapons Section -->
+          <div class="section">
+            <h2>Weapons</h2>
+            <div class="equipment-table-container">
+              <div
+                style="
+                  display: flex;
+                  gap: 10px;
+                  margin-bottom: 10px;
+                  justify-content: flex-end;
+                "
+              >
+                <button
+                  id="weaponsShowAll"
+                  class="view-toggle-btn active"
+                  onclick="toggleWeaponsView('all')"
+                  style="
+                    padding: 8px 16px;
+                    background: #317e30;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-weight: bold;
+                  "
+                >
+                  Show All
+                </button>
+                <button
+                  id="weaponsShowSelected"
+                  class="view-toggle-btn"
+                  onclick="toggleWeaponsView('selected')"
+                  style="
+                    padding: 8px 16px;
+                    background: #555;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-weight: bold;
+                  "
+                >
+                  Show Selected
+                </button>
+              </div>
+              <table class="equipment-table">
+                <thead>
+                  <tr>
+                    <th>Select</th>
+                    <th>Item</th>
+                    <th>Value</th>
+                    <th>Damage</th>
+                    <th>Notes</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="weaponsTableBody">
+                  <!-- Rows will be added here dynamically -->
+                </tbody>
+              </table>
+              <button class="add-equipment-btn" onclick="addWeaponRow()">
+                + Add Custom Weapon
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stress & Injury -->
+        <div id="stress-injury" class="tab-content">
+          <!-- Damage Track -->
+          <div class="section">
+            <div class="damage-track-container">
+              <h3>Damage Track</h3>
+              <!-- Current State Display -->
+              <div class="damage-state-display">
+                <div class="damage-state-label">Current State</div>
+                <div id="damageState" class="damage-state-value hale">Hale</div>
+              </div>
+
+              <!-- Navigation Controls -->
+              <div class="damage-navigation">
+                <button
+                  onclick="changeDamageState(-1)"
+                  class="damage-nav-button prev"
+                >
+                  ◄ Better
+                </button>
+                <button
+                  onclick="changeDamageState(1)"
+                  class="damage-nav-button next"
+                >
+                  Worse ►
+                </button>
+              </div>
+
+              <!-- State Description -->
+              <div id="damageDescription" class="damage-description-box">
+                Normal state. No penalties.
+              </div>
+
+              <!-- Quick State Selection -->
+              <div class="damage-quick-select">
+                <div class="damage-quick-label">Jump to State:</div>
+                <div class="damage-quick-buttons">
+                  <button
+                    onclick="setDamageState('hale')"
+                    class="damage-quick-btn hale-btn"
+                    id="quickHale"
+                  >
+                    Hale
+                  </button>
+                  <button
+                    onclick="setDamageState('hurt')"
+                    class="damage-quick-btn hurt-btn"
+                    id="quickHurt"
+                  >
+                    Hurt
+                  </button>
+                  <button
+                    onclick="setDamageState('impaired')"
+                    class="damage-quick-btn impaired-btn"
+                    id="quickImpaired"
+                  >
+                    Impaired
+                  </button>
+                  <button
+                    onclick="setDamageState('debilitated')"
+                    class="damage-quick-btn debilitated-btn"
+                    id="quickDebilitated"
+                  >
+                    Debilitated
+                  </button>
+                  <button
+                    onclick="setDamageState('dead')"
+                    class="damage-quick-btn dead-btn"
+                    id="quickDead"
+                  >
+                    Dead
+                  </button>
+                </div>
+              </div>
+
+              <!-- Damage Track Effects (Collapsible) -->
+              <details class="info-details">
+                <summary>Damage Track Effects & Penalties</summary>
+                <div class="info-content">
+                  <ul>
+                    <li>
+                      <strong>Hale:</strong> Healthy and uninjured. No penalties
+                      to actions.
+                    </li>
+                    <li>
+                      <strong>Hurt:</strong> Minor injuries but still
+                      functional. No penalties to actions.
+                    </li>
+                    <li>
+                      <strong>Impaired:</strong>
+                      <ul style="margin-top: 5px">
+                        <li>Effort costs +1 more from stat pools</li>
+                        <li>Cannot achieve minor or major effects on rolls</li>
+                        <li>Still able to act normally otherwise</li>
+                      </ul>
+                    </li>
+                    <li>
+                      <strong>Debilitated:</strong>
+                      <ul style="margin-top: 5px">
+                        <li>Effort costs +1 more from stat pools</li>
+                        <li>Cannot achieve minor or major effects on rolls</li>
+                        <li>
+                          Can only make move actions (likely to crawl away)
+                        </li>
+                      </ul>
+                    </li>
+                    <li><strong>Dead:</strong> Character is deceased.</li>
+                  </ul>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="stress-container">
+              <div class="stress-box">
+                <h3>Stress</h3>
+
+                <div class="stress-value-display">
+                  <span class="stress-number" id="stressPoints">0</span>
+                  <span class="stress-label">Points</span>
+                </div>
+                <div class="stress-controls">
+                  <button class="stress-button" onclick="adjustStress(-3)">
+                    - 3
+                  </button>
+                  <button class="stress-button" onclick="adjustStress(-1)">
+                    - 1
+                  </button>
+                  <button class="stress-button" onclick="adjustStress(1)">
+                    + 1
+                  </button>
+                  <button class="stress-button" onclick="adjustStress(3)">
+                    + 3
+                  </button>
+                </div>
+                <div class="stress-level-display">
+                  <span class="level-label">Current Stress Level</span>
+                  <span class="level-number" id="stressLevel">0</span>
+                </div>
+                <!-- Reset Stress Button 
+               <button
+                  onclick="resetStress()"
+                  class="button secondary-button"
+                  style="width: 100%; padding: 10px; margin-top: 10px"
+                >
+                  Reset to 0
+                </button>
+              --></div>
+
+              <!-- Supernatural Stress Section -->
+              <div class="supernatural-stress-box">
+                <h3>Stress from Supernatural Sources</h3>
+
+                <div class="supernatural-stress-value-display">
+                  <span class="stress-number" id="superStressDisplay">0</span>
+                  <span class="stress-label">Points</span>
+                </div>
+
+                <p class="supernatural-stress-warning">
+                  WARNING: Stress from Supernatural Sources cannot be reduced
+                  once gained
+                </p>
+
+                <button
+                  class="supernatural-stress-button"
+                  onclick="addSuperStress()"
+                >
+                  Gain Stress from a Supernatural Source
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== ADVANCEMENT SECTION ==================== -->
+        <div id="advancement" class="tab-content">
+          <div class="section">
+            <h2>Character Advancement</h2>
+            <div class="section advancement-section">
+              <!-- Advancement Overview -->
+              <div class="advancement-overview">
+                <div class="advancement-stat-box">
+                  <label>Current Tier</label>
+                  <span class="stat-value" id="tierDisplayAdv">1</span>
+                </div>
+
+                <div class="advancement-stat-box">
+                  <label>Experience Points</label>
+                  <div class="xp-input-wrapper">
+                    <input
+                      type="number"
+                      id="xp"
+                      value="0"
+                      min="0"
+                      step="1"
+                      oninput="updateXP(this.value)"
+                    />
+                  </div>
+                </div>
+
+                <div class="advancement-stat-box">
+                  <label>Tier Progress</label>
+                  <span class="stat-value">
+                    <span id="advancementCount">0</span> / 5
+                  </span>
+                </div>
+              </div>
+
+              <!-- Quick XP Addition -->
+              <div class="xp-quick-add">
+                <h3>Quick Add XP</h3>
+                <div class="xp-buttons">
+                  <button class="xp-btn" onclick="addQuickXP(1)">+1 XP</button>
+                  <button class="xp-btn" onclick="addQuickXP(2)">+2 XP</button>
+                  <button class="xp-btn" onclick="addQuickXP(3)">+3 XP</button>
+                  <button class="xp-btn" onclick="addQuickXP(4)">+4 XP</button>
+                </div>
+              </div>
+
+              <!-- Required Advancements -->
+              <div class="advancements-category">
+                <h3 class="category-header">
+                  <span class="category-icon">⚡</span>
+                  Required Advancements
+                  <span class="category-note"
+                    >(Choose 4 of these to advance to next tier)</span
+                  >
+                </h3>
+
+                <div class="advancements-grid">
+                  <div class="advancement-card" id="increasePools">
+                    <div class="advancement-header">
+                      <h4>Increase Capabilities</h4>
+                      <span class="advancement-cost">4 XP</span>
+                    </div>
+                    <p class="advancement-description">
+                      Add 4 points to your stat Pools (divided as you wish)
+                    </p>
+                    <button
+                      class="advancement-purchase-btn"
+                      id="increasePoolsBtn"
+                      onclick="purchaseIncreasePools()"
+                    >
+                      Purchase
+                    </button>
+                  </div>
+
+                  <div class="advancement-card" id="increaseEdge">
+                    <div class="advancement-header">
+                      <h4>Move Toward Perfection</h4>
+                      <span class="advancement-cost">4 XP</span>
+                    </div>
+                    <p class="advancement-description">
+                      Increase one Edge by 1
+                    </p>
+                    <button
+                      class="advancement-purchase-btn"
+                      id="increaseEdgeBtn"
+                      onclick="purchaseIncreaseEdge()"
+                    >
+                      Purchase
+                    </button>
+                  </div>
+
+                  <div class="advancement-card" id="increaseEffort">
+                    <div class="advancement-header">
+                      <h4>Extra Effort</h4>
+                      <span class="advancement-cost">4 XP</span>
+                    </div>
+                    <p class="advancement-description">Increase Effort by 1</p>
+                    <button
+                      class="advancement-purchase-btn"
+                      id="increaseEffortBtn"
+                      onclick="purchaseIncreaseEffort()"
+                    >
+                      Purchase
+                    </button>
+                  </div>
+
+                  <div class="advancement-card" id="trainSkill">
+                    <div class="advancement-header">
+                      <h4>Skill Training</h4>
+                      <span class="advancement-cost">4 XP</span>
+                    </div>
+                    <p class="advancement-description">
+                      Become trained in one skill OR become specialized in a
+                      skill you're already trained in
+                    </p>
+                    <button
+                      class="advancement-purchase-btn"
+                      id="trainSkillBtn"
+                      onclick="purchaseTrainSkill()"
+                    >
+                      Purchase
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Optional Advancements -->
+              <div class="advancements-category">
+                <h3 class="category-header">
+                  <span class="category-icon">✨</span>
+                  Optional Advancements
+                  <span class="category-note"
+                    >(Choose 1 of these to advance to next tier)</span
+                  >
+                </h3>
+
+                <div class="advancements-grid">
+                  <div class="advancement-card" id="increaseRecovery">
+                    <div class="advancement-header">
+                      <h4>Increase Recovery</h4>
+                      <span class="advancement-cost">4 XP</span>
+                    </div>
+                    <p class="advancement-description">
+                      Add +1 to all recovery rolls
+                    </p>
+                    <button
+                      class="advancement-purchase-btn"
+                      id="increaseRecoveryBtn"
+                      onclick="purchaseIncreaseRecovery()"
+                    >
+                      Purchase
+                    </button>
+                  </div>
+
+                  <div class="advancement-card" id="extraFocusAbility">
+                    <div class="advancement-header">
+                      <h4>Extra Focus Ability</h4>
+                      <span class="advancement-cost">4 XP</span>
+                    </div>
+                    <p class="advancement-description">
+                      Select an additional ability from your Focus
+                      <em>(Tier 3+ only)</em>
+                    </p>
+                    <button
+                      class="advancement-purchase-btn"
+                      id="extraFocusAbilityBtn"
+                      onclick="purchaseExtraFocusAbility()"
+                    >
+                      Purchase
+                    </button>
+                  </div>
+
+                  <div class="advancement-card" id="extraTypeAbility">
+                    <div class="advancement-header">
+                      <h4>Extra Type Ability</h4>
+                      <span class="advancement-cost">4 XP</span>
+                    </div>
+                    <p class="advancement-description">
+                      Select an additional ability from your Type
+                    </p>
+                    <button
+                      class="advancement-purchase-btn"
+                      id="extraTypeAbilityBtn"
+                      onclick="purchaseExtraTypeAbility()"
+                    >
+                      Purchase
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculators Tab Content -->
+        <div id="calculators" class="tab-content">
+          <div class="section quick-dice-section">
+            <h2>Quick Dice Rolls</h2>
+            <p class="quick-dice-description">
+              Roll dice for general checks, random events, or GM-called rolls.
+            </p>
+
+            <div class="quick-dice-grid">
+              <div class="quick-dice-card d6-card">
+                <div class="quick-dice-label">Roll d6</div>
+                <div class="quick-dice-info">Six-sided die</div>
+                <button class="quick-dice-btn" onclick="quickRollD6()">
+                  Roll Virtual d6
+                </button>
+                <div class="manual-roll-divider">— OR —</div>
+                <div class="manual-roll-section">
+                  <label for="manualD6Input" class="manual-roll-label"
+                    >Enter your roll:</label
+                  >
+                  <input
+                    type="number"
+                    id="manualD6Input"
+                    class="manual-roll-input"
+                    min="1"
+                    max="6"
+                    placeholder="1-6"
+                    onkeypress="if(event.key === 'Enter') submitManualD6()"
+                  />
+                  <button class="manual-roll-btn" onclick="submitManualD6()">
+                    Submit
+                  </button>
+                </div>
+              </div>
+
+              <div class="quick-dice-card d20-card">
+                <div class="quick-dice-label">Roll d20</div>
+                <div class="quick-dice-info">Twenty-sided die</div>
+                <button class="quick-dice-btn" onclick="quickRollD20()">
+                  Roll Virtual d20
+                </button>
+                <div class="manual-roll-divider">— OR —</div>
+                <div class="manual-roll-section">
+                  <label for="manualD20Input" class="manual-roll-label"
+                    >Enter your roll:</label
+                  >
+                  <input
+                    type="number"
+                    id="manualD20Input"
+                    class="manual-roll-input"
+                    min="1"
+                    max="20"
+                    placeholder="1-20"
+                    onkeypress="if(event.key === 'Enter') submitManualD20()"
+                  />
+                  <button class="manual-roll-btn" onclick="submitManualD20()">
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h2>Action Calculators</h2>
+
+          <!-- Performing an Action Calculator (COLLAPSIBLE) -->
+          <details class="calculator-collapsible">
+            <summary class="calculator-summary">
+              <span class="calculator-icon">🎯</span>
+              <span>Performing an Action</span>
+            </summary>
+
+            <div class="calculator-section">
+              <div class="calculator-container">
+                <table class="calculator-table">
+                  <tbody>
+                    <!-- Task Difficulty -->
+                    <tr>
+                      <td class="calculator-label">Task Difficulty:</td>
+                      <td class="calculator-input">
+                        <select
+                          id="actionDifficulty"
+                          onchange="updateActionCalculator()"
+                        >
+                          <option value="">-- Select Difficulty --</option>
+                        </select>
+                      </td>
+                      <td class="calculator-info">
+                        <span id="actionDifficultyDesc"></span>
+                      </td>
+                    </tr>
+
+                    <!-- Stat Selection -->
+                    <tr>
+                      <td class="calculator-label">Stat Used:</td>
+                      <td class="calculator-input">
+                        <select
+                          id="actionStat"
+                          onchange="updateActionCalculator()"
+                        >
+                          <option value="">-- Select Stat --</option>
+                          <option value="might">Might</option>
+                          <option value="speed">Speed</option>
+                          <option value="intellect">Intellect</option>
+                        </select>
+                      </td>
+                      <td class="calculator-info">
+                        Edge: <span id="actionEdgeDisplay">--</span>
+                      </td>
+                    </tr>
+
+                    <!-- Cooperative Action -->
+                    <tr>
+                      <td class="calculator-label">
+                        Cooperative Action - Assistance Level:
+                      </td>
+                      <td class="calculator-input">
+                        <select
+                          id="actionTraining"
+                          onchange="updateActionCalculator()"
+                        >
+                          <option value="0">No Assistance</option>
+                          <option value="0">Untrained</option>
+                          <option value="1">Trained</option>
+                          <option value="2">Specialized</option>
+                          <option value="-1">Inability</option>
+                        </select>
+                      </td>
+                      <td class="calculator-info">
+                        <span id="actionTrainingEffect"></span>
+                      </td>
+                    </tr>
+
+                    <!-- Effort -->
+                    <tr>
+                      <td class="calculator-label">Effort Applied:</td>
+                      <td class="calculator-input">
+                        <input
+                          type="number"
+                          id="actionEffort"
+                          value="0"
+                          min="0"
+                          max="6"
+                          oninput="updateActionCalculator()"
+                        />
+                      </td>
+                      <td class="calculator-info">
+                        Max: <span id="actionEffortMax">--</span>
+                      </td>
+                    </tr>
+
+                    <!-- Special Abilities -->
+                    <tr>
+                      <td class="calculator-label">Special Abilities Bonus:</td>
+                      <td class="calculator-input">
+                        <input
+                          type="number"
+                          id="actionSpecial"
+                          value="0"
+                          min="0"
+                          oninput="updateActionCalculator()"
+                        />
+                      </td>
+                      <td class="calculator-info">
+                        Steps of ease from abilities/assets
+                      </td>
+                    </tr>
+
+                    <!-- Eased Difficulty (Calculated) -->
+                    <tr class="calculator-result-row">
+                      <td class="calculator-label">Eased Difficulty:</td>
+                      <td class="calculator-display" colspan="2">
+                        <span id="actionEasedDifficulty">--</span>
+                      </td>
+                    </tr>
+
+                    <!-- Target Number (Calculated) -->
+                    <tr class="calculator-result-row">
+                      <td class="calculator-label">Target Number:</td>
+                      <td class="calculator-display" colspan="2">
+                        <span id="actionTargetNumber" class="target-number"
+                          >--</span
+                        >
+                      </td>
+                    </tr>
+
+                    <!-- Roll Button -->
+                    <tr>
+                      <td colspan="3" class="calculator-action">
+                        <button
+                          class="button primary-button calculator-roll-btn"
+                          onclick="rollActionDice()"
+                          id="actionRollBtn"
+                        >
+                          🎲 Roll D20 🎲
+                        </button>
+                      </td>
+                    </tr>
+
+                    <!-- Dice Result Display -->
+                    <tr id="actionDiceResultRow" style="display: none">
+                      <td class="calculator-label">Dice Roll:</td>
+                      <td class="calculator-display" colspan="2">
+                        <span id="actionDiceResult" class="dice-result"
+                          >--</span
+                        >
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!-- Result Boxes -->
+                <div
+                  class="calculator-results"
+                  id="actionResults"
+                  style="display: none"
+                >
+                  <div class="result-box" id="actionSuccessBox">
+                    <h4>Result</h4>
+                    <p id="actionSuccessText"></p>
+                  </div>
+
+                  <div class="result-box" id="actionCostBox">
+                    <h4>Stat Pool Cost</h4>
+                    <p id="actionCostText"></p>
+                  </div>
+                </div>
+
+                <!-- Confirm Action button -->
+                <div
+                  class="calculator-confirm-section"
+                  id="actionConfirmSection"
+                  style="display: none"
+                >
+                  <button
+                    class="button primary-button calculator-confirm-btn"
+                    onclick="confirmAction()"
+                    id="confirmActionBtn"
+                  >
+                    Confirm Action & Apply Cost
+                  </button>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Ability Usage Calculator -->
+          <details class="calculator-collapsible">
+            <summary class="calculator-summary">
+              <span class="calculator-icon">✨</span>
+              <span>Ability Usage</span>
+            </summary>
+
+            <div class="calculator-section">
+              <div class="calculator-container">
+                <table class="calculator-table">
+                  <tbody>
+                    <!-- Ability Selection -->
+                    <tr>
+                      <td class="calculator-label">Select Ability:</td>
+                      <td class="calculator-input" colspan="2">
+                        <select
+                          id="abilitySelect"
+                          onchange="updateAbilityCalculator()"
+                        >
+                          <option value="">-- Select Ability --</option>
+                        </select>
+                      </td>
+                    </tr>
+
+                    <!-- Ability Effect Display -->
+                    <tr>
+                      <td class="calculator-label">Effect:</td>
+                      <td colspan="2">
+                        <textarea
+                          id="abilityEffect"
+                          readonly
+                          style="
+                            width: 100%;
+                            min-height: 80px;
+                            background: #2a2a2a;
+                            border: 1px solid #444;
+                            color: #ddd;
+                            padding: 10px;
+                            border-radius: 4px;
+                            resize: vertical;
+                          "
+                          placeholder="Select an ability to see its effect..."
+                        ></textarea>
+                      </td>
+                    </tr>
+
+                    <tr id="abilityStatRow" style="display: none">
+                      <td class="calculator-label">Stat Used:</td>
+                      <td class="calculator-input">
+                        <select
+                          id="abilityStat"
+                          onchange="onAbilityStatChange()"
+                        >
+                          <option value="">-- Select Stat --</option>
+                        </select>
+                      </td>
+                      <td class="calculator-info">
+                        Edge: <span id="abilityEdge">--</span>
+                      </td>
+                    </tr>
+
+                    <!-- Base Cost Display -->
+                    <tr class="calculator-result-row">
+                      <td class="calculator-label">Base Cost:</td>
+                      <td class="calculator-display" colspan="2">
+                        <span id="abilityCost">--</span> points
+                      </td>
+                    </tr>
+
+                    <!-- Stress Display -->
+                    <tr class="calculator-result-row">
+                      <td class="calculator-label">Stress Incurred:</td>
+                      <td class="calculator-display" colspan="2">
+                        <span id="abilityStress">--</span> stress
+                      </td>
+                    </tr>
+
+                    <!-- Confirmed Cost (Optional Override) -->
+                    <tr>
+                      <td class="calculator-label">
+                        Confirmed Cost (Optional):
+                      </td>
+                      <td class="calculator-input">
+                        <input
+                          type="number"
+                          id="abilityConfirmedCost"
+                          value=""
+                          min="0"
+                          placeholder="Leave blank to use base cost"
+                          oninput="updateAbilityCalculator()"
+                        />
+                      </td>
+                      <td class="calculator-info">
+                        Override for variable cost abilities
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!-- Cost Confirmation Section -->
+                <div
+                  id="abilityConfirmSection"
+                  style="display: none; margin-top: 20px"
+                >
+                  <div class="result-box" id="abilityCostConfirmBox">
+                    <h4>Cost Breakdown</h4>
+                    <p id="abilityCostConfirmText"></p>
+                  </div>
+                </div>
+
+                <!-- Use Ability Button -->
+                <div
+                  class="calculator-confirm-section"
+                  style="margin-top: 20px"
+                >
+                  <button
+                    class="button primary-button calculator-confirm-btn"
+                    onclick="confirmAbilityUsage()"
+                    id="confirmAbilityBtn"
+                  >
+                    Use Ability & Apply Cost
+                  </button>
+                  <button
+                    class="button secondary-button"
+                    onclick="clearAbilityCalculator()"
+                    style="margin-left: 10px"
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Combat Calculators -->
+          <h2 style="margin-top: 30px">Combat Calculators</h2>
+          <!-- Attacking Calculator (COLLAPSIBLE) -->
+          <details class="calculator-collapsible">
+            <summary class="calculator-summary">
+              <span class="calculator-icon">⚔️</span>
+              <span>Combat - Attacking</span>
+            </summary>
+
+            <div class="calculator-section">
+              <div class="calculator-container">
+                <table class="calculator-table">
+                  <tbody>
+                    <!-- Opponent Type -->
+                    <tr>
+                      <td class="calculator-label">Opponent:</td>
+                      <td class="calculator-input">
+                        <select
+                          id="attackOpponentType"
+                          onchange="updateAttackCalculator()"
+                        >
+                          <option value="player-npc">Player vs NPC</option>
+                          <option value="npc-npc">NPC vs NPC</option>
+                          <option value="player-player">
+                            Player vs Player
+                          </option>
+                          <option value="attacking-objects">
+                            Attacking Objects
+                          </option>
+                        </select>
+                      </td>
+                      <td class="calculator-info">
+                        <span id="attackOpponentInfo"
+                          >Standard combat encounter</span
+                        >
+                      </td>
+                    </tr>
+
+                    <!-- Opponent Level / Roll -->
+                    <tr id="attackOpponentLevelRow">
+                      <td class="calculator-label">
+                        <span id="attackOpponentLevelLabel"
+                          >Opponent Level:</span
+                        >
+                      </td>
+                      <td class="calculator-input">
+                        <input
+                          type="number"
+                          id="attackOpponentLevel"
+                          value=""
+                          min="0"
+                          placeholder="Enter level..."
+                          oninput="updateAttackCalculator()"
+                        />
+                      </td>
+                      <td class="calculator-info">
+                        Target difficulty:
+                        <span id="attackTargetDifficulty">--</span>
+                      </td>
+                    </tr>
+
+                    <!-- Opponent Health -->
+                    <tr id="attackOpponentHealthRow">
+                      <td class="calculator-label">Opponent Health:</td>
+                      <td class="calculator-input">
+                        <input
+                          type="number"
+                          id="attackOpponentHealth"
+                          value=""
+                          min="0"
+                          placeholder="Current health..."
+                          oninput="updateAttackCalculator()"
+                        />
+                      </td>
+                      <td class="calculator-info">Remaining health pool</td>
+                    </tr>
+
+                    <!-- Stat Selection -->
+                    <tr>
+                      <td class="calculator-label">Stat Used:</td>
+                      <td class="calculator-input">
+                        <select
+                          id="attackStat"
+                          onchange="updateAttackCalculator()"
+                        >
+                          <option value="">-- Select Stat --</option>
+                          <option value="might">Might</option>
+                          <option value="speed">Speed</option>
+                          <option value="intellect">Intellect</option>
+                        </select>
+                      </td>
+                      <td class="calculator-info">
+                        Edge: <span id="attackEdgeDisplay">--</span>
+                      </td>
+                    </tr>
+
+                    <!-- Weapon Selection -->
+                    <tr>
+                      <td class="calculator-label">Weapon:</td>
+                      <td class="calculator-input">
+                        <select
+                          id="attackWeapon"
+                          onchange="updateAttackCalculator()"
+                        >
+                          <option value="">-- Select Weapon --</option>
+                          <option value="unarmed">Unarmed (2 damage)</option>
+                          <option value="improvised">
+                            Improvised (2 damage)
+                          </option>
+                        </select>
+                      </td>
+                      <td class="calculator-info">
+                        Damage: <span id="attackWeaponDamage">--</span>
+                      </td>
+                    </tr>
+
+                    <!-- Effort -->
+                    <tr>
+                      <td class="calculator-label">Effort Applied:</td>
+                      <td class="calculator-input">
+                        <input
+                          type="number"
+                          id="attackEffort"
+                          value="0"
+                          min="0"
+                          max="6"
+                          oninput="updateAttackCalculator()"
+                        />
+                      </td>
+                      <td class="calculator-info">
+                        Max: <span id="attackEffortMax">--</span>
+                      </td>
+                    </tr>
+
+                    <!-- Special Abilities -->
+                    <tr>
+                      <td class="calculator-label">Special Abilities:</td>
+                      <td class="calculator-input">
+                        <input
+                          type="number"
+                          id="attackSpecial"
+                          value="0"
+                          min="0"
+                          oninput="updateAttackCalculator()"
+                        />
+                      </td>
+                      <td class="calculator-info">
+                        Steps of ease from abilities/assets
+                      </td>
+                    </tr>
+
+                    <!-- Modified Attack Roll (Calculated) -->
+                    <tr class="calculator-result-row">
+                      <td class="calculator-label">Modified Attack Value:</td>
+                      <td class="calculator-display" colspan="2">
+                        <span id="attackModifiedValue">--</span>
+                      </td>
+                    </tr>
+
+                    <!-- Target Number (Calculated) -->
+                    <tr class="calculator-result-row">
+                      <td class="calculator-label">Target Number:</td>
+                      <td class="calculator-display" colspan="2">
+                        <span id="attackTargetNumber" class="target-number"
+                          >--</span
+                        >
+                      </td>
+                    </tr>
+
+                    <!-- Roll Button -->
+                    <tr>
+                      <td colspan="3" class="calculator-action">
+                        <button
+                          class="button primary-button calculator-roll-btn"
+                          onclick="rollAttackDice()"
+                          id="attackRollBtn"
+                        >
+                          🎲 Roll Attack (D20) 🎲
+                        </button>
+                      </td>
+                    </tr>
+
+                    <!-- Dice Result Display -->
+                    <tr id="attackDiceResultRow" style="display: none">
+                      <td class="calculator-label">Attack Roll:</td>
+                      <td class="calculator-display" colspan="2">
+                        <span id="attackDiceResult" class="dice-result"
+                          >--</span
+                        >
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!-- Hit/Miss Result and Damage Input -->
+                <div
+                  id="attackHitSection"
+                  style="display: none; margin-top: 20px"
+                >
+                  <div class="result-box success" id="attackHitBox">
+                    <h4>Attack Hits!</h4>
+                    <p id="attackHitText"></p>
+
+                    <div
+                      style="
+                        margin-top: 20px;
+                        padding-top: 20px;
+                        border-top: 1px solid #444;
+                      "
+                    >
+                      <table class="calculator-table" style="margin: 0">
+                        <tbody>
+                          <!-- Damage Bonuses from Abilities -->
+                          <tr>
+                            <td class="calculator-label" style="width: 40%">
+                              Damage Bonuses (Abilities):
+                            </td>
+                            <td class="calculator-input" style="width: 30%">
+                              <input
+                                type="number"
+                                id="attackDamageBonus"
+                                value="0"
+                                min="0"
+                                oninput="updateDamageBonusDisplay()"
+                              />
+                            </td>
+                            <td class="calculator-info" style="width: 30%">
+                              From skills/abilities
+                            </td>
+                          </tr>
+
+                          <!-- Additional Effort for Damage -->
+                          <tr>
+                            <td class="calculator-label">
+                              Additional Effort (Damage):
+                            </td>
+                            <td class="calculator-input">
+                              <input
+                                type="number"
+                                id="attackDamageEffort"
+                                value="0"
+                                min="0"
+                                max="6"
+                                oninput="updateDamageBonusDisplay()"
+                              />
+                            </td>
+                            <td class="calculator-info">
+                              +3 damage per Effort (Max:
+                              <span id="attackDamageEffortMax">--</span>)
+                            </td>
+                          </tr>
+
+                          <!-- Damage Preview -->
+                          <tr class="calculator-result-row">
+                            <td class="calculator-label">
+                              Bonus Damage Preview:
+                            </td>
+                            <td class="calculator-display" colspan="2">
+                              <span id="attackBonusDamagePreview">0</span>
+                            </td>
+                          </tr>
+
+                          <!-- Calculate Button -->
+                          <tr>
+                            <td colspan="3" class="calculator-action">
+                              <button
+                                class="button primary-button calculator-roll-btn"
+                                onclick="calculateAttackDamage()"
+                                id="calculateDamageBtn"
+                              >
+                                Calculate Total Damage
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Result Boxes -->
+                <div
+                  class="calculator-results"
+                  id="attackResults"
+                  style="display: none"
+                >
+                  <div class="result-box" id="attackOutcomeBox">
+                    <h4>Attack Outcome</h4>
+                    <p id="attackOutcomeText"></p>
+                  </div>
+
+                  <div class="result-box" id="attackDamageBox">
+                    <h4>Damage Dealt</h4>
+                    <p id="attackDamageText"></p>
+                  </div>
+
+                  <div class="result-box" id="attackCostBox">
+                    <h4>Stat Pool Cost</h4>
+                    <p id="attackCostText"></p>
+                  </div>
+                </div>
+
+                <!-- Confirm Attack button -->
+                <div
+                  class="calculator-confirm-section"
+                  id="attackConfirmSection"
+                  style="display: none"
+                >
+                  <button
+                    class="button primary-button calculator-confirm-btn"
+                    onclick="confirmAttack()"
+                    id="confirmAttackBtn"
+                  >
+                    Confirm Attack & Apply Cost
+                  </button>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Defending Calculator -->
+
+          <details class="calculator-collapsible">
+            <summary class="calculator-summary">
+              <span class="calculator-icon">🛡️</span>
+              <span>Combat - Defending</span>
+            </summary>
+
+            <div class="calculator-section">
+              <div class="calculator-container">
+                <table class="calculator-table">
+                  <tbody>
+                    <!-- Opponent Type -->
+                    <tr>
+                      <td class="calculator-label">Opponent:</td>
+                      <td class="calculator-input">
+                        <select
+                          id="defendOpponentType"
+                          onchange="updateDefendCalculator()"
+                        >
+                          <option value="player-npc">Player vs NPC</option>
+                          <option value="npc-npc">NPC vs NPC</option>
+                          <option value="player-player">
+                            Player vs Player
+                          </option>
+                        </select>
+                      </td>
+                      <td class="calculator-info">
+                        <span id="defendOpponentInfo"
+                          >Defending against an attack</span
+                        >
+                      </td>
+                    </tr>
+
+                    <!-- Opponent Level -->
+                    <tr id="defendOpponentLevelRow">
+                      <td class="calculator-label">Opponent Level:</td>
+                      <td class="calculator-input">
+                        <input
+                          type="number"
+                          id="defendOpponentLevel"
+                          value=""
+                          min="0"
+                          placeholder="Enter level..."
+                          oninput="updateDefendCalculator()"
+                        />
+                      </td>
+                      <td class="calculator-info">
+                        Target difficulty:
+                        <span id="defendTargetDifficulty">--</span>
+                      </td>
+                    </tr>
+
+                    <!-- Stat Selection -->
+                    <tr>
+                      <td class="calculator-label">Stat Used:</td>
+                      <td class="calculator-input">
+                        <select
+                          id="defendStat"
+                          onchange="updateDefendCalculator()"
+                        >
+                          <option value="">-- Select Stat --</option>
+                          <option value="might">Might</option>
+                          <option value="speed">Speed</option>
+                          <option value="intellect">Intellect</option>
+                        </select>
+                      </td>
+                      <td class="calculator-info">
+                        Edge: <span id="defendEdgeDisplay">--</span>
+                      </td>
+                    </tr>
+
+                    <!-- Effort -->
+                    <tr>
+                      <td class="calculator-label">Effort Applied:</td>
+                      <td class="calculator-input">
+                        <input
+                          type="number"
+                          id="defendEffort"
+                          value="0"
+                          min="0"
+                          max="6"
+                          oninput="updateDefendCalculator()"
+                        />
+                      </td>
+                      <td class="calculator-info">
+                        Max: <span id="defendEffortMax">--</span>
+                      </td>
+                    </tr>
+
+                    <!-- Cooperative Action -->
+                    <tr>
+                      <td class="calculator-label">Cooperative Action:</td>
+                      <td class="calculator-input">
+                        <select
+                          id="defendCooperative"
+                          onchange="updateDefendCalculator()"
+                        >
+                          <option value="none">None</option>
+                          <option value="distraction">
+                            Distraction (-1 difficulty)
+                          </option>
+                          <option value="draw">
+                            Draw the Attack (+2 difficulty)
+                          </option>
+                          <option value="take">
+                            Take the Attack (auto-hit +1 stress)
+                          </option>
+                        </select>
+                      </td>
+                      <td class="calculator-info">
+                        <span id="defendCooperativeEffect">No assistance</span>
+                      </td>
+                    </tr>
+
+                    <!-- Special Abilities -->
+                    <tr>
+                      <td class="calculator-label">Special Abilities:</td>
+                      <td class="calculator-input">
+                        <input
+                          type="number"
+                          id="defendSpecial"
+                          value="0"
+                          min="0"
+                          oninput="updateDefendCalculator()"
+                        />
+                      </td>
+                      <td class="calculator-info">
+                        Steps of ease from abilities/assets
+                      </td>
+                    </tr>
+
+                    <!-- Modified Defense Value (Calculated) -->
+                    <tr class="calculator-result-row">
+                      <td class="calculator-label">Modified Defense Value:</td>
+                      <td class="calculator-display" colspan="2">
+                        <span id="defendModifiedValue">--</span>
+                      </td>
+                    </tr>
+
+                    <!-- Target Number (Calculated) -->
+                    <tr class="calculator-result-row">
+                      <td class="calculator-label">Target Number:</td>
+                      <td class="calculator-display" colspan="2">
+                        <span id="defendTargetNumber" class="target-number"
+                          >--</span
+                        >
+                      </td>
+                    </tr>
+
+                    <!-- Roll Button -->
+                    <tr>
+                      <td colspan="3" class="calculator-action">
+                        <button
+                          class="button primary-button calculator-roll-btn"
+                          onclick="rollDefendDice()"
+                          id="defendRollBtn"
+                        >
+                          🎲 Roll Defense (D20) 🎲
+                        </button>
+                      </td>
+                    </tr>
+
+                    <!-- Dice Result Display -->
+                    <tr id="defendDiceResultRow" style="display: none">
+                      <td class="calculator-label">Defense Roll:</td>
+                      <td class="calculator-display" colspan="2">
+                        <span id="defendDiceResult" class="dice-result"
+                          >--</span
+                        >
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!-- Defense Success Section -->
+                <div
+                  id="defendSuccessSection"
+                  style="display: none; margin-top: 20px"
+                >
+                  <div class="result-box success" id="defendSuccessBox">
+                    <h4>Defense Succeeds!</h4>
+                    <p id="defendSuccessText"></p>
+                  </div>
+                </div>
+
+                <!-- Defense Failure / Hit Section -->
+                <div
+                  id="defendHitSection"
+                  style="display: none; margin-top: 20px"
+                >
+                  <div class="result-box failure" id="defendHitBox">
+                    <h4>Attack Hits!</h4>
+                    <p id="defendHitText"></p>
+
+                    <div
+                      style="
+                        margin-top: 20px;
+                        padding-top: 20px;
+                        border-top: 1px solid #444;
+                      "
+                    >
+                      <table class="calculator-table" style="margin: 0">
+                        <tbody>
+                          <!-- Stress Taken -->
+                          <tr>
+                            <td class="calculator-label" style="width: 40%">
+                              Stress Taken:
+                            </td>
+                            <td class="calculator-input" style="width: 30%">
+                              <input
+                                type="number"
+                                id="defendStressTaken"
+                                value="0"
+                                min="0"
+                                oninput="updateDefendStressDisplay()"
+                              />
+                            </td>
+                            <td class="calculator-info" style="width: 30%">
+                              <span id="defendStressInfo"
+                                >Enter stress received</span
+                              >
+                            </td>
+                          </tr>
+
+                          <!-- Stress Preview -->
+                          <tr class="calculator-result-row">
+                            <td class="calculator-label">
+                              Damage Track Effect:
+                            </td>
+                            <td class="calculator-display" colspan="2">
+                              <span id="defendDamageTrackEffect">--</span>
+                            </td>
+                          </tr>
+
+                          <!-- Calculate Button -->
+                          <tr>
+                            <td colspan="3" class="calculator-action">
+                              <button
+                                class="button primary-button calculator-roll-btn"
+                                onclick="calculateDefendResult()"
+                                id="calculateDefendBtn"
+                              >
+                                Calculate Defense Result
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Result Boxes -->
+                <div
+                  class="calculator-results"
+                  id="defendResults"
+                  style="display: none"
+                >
+                  <div class="result-box" id="defendOutcomeBox">
+                    <h4>Defense Outcome</h4>
+                    <p id="defendOutcomeText"></p>
+                  </div>
+
+                  <div class="result-box" id="defendStressBox">
+                    <h4>Stress & Damage</h4>
+                    <p id="defendStressText"></p>
+                  </div>
+
+                  <div class="result-box" id="defendCostBox">
+                    <h4>Stat Pool Cost</h4>
+                    <p id="defendCostText"></p>
+                  </div>
+                </div>
+
+                <!-- Confirm Defense button -->
+                <div
+                  class="calculator-confirm-section"
+                  id="defendConfirmSection"
+                  style="display: none"
+                >
+                  <button
+                    class="button primary-button calculator-confirm-btn"
+                    onclick="confirmDefend()"
+                    id="confirmDefendBtn"
+                  >
+                    Confirm Defense & Apply Effects
+                  </button>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Avatar Tab Content -->
+
+        <div id="avatar" class="tab-content">
+          <!-- Password Protection Overlay -->
+          <div
+            id="avatarPasswordOverlay"
+            class="avatar-password-overlay"
+            style="display: none"
+          >
+            <div class="avatar-password-container">
+              <h2>WARNING</h2>
+              <p class="avatar-warning-text">
+                You stand at the precipice of transformation.<br />
+                Beyond this point lies power, but also inevitability.<br />
+                <strong
+                  >Once crossed, this threshold cannot be uncrossed.</strong
+                >
+              </p>
+              <div class="avatar-password-input-section">
+                <label for="avatarPassword">Enter password to proceed:</label>
+                <input
+                  type="password"
+                  id="avatarPassword"
+                  placeholder="Password"
+                  onkeypress="if(event.key === 'Enter') unlockAvatarTab()"
+                />
+                <div class="avatar-password-buttons">
+                  <button
+                    class="button secondary-button"
+                    onclick="closeAvatarPasswordOverlay()"
+                  >
+                    ← Go Back
+                  </button>
+                  <button
+                    class="button danger-button"
+                    onclick="unlockAvatarTab()"
+                  >
+                    Enter the Path of Fear
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pre-Commitment Content -->
+          <div id="avatarPreCommitment" class="section" style="display: none">
+            <div class="avatar-header">
+              <h2>Becoming an Avatar</h2>
+            </div>
+            <div class="avatar-warning-box">
+              <h3>A Choice Beyond Return</h3>
+              <p>
+                You have walked too far into the darkness. The supernatural has
+                left its mark upon you.<br />
+                <strong>10 points of Supernatural Stress</strong> weigh on your
+                psyche.<br />
+                Power flowing through you at
+                <strong>Tier 4 or higher</strong>.<br />
+                You already wield <strong>Supernatural Power</strong>.
+              </p>
+              <p>
+                Now, one of the Entities calls to you. Its fear resonates with
+                something deep within your soul.
+              </p>
+              <p class="avatar-final-warning">
+                <strong
+                  >This choice is permanent. Once you become an Avatar, you
+                  cannot go back.</strong
+                >
+              </p>
+            </div>
+
+            <div class="entity-selection-section">
+              <label for="entitySelect">Choose Your Entity:</label>
+              <select id="entitySelect" onchange="updateEntityDescription()">
+                <option value="">-- Select an Entity --</option>
+              </select>
+
+              <div class="entity-description-box">
+                <textarea
+                  id="entityDescription"
+                  readonly
+                  placeholder="Select an Entity to see its nature..."
+                ></textarea>
+              </div>
+
+              <button
+                class="button danger-button confirm-entity-btn"
+                onclick="confirmEntityChoice()"
+              >
+                Commit to This Path
+              </button>
+            </div>
+          </div>
+
+          <!-- Post-Commitment Content -->
+          <div id="avatarPostCommitment" class="section" style="display: none">
+            <div class="avatar-header-container">
+              <div class="avatar-tarot-card">
+                <img id="avatarTarotImage" src="" alt="Entity Tarot Card" />
+              </div>
+
+              <div class="avatar-header-content">
+                <div class="avatar-committed-box">
+                  <p
+                    id="avatarCommitmentText"
+                    class="avatar-commitment-text"
+                  ></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="avatar-powers-section">
+              <div class="avatar-header">
+                <h2>Avatar Powers</h2>
+              </div>
+
+              <div class="avatar-power-info">
+                <p>
+                  <strong>Universal Powers</strong> are available to all
+                  Avatars.<br />
+                  <strong>Entity-Specific Powers</strong> are available only to
+                  Avatars of that Entity.<br />
+                  You may select <strong>one Entity-Specific power</strong> to
+                  learn. Changing it costs <strong>4 XP</strong>.
+                </p>
+              </div>
+
+              <div class="selected-power-display">
+                <div class="selected-power-item">
+                  <span class="selected-power-label">Selected Power:</span>
+                  <span class="selected-power-value" id="selectedPowerName"
+                    >None</span
+                  >
+                </div>
+                <button
+                  class="button primary-button"
+                  onclick="changeTetheredPower()"
+                  id="changePowerBtn"
+                >
+                  Change Power (4 XP)
+                </button>
+              </div>
+
+              <!-- Changed from table structure to div container -->
+              <div id="avatarPowersTableBody">
+                <!-- Cards will be populated by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Save & Load Section -->
+      <details class="save-load-section">
+        <summary class="save-load-header">
+          <span class="save-load-icon">💾</span>
+          <span>Save & Load Character</span>
+        </summary>
+
+        <div class="save-load-content">
+          <div class="save-load-info">
+            <p>
+              <strong>Save your character</strong> to your computer or
+              <strong>load a previously saved character</strong> to continue
+              your investigation.
+            </p>
+          </div>
+
+          <div class="save-load-buttons">
+            <button class="save-load-btn primary" onclick="saveCharacter()">
+              <span class="btn-icon">💾</span>
+              <span class="btn-text">Save</span>
+            </button>
+            <button class="save-load-btn secondary" onclick="loadCharacter()">
+              <span class="btn-icon">📂</span>
+              <span class="btn-text">Load</span>
+            </button>
+            <button class="save-load-btn secondary" onclick="resetCharacter()">
+              <span class="btn-icon">🔄</span>
+              <span class="btn-text">Reset</span>
+            </button>
+            <button class="save-load-btn secondary" onclick="exportToText()">
+              <span class="btn-icon">📄</span>
+              <span class="btn-text">Export</span>
+            </button>
+          </div>
+
+          <div id="output" style="display: none"></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Optional: Output display for debugging
+        <details style="margin-top: 20px">
+          <summary
+            style="
+              cursor: pointer;
+              padding: 10px;
+              background: #2a2a2a;
+              border-radius: 6px;
+            "
+          >
+            Show Character Data (Debug)
+          </summary>
+          <pre id="output" style="margin-top: 10px"></pre>
+        </details> -->
+
+    <!-- ==================== 3D DICE ROLLER MODAL ==================== -->
+    <div id="diceRollerModal" class="dice-roller-modal">
+      <div class="dice-roller-container">
+        <div class="dice-roller-header">
+          <h2 id="diceRollType">Roll d20</h2>
+          <button class="dice-close-button" onclick="closeDiceRoller()">
+            &times;
+          </button>
+        </div>
+
+        <div class="dice-roller-content">
+          <!-- Container for DICE.dice_box (it will create its own canvas inside) -->
+          <div id="dice-canvas-container" class="dice-canvas-container"></div>
+
+          <div class="dice-result-area">
+            <div id="diceResult"></div>
+
+            <button id="rollDiceButton" class="dice-button">
+              Roll Virtual Dice
+            </button>
+
+            <!-- MANUAL INPUT -->
+            <div id="manualInputRow" class="dice-manual-row">
+              <span>Physical dice?</span>
+              <input
+                type="number"
+                id="manualDiceInput"
+                placeholder="1-20"
+                min="1"
+                max="20"
+                onkeypress="if(event.key==='Enter') submitManualRoll()"
+              />
+              <button onclick="submitManualRoll()">Submit</button>
+            </div>
+
+            <button
+              id="rerollDiceButton"
+              class="dice-button"
+              style="display: none"
+              onclick="rerollDice()"
+            >
+              Reroll
+            </button>
+
+            <button
+              id="acceptDiceButton"
+              class="dice-button"
+              style="display: none"
+              onclick="acceptDiceRoll()"
+            >
+              Accept
+            </button>
+
+            <button
+              id="closeDiceButton"
+              class="dice-button"
+              onclick="closeDiceRoller()"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== JAVASCRIPT FILES ==================== -->
+
+    <!-- ==================== DATA FILES FIRST (No dependencies) ==================== -->
+    <script src="tables/difficulties.js"></script>
+    <script src="tables/fociAbilities.js"></script>
+    <script src="tables/abilities.js"></script>
+    <script src="tables/skillsList.js"></script>
+    <script src="tables/cyphers.js"></script>
+    <script src="tables/characterArcs.js"></script>
+    <script src="tables/avatarPowers.js"></script>
+    <script src="tables/equipment-list.js"></script>
+    <script src="tables/startingBonuses.js"></script>
+
+    <!-- ==================== FEATURE MODULES ==================== -->
+
+    <!-- ==================== DICE ROLLER ==================== -->
+    <script src="dice-main/libs/three.min.js"></script>
+    <script src="dice-main/libs/cannon.min.js"></script>
+    <script src="dice-main/libs/teal.js"></script>
+    <script src="dice-main/dice-roller.js"></script>
+    <script src="dice-main/dice.js"></script>
+
+    <!-- ==================== FEATURE FUNCTION FILES ==================== -->
+    <script src="functions/equipment.js"></script>
+    <script src="functions/advancement.js"></script>
+    <script src="functions/skills.js"></script>
+    <script src="functions/abilities-management.js"></script>
+    <script src="functions/recovery.js"></script>
+    <script src="functions/calculators.js"></script>
+    <script src="functions/connections.js"></script>
+    <script src="functions/arcs.js"></script>
+    <script src="functions/avatar.js"></script>
+    <script src="functions/cypher-system.js"></script>
+    <script src="functions/stress+damage.js"></script>
+    <script src="functions/save-load.js"></script>
+    <script src="functions/ui-helpers.js"></script>
+
+    <!-- ==================== CORE FUNCTION FILES ==================== -->
+    <script src="functions/character.js"></script>
+
+    <!-- ==================== GLOBAL SCOPE ASSIGNMENTS ==================== -->
+    <script src="functions/global.js"></script>
+
+    <!-- ==================== INITIALIZATION (MUST BE LAST) ==================== -->
+    <script src="functions/main.js"></script>
+
+    <!-- Testing tools -->
+    <script src="testing/testtools.js"></script>
+  </body>
+</html>

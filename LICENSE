@@ -1,0 +1,69 @@
+MIT License
+
+Copyright (c) 2025 Jurneymann
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## Additional Notices
+
+This project is a fan-made work based on:
+
+- **The Magnus Archives** podcast by Rusty Quill (https://rustyquill.com)
+- **The Magnus Archives Roleplaying Game** by Monte Cook Games (https://www.montecookgames.com)
+
+This software has **no official affiliation** with Rusty Quill or Monte Cook Games.
+
+### Third-Party Assets & Licenses
+
+#### Artwork
+
+- Avatar portrait frames and design elements by kruk-art (https://kruk-art.tumblr.com)
+- Used with permission for fan projects
+
+#### 3D Dice Roller
+
+- Dice roller system by Sarah Rosanna Busch (https://sarahrosannabusch.ca/)
+- Original work by Anton Natarov
+- Uses three.js (MIT License) - https://github.com/mrdoob/three.js/
+- Uses cannon.js (MIT License) - https://github.com/schteppe/cannon.js
+- Sound effects from Nicovideo Commons (http://commons.nicovideo.jp/material/nc93322)
+
+### Intellectual Property Rights
+
+All rights to **The Magnus Archives** intellectual property, including characters,
+settings, and storylines, belong to Rusty Quill.
+
+All rights to the **Cypher System** and game mechanics belong to Monte Cook Games.
+
+This license applies only to the original code and implementation of this character
+sheet software, not to the underlying intellectual properties or game system.
+
+### Usage Requirements
+
+Users of this software must own or have access to **The Magnus Archives Roleplaying Game**
+rulebook published by Monte Cook Games to play the game properly.
+
+Purchase the official rulebook at:
+https://www.montecookgames.com/store/product/the-magnus-archives-roleplaying-game/
+
+---
+
+**For more information, see the README.md file.**
