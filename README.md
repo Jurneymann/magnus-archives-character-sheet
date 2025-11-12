@@ -51,7 +51,7 @@ This project has **no official affiliation** with either Rusty Quill or Monte Co
 ### Option 1: Simple File Opening
 
 1. Download or clone this repository
-2. Open `CharacterSheetHTML.html` in a modern web browser (Chrome, Firefox, Edge, Safari)
+2. Open `index.html` in a modern web browser (Chrome, Firefox, Edge, Safari)
 3. Start creating your character!
 
 ### Option 2: Local Web Server (Recommended for full functionality)
@@ -61,7 +61,7 @@ This project has **no official affiliation** with either Rusty Quill or Monte Co
    - **VS Code**: Install "Live Server" extension and click "Go Live"
    - **Python**: Run `python -m http.server 5500` in the project directory
    - **Node.js**: Run `npx http-server -p 5500`
-3. Open `http://localhost:5500/CharacterSheetHTML.html` in your browser
+3. Open `http://localhost:5500/index.html` in your browser
 
 > **Note**: The 3D dice roller works best with a local web server due to browser security restrictions.
 
@@ -98,7 +98,7 @@ Game Masters can customize the password to control access:
 
 ```
 Magnus Archives Character Sheet/
-├── CharacterSheetHTML.html          # Main character sheet
+├── index.html                       # Main character sheet
 ├── styles.css                       # All styling
 ├── functions/
 │   ├── main.js                     # Core character data and initialization
