@@ -2723,6 +2723,9 @@ function populateAbilityDropdown() {
 
   if (!abilitySelect) return;
 
+  console.log("=== POPULATING ABILITY DROPDOWN ===");
+  console.log("Selected Type Abilities:", character.selectedTypeAbilities);
+
   // Clear existing options
   abilitySelect.innerHTML = '<option value="">-- Select Ability --</option>';
 
@@ -2734,34 +2737,59 @@ function populateAbilityDropdown() {
     const typeGroup = document.createElement("optgroup");
     typeGroup.label = "Type Abilities";
 
+    console.log("Processing Type Abilities...");
+
     character.selectedTypeAbilities.forEach((abilityName) => {
+      console.log(`Looking for Type ability: "${abilityName}"`);
+
       const ability = ABILITIES_DATA.find((a) => a.name === abilityName);
 
-      if (
-        ability &&
-        ability.pointsRequired &&
-        ability.pointsRequired !== "—" &&
-        ability.pointsRequired !== "0"
-      ) {
-        const option = document.createElement("option");
-        option.value = `type_${abilityName}`;
-        option.textContent = `${abilityName} (Type - ${ability.pointsRequired} pts)`;
-        option.dataset.type = "type";
-        option.dataset.name = abilityName;
-        typeGroup.appendChild(option);
+      console.log(`Found:`, ability ? ability.name : "NOT FOUND");
+
+      if (ability) {
+        const points = ability.pointsRequired || 0;
+        const stat = ability.stat || "";
+
+        console.log(`  Points: ${points}, Stat: ${stat}`);
+
+        // FIX: Change this line - remove the first "points &&" check
+        if (points > 0) {
+          // Changed from: if (points && points > 0)
+          const option = document.createElement("option");
+          option.value = `type_${abilityName}`;
+          option.textContent = `${abilityName} (Type - ${points} ${stat} pts)`;
+          option.dataset.type = "type";
+          option.dataset.name = abilityName;
+          typeGroup.appendChild(option);
+          console.log(`  ✓ Added to dropdown`);
+        } else {
+          console.log(`  ✗ Skipped (no cost or cost is 0)`);
+        }
+      } else {
+        console.error(
+          `  ✗ Ability "${abilityName}" NOT FOUND in ABILITIES_DATA`
+        );
       }
     });
 
     if (typeGroup.children.length > 0) {
       abilitySelect.appendChild(typeGroup);
+      console.log(
+        `✓ Added ${typeGroup.children.length} Type abilities to dropdown`
+      );
+    } else {
+      console.log("⚠ No Type abilities with costs found");
     }
   }
 
   // Get player's Focus abilities (auto-gained and chosen)
   const focusAbilities = [];
 
+  console.log("Processing Focus Abilities...");
+
   // Get all available focus abilities
   const availableFocusAbilities = getAvailableFocusAbilities();
+  console.log(`Available focus abilities: ${availableFocusAbilities.length}`);
 
   availableFocusAbilities.forEach((ability) => {
     const tier = parseInt(ability.Tier);
@@ -2772,8 +2800,12 @@ function populateAbilityDropdown() {
     const isExtra = character.selectedFocusAbilities?.includes(ability.Ability);
 
     if (isAutoGained || isChosen || isExtra) {
+      // Focus abilities use different property names (Ability, Cost, Stat with capitals)
       if (ability.Cost && ability.Cost !== "—" && ability.Cost !== "0") {
         focusAbilities.push(ability);
+        console.log(
+          `  ✓ Focus: ${ability.Ability} (Cost: ${ability.Cost} ${ability.Stat})`
+        );
       }
     }
   });
@@ -2785,14 +2817,18 @@ function populateAbilityDropdown() {
     focusAbilities.forEach((ability) => {
       const option = document.createElement("option");
       option.value = `focus_${ability.Ability}`;
-      option.textContent = `${ability.Ability} (Focus - ${ability.Cost})`;
+      option.textContent = `${ability.Ability} (Focus - ${ability.Cost} ${ability.Stat})`;
       option.dataset.type = "focus";
       option.dataset.name = ability.Ability;
       focusGroup.appendChild(option);
     });
 
     abilitySelect.appendChild(focusGroup);
+    console.log(`✓ Added ${focusAbilities.length} Focus abilities to dropdown`);
   }
+
+  console.log("=== DROPDOWN POPULATION COMPLETE ===");
+  console.log(`Total options: ${abilitySelect.options.length - 1}`); // -1 for placeholder
 }
 
 // Update ability calculator displays
@@ -3155,3 +3191,66 @@ function quickRollD20() {
     alert(`You rolled a d20: ${result}`);
   });
 }
+
+// Diagnostic function to check ability data structure
+function diagnoseAbilityData() {
+  console.log("\n=== ABILITY DATA DIAGNOSTIC ===\n");
+
+  console.log(
+    "1. ABILITIES_DATA exists:",
+    typeof ABILITIES_DATA !== "undefined"
+  );
+
+  if (typeof ABILITIES_DATA !== "undefined") {
+    console.log("   Total abilities:", ABILITIES_DATA.length);
+
+    if (ABILITIES_DATA.length > 0) {
+      console.log("\n2. Sample ability structure:");
+      const sample = ABILITIES_DATA[0];
+      console.log("   Keys:", Object.keys(sample));
+      console.log("   Sample:", sample);
+
+      console.log("\n3. Property name variations:");
+      const hasAbility = ABILITIES_DATA.some((a) => a.Ability !== undefined);
+      const hasName = ABILITIES_DATA.some((a) => a.name !== undefined);
+      const hasPoints = ABILITIES_DATA.some((a) => a.Points !== undefined);
+      const hasCost = ABILITIES_DATA.some((a) => a.cost !== undefined);
+
+      console.log("   - Has 'Ability' property:", hasAbility);
+      console.log("   - Has 'name' property:", hasName);
+      console.log("   - Has 'Points' property:", hasPoints);
+      console.log("   - Has 'cost' property:", hasCost);
+    }
+  }
+
+  console.log("\n4. Character's selected Type abilities:");
+  console.log("   ", character.selectedTypeAbilities);
+
+  if (
+    character.selectedTypeAbilities &&
+    character.selectedTypeAbilities.length > 0
+  ) {
+    console.log("\n5. Checking if selected abilities exist in data:");
+    character.selectedTypeAbilities.forEach((name) => {
+      const found = ABILITIES_DATA.find(
+        (a) => a.Ability === name || a.name === name
+      );
+      console.log(`   ${name}:`, found ? "✓ FOUND" : "✗ NOT FOUND");
+      if (found) {
+        console.log(
+          `      Cost: ${found.Points || found.points || found.cost || "none"}`
+        );
+        console.log(`      Stat: ${found.Stat || found.stat || "none"}`);
+      }
+    });
+  }
+
+  console.log("\n=== END DIAGNOSTIC ===\n");
+}
+
+// Make it globally available
+window.diagnoseAbilityData = diagnoseAbilityData;
+
+console.log(
+  "✓ Ability diagnostic function loaded. Run diagnoseAbilityData() in console to debug."
+);

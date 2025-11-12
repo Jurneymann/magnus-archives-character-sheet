@@ -182,9 +182,67 @@ function initializeTabSwitching() {
 
       // Calculators tab initialization
       if (tabID === "calculators") {
-        if (typeof initializeCalculators === "function") {
-          initializeCalculators();
-        }
+        console.log(
+          "Switched to Calculators tab - initializing all calculators"
+        );
+
+        // Use setTimeout to ensure DOM is ready
+        setTimeout(() => {
+          // Initialize all calculators
+          if (typeof initializeAllCalculators === "function") {
+            try {
+              initializeAllCalculators();
+              console.log("✓ All calculators initialized");
+            } catch (error) {
+              console.error("Error initializing calculators:", error);
+            }
+          } else {
+            // Fallback: Initialize each calculator individually
+            console.log(
+              "initializeAllCalculators not found, initializing individually..."
+            );
+
+            if (typeof initializeActionCalculator === "function") {
+              try {
+                initializeActionCalculator();
+                console.log("✓ Action calculator initialized");
+              } catch (error) {
+                console.error("Error initializing action calculator:", error);
+              }
+            }
+
+            if (typeof initializeAttackCalculator === "function") {
+              try {
+                initializeAttackCalculator();
+                console.log("✓ Attack calculator initialized");
+              } catch (error) {
+                console.error("Error initializing attack calculator:", error);
+              }
+            }
+
+            if (typeof initializeDefendCalculator === "function") {
+              try {
+                initializeDefendCalculator();
+                console.log("✓ Defend calculator initialized");
+              } catch (error) {
+                console.error("Error initializing defend calculator:", error);
+              }
+            }
+
+            if (typeof initializeAbilityCalculator === "function") {
+              try {
+                initializeAbilityCalculator();
+                console.log("✓ Ability calculator initialized");
+              } catch (error) {
+                console.error("Error initializing ability calculator:", error);
+              }
+            } else {
+              console.error(
+                "✗ initializeAbilityCalculator function not found!"
+              );
+            }
+          }
+        }, 100); // Small delay to ensure DOM is ready
       }
     });
   });
@@ -318,22 +376,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initialize the XP display
   updateXPDisplay();
 
-  // Initialize attack calculator
-  setTimeout(() => {
-    initializeAttackCalculator();
-  }, 500);
-
-  // Initialize action calculator
-  initializeActionCalculator();
-  const calculatorsTab = document.querySelector('[data-tab="calculators"]');
-  if (calculatorsTab) {
-    calculatorsTab.addEventListener("click", function () {
-      console.log("Switching to calculators tab, initializing...");
-      setTimeout(() => {
-        initializeAttackCalculator();
-      }, 100);
-    });
-  }
   // Initialize temporary stat boosts display
   if (typeof updateTemporaryStatBoosts === "function") {
     updateTemporaryStatBoosts();
