@@ -858,6 +858,8 @@ function renderTypeAbilitiesTable() {
 
   updateTypeAbilityCounter();
   updateTypeAbilityConfirmButton();
+  checkAvatarRequirements();
+  updateAvatarTabVisibility();
 }
 
 function applyTypeAbilitiesFilters(abilities) {

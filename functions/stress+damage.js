@@ -166,6 +166,8 @@ function addSuperStress() {
       (atMax ? `⚠️ YOU HAVE REACHED MAXIMUM SUPERNATURAL STRESS!\n\n` : "") +
       `Note: This does NOT automatically affect your Damage Track.`
   );
+  checkAvatarRequirements();
+  updateAvatarTabVisibility();
 }
 
 function updateSuperStressDisplay() {

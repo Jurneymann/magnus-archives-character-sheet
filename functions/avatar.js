@@ -25,8 +25,8 @@ function checkAvatarRequirements() {
 
   // Check for at least one supernatural Type Ability
   const hasSupernaturalAbility =
-    character.typeAbilities &&
-    character.typeAbilities.some((abilityName) => {
+    character.selectedTypeAbilities &&
+    character.selectedTypeAbilities.some((abilityName) => {
       const abilityData = ABILITIES_DATA.find((a) => a.name === abilityName);
       return abilityData && abilityData.supernatural === true;
     });
@@ -54,8 +54,10 @@ function updateAvatarTabVisibility() {
 
   if (meetsRequirements || character.avatar.isAvatar) {
     avatarTabBtn.style.display = "block";
+    console.log("Avatar Requirements met. Tab is visible");
   } else {
     avatarTabBtn.style.display = "none";
+    console.log("Avatar Requirements NOT met. Tab is hidden");
   }
 }
 

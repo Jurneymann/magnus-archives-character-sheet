@@ -172,6 +172,8 @@ function advanceTier() {
   if (typeof renderFocusAbilitiesTable === "function") {
     renderFocusAbilitiesTable();
   }
+  checkAvatarRequirements();
+  updateAvatarTabVisibility();
 
   // Show notification
   alert(
