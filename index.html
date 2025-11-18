@@ -2786,8 +2786,15 @@
               <span class="btn-icon">📂</span>
               <span class="btn-text">Load</span>
             </button>
-            <button class="save-load-btn secondary" onclick="resetCharacter()">
+            <button
+              class="save-load-btn secondary"
+              onclick="loadFromLocalStorage()"
+            >
               <span class="btn-icon">🔄</span>
+              <span class="btn-text">Load from Auto-Save</span>
+            </button>
+            <button class="save-load-btn secondary" onclick="resetCharacter()">
+              <span class="btn-icon">🗑️</span>
               <span class="btn-text">Reset</span>
             </button>
             <button class="save-load-btn secondary" onclick="exportToText()">
@@ -2833,9 +2840,7 @@
           <div class="dice-result-area">
             <div id="diceResult"></div>
 
-            <button id="rollDiceButton" class="dice-button">
-              Roll Virtual Dice
-            </button>
+            <button id="rollDiceButton" class="dice-button">Roll Dice</button>
 
             <!-- MANUAL INPUT -->
             <div id="manualInputRow" class="dice-manual-row">

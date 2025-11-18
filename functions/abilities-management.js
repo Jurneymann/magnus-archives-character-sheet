@@ -163,30 +163,21 @@ function renderFocusAbilitiesTable() {
             ability.Ability
           );
 
-          // Determine select button content
-          let selectContent = "";
-          let selectClass = "";
+          // Check if this ability can be selected as an extra
+          const availableExtras =
+            character.extraFocusAbilitySelections?.available || 0;
+          const usedExtras = character.extraFocusAbilitySelections?.used || 0;
+          const remainingExtras = availableExtras - usedExtras;
 
-          if (isAutoGained) {
-            selectContent = "✓";
-            selectClass = "auto-gained";
-          } else if (isChosen) {
-            selectContent = "✓";
-            selectClass = "chosen";
-          } else if (isAvailableChoice) {
-            selectContent = "";
-            selectClass = "available";
-          } else {
-            selectContent = "";
-            selectClass = "unavailable";
-          }
-
-          // Check for extra selection
           const canSelectExtra =
             !isAutoGained &&
             !isChosen &&
-            character.extraFocusAbilitySelections?.available >
-              character.extraFocusAbilitySelections?.used;
+            !isExtraSelection &&
+            remainingExtras > 0;
+
+          console.log(
+            `${ability.Ability}: canSelectExtra=${canSelectExtra}, remainingExtras=${remainingExtras}`
+          );
 
           // Build meta string for mobile
           const metaString = `Tier ${ability.Tier} • ${
@@ -194,62 +185,48 @@ function renderFocusAbilitiesTable() {
           } • ${ability.Cost || 0} Points`;
 
           html += `
-            <div class="focus-ability-card ${
-              isChosen || isAutoGained ? "selected-ability" : ""
-            }">
-              <div class="focus-ability-header">
-                <div class="ability-select-cell">
-                  ${
-                    isAutoGained
-                      ? `
-                    <div class="ability-status-badge auto-gained">Auto</div>
-                  `
-                      : isChosen
-                      ? `
-                    <div class="ability-status-badge chosen">Chosen</div>
-                  `
-                      : isAvailableChoice
-                      ? `
-                    <button
-                      class="ability-choice-btn"
-                      onclick="chooseFocusTierAbility(${tierNum}, '${ability.Ability.replace(
-                          /'/g,
-                          "\\'"
-                        )}')"
-                    >
-                      Choose
-                    </button>
-                  `
-                      : `
-                    <div class="ability-status-badge unavailable">—</div>
-                  `
-                  }
-                  ${
-                    isExtraSelection || canSelectExtra
-                      ? `
-                    <div style="margin-top: 5px;">
-                      ${
-                        isExtraSelection
-                          ? `
-                        <div class="ability-status-badge extra">Extra</div>
-                      `
-                          : `
-                        <button
-                          class="ability-extra-btn"
-                          onclick="selectExtraFocusAbility('${ability.Ability.replace(
-                            /'/g,
-                            "\\'"
-                          )}')"
-                        >
-                          Select Extra
-                        </button>
-                      `
-                      }
-                    </div>
-                  `
-                      : ""
-                  }
-                </div>
+    <div class="focus-ability-card ${
+      isChosen || isAutoGained || isExtraSelection ? "selected-ability" : ""
+    }">
+      <div class="focus-ability-header">
+        <div class="ability-select-cell">
+          ${
+            isAutoGained
+              ? `<div class="ability-status-badge auto-gained">Auto</div>`
+              : isChosen
+              ? `<div class="ability-status-badge chosen">Chosen</div>`
+              : isExtraSelection
+              ? `
+                <div class="ability-status-badge extra">Extra</div>
+                              `
+              : isAvailableChoice
+              ? `
+                <button
+                  class="ability-choice-btn"
+                  onclick="chooseFocusTierAbility(${tierNum}, '${ability.Ability.replace(
+                  /'/g,
+                  "\\'"
+                )}')"
+                >
+                  Choose
+                </button>
+              `
+              : canSelectExtra
+              ? `
+                <button
+                  class="ability-extra-btn"
+                  onclick="selectExtraFocusAbility('${ability.Ability.replace(
+                    /'/g,
+                    "\\'"
+                  )}')"
+                  style="background: #4a4a4a; color: #4caf50; border: 2px solid #4caf50; padding: 8px 16px; font-weight: bold;"
+                >
+                  Select Extra
+                </button>
+              `
+              : `<div class="ability-status-badge unavailable">—</div>`
+          }
+        </div>
 
                 <div class="ability-name-cell" data-meta="${metaString}">
                   <span class="ability-name">${ability.Ability}</span>
@@ -272,10 +249,10 @@ function renderFocusAbilitiesTable() {
               </div>
 
               <div class="focus-ability-description">
-                <p>${ability.Effect || "No description available."}</p>
-              </div>
-            </div>
-          `;
+        <p>${ability.Effect || "No description available."}</p>
+      </div>
+    </div>
+  `;
         });
       });
   }
@@ -359,54 +336,65 @@ function chooseFocusTierAbility(tier, abilityName) {
   }
 }
 
-function selectExtraFocusAbility(abilityName) {
-  if (
-    character.extraFocusAbilitySelections.used >=
-    character.extraFocusAbilitySelections.available
-  ) {
-    alert("You have no extra Focus ability selections available!");
-    return;
+function grantExtraFocusAbility() {
+  console.log("=== grantExtraFocusAbility called ===");
+
+  // Increment the available extra selections
+  if (!character.extraFocusAbilitySelections) {
+    character.extraFocusAbilitySelections = {
+      available: 0,
+      used: 0,
+    };
   }
 
-  const confirmation = confirm(
-    `Select "${abilityName}" as an extra Focus ability?\n\n` +
-      `This will use one of your extra Focus ability selections.`
+  character.extraFocusAbilitySelections.available++;
+
+  console.log(
+    `✓ Extra Focus ability granted. Available: ${character.extraFocusAbilitySelections.available}, Used: ${character.extraFocusAbilitySelections.used}`
   );
 
-  if (confirmation) {
-    character.selectedFocusAbilities.push(abilityName);
-    character.extraFocusAbilitySelections.used++;
-
-    renderFocusAbilitiesTable();
-
-    alert(`You have selected "${abilityName}" as an extra Focus ability!`);
-
-    // Check if this ability grants a pool or edge increase
-    const abilityData = focusAbilities.find(
-      (a) => a.Ability === abilityName && a.Focus === character.focus1
-    );
-
-    if (abilityData && (abilityData.PoolIncrease || abilityData.EdgeIncrease)) {
-      console.log("Stat increase detected for:", abilityName);
-      console.log("PoolIncrease:", abilityData.PoolIncrease);
-      console.log("EdgeIncrease:", abilityData.EdgeIncrease);
-      console.log("EdgeIncreaseStat:", abilityData.EdgeIncreaseStat);
-
-      // Apply or show allocation UI for pool/edge increase
-      setTimeout(() => {
-        applyFocusAbilityPoolIncrease(abilityData);
-      }, 500);
-    }
+  // Save the data immediately
+  if (typeof saveCharacterData === "function") {
+    saveCharacterData();
   }
-}
 
-function grantExtraFocusAbilitySelection() {
-  character.extraFocusAbilitySelections.available++;
+  // Rebuild the Focus abilities table to show the extra selection buttons
   renderFocusAbilitiesTable();
 
+  // Switch to Abilities tab
+  setTimeout(() => {
+    // Use the correct tab switching function from main.js
+    const abilitiesTab = document.querySelector('[data-tab="abilities"]');
+    if (abilitiesTab) {
+      abilitiesTab.click();
+    }
+
+    // Scroll to Focus section after a short delay
+    setTimeout(() => {
+      const focusSection = document.querySelector(".focus-abilities-section");
+      if (focusSection) {
+        focusSection.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        // Add visual highlight
+        focusSection.style.transition = "all 0.3s ease";
+        focusSection.style.border = "3px solid #4caf50";
+        focusSection.style.boxShadow = "0 0 20px rgba(76, 175, 80, 0.5)";
+
+        // Remove highlight after 3 seconds
+        setTimeout(() => {
+          focusSection.style.border = "";
+          focusSection.style.boxShadow = "";
+        }, 3000);
+      }
+    }, 300);
+  }, 100);
+
   alert(
-    `You can now select 1 additional Focus ability!\n\n` +
-      `Look for abilities marked "Select as Extra" in the Focus Abilities table.`
+    `Extra Focus ability granted!\n\n` +
+      `You can now select 1 additional Focus ability.\n\n` +
+      `Available selections: ${character.extraFocusAbilitySelections.available}\n` +
+      `Already selected: ${character.extraFocusAbilitySelections.used}\n\n` +
+      `Look for "Select Extra" buttons in the Focus Abilities section on the Abilities tab.`
   );
 }
 
@@ -431,6 +419,63 @@ function updateFocusAbilityCounter() {
 
     counter.textContent = text;
   }
+}
+
+function diagnoseExtraFocusAbilities() {
+  console.log("\n=== EXTRA FOCUS ABILITIES DIAGNOSTIC ===\n");
+
+  console.log("1. Extra selections data:");
+  console.log(
+    "   Available:",
+    character.extraFocusAbilitySelections?.available || 0
+  );
+  console.log("   Used:", character.extraFocusAbilitySelections?.used || 0);
+  console.log(
+    "   Remaining:",
+    (character.extraFocusAbilitySelections?.available || 0) -
+      (character.extraFocusAbilitySelections?.used || 0)
+  );
+
+  console.log("\n2. Selected extra abilities:");
+  console.log("   ", character.selectedFocusAbilities);
+
+  console.log("\n3. Current tier advancement:");
+  console.log(
+    "   extraFocusAbility purchased:",
+    character.currentTierAdvancements?.extraFocusAbility
+  );
+
+  console.log("\n4. Testing canSelectExtra calculation:");
+  const availableExtras = character.extraFocusAbilitySelections?.available || 0;
+  const usedExtras = character.extraFocusAbilitySelections?.used || 0;
+  const remainingExtras = availableExtras - usedExtras;
+  console.log(
+    `   ${availableExtras} available - ${usedExtras} used = ${remainingExtras} remaining`
+  );
+
+  console.log("\n5. Checking if buttons should appear:");
+  const abilities = getAvailableFocusAbilities();
+  abilities.forEach((ability) => {
+    const isAutoGained =
+      parseInt(ability.Tier) !== 3 && parseInt(ability.Tier) !== 6;
+    const isChosen =
+      (parseInt(ability.Tier) === 3 &&
+        character.focusTierChoices?.tier3 === ability.Ability) ||
+      (parseInt(ability.Tier) === 6 &&
+        character.focusTierChoices?.tier6 === ability.Ability);
+    const isExtraSelection = character.selectedFocusAbilities?.includes(
+      ability.Ability
+    );
+
+    const canSelectExtra =
+      !isAutoGained && !isChosen && !isExtraSelection && remainingExtras > 0;
+
+    if (canSelectExtra) {
+      console.log(`   ✓ ${ability.Ability} - CAN select as extra`);
+    }
+  });
+
+  console.log("\n=== END DIAGNOSTIC ===\n");
 }
 
 // ==================== ABILITY SELECTION LIMITS ==================== //
@@ -1552,76 +1597,90 @@ function chooseFocusTierAbility(tier, abilityName) {
 }
 
 function selectExtraFocusAbility(abilityName) {
-  if (
-    character.extraFocusAbilitySelections.used >=
-    character.extraFocusAbilitySelections.available
-  ) {
+  console.log(`=== selectExtraFocusAbility called for: ${abilityName} ===`);
+
+  const availableExtras = character.extraFocusAbilitySelections?.available || 0;
+  const usedExtras = character.extraFocusAbilitySelections?.used || 0;
+  const remainingExtras = availableExtras - usedExtras;
+
+  console.log(
+    `Available: ${availableExtras}, Used: ${usedExtras}, Remaining: ${remainingExtras}`
+  );
+
+  if (remainingExtras <= 0) {
     alert("You have no extra Focus ability selections available!");
+    console.error("No extra selections available");
     return;
   }
 
   const confirmation = confirm(
     `Select "${abilityName}" as an extra Focus ability?\n\n` +
-      `This will use one of your extra Focus ability selections.`
+      `This will use one of your extra Focus ability selections.\n\n` +
+      `Remaining extra selections after this: ${remainingExtras - 1}`
   );
 
-  if (confirmation) {
-    character.selectedFocusAbilities.push(abilityName);
-    character.extraFocusAbilitySelections.used++;
+  if (!confirmation) return;
 
-    renderFocusAbilitiesTable();
+  // Add to selected focus abilities array
+  if (!character.selectedFocusAbilities) {
+    character.selectedFocusAbilities = [];
+  }
 
-    alert(`You have selected "${abilityName}" as an extra Focus ability!`);
+  // Prevent duplicates
+  if (character.selectedFocusAbilities.includes(abilityName)) {
+    alert("You have already selected this ability!");
+    return;
+  }
 
-    // Check if this ability grants a pool or edge increase
-    const abilityData = focusAbilities.find(
-      (a) => a.Ability === abilityName && a.Focus === character.focus1
-    );
+  character.selectedFocusAbilities.push(abilityName);
 
-    if (abilityData && (abilityData.PoolIncrease || abilityData.EdgeIncrease)) {
-      console.log("Stat increase detected for:", abilityName);
-      console.log("PoolIncrease:", abilityData.PoolIncrease);
-      console.log("EdgeIncrease:", abilityData.EdgeIncrease);
-      console.log("EdgeIncreaseStat:", abilityData.EdgeIncreaseStat);
+  // Increment used count
+  character.extraFocusAbilitySelections.used++;
 
-      // Apply or show allocation UI for pool/edge increase
+  console.log(`✓ Selected extra Focus ability: ${abilityName}`);
+  console.log(
+    `  Available: ${character.extraFocusAbilitySelections.available}, Used: ${character.extraFocusAbilitySelections.used}`
+  );
+
+  // Save immediately
+  if (typeof saveCharacterData === "function") {
+    saveCharacterData();
+  }
+
+  // Rebuild the table first
+  renderFocusAbilitiesTable();
+
+  alert(`You have selected "${abilityName}" as an extra Focus ability!`);
+
+  // Check if this ability grants a pool or edge increase
+  const abilityData = focusAbilities.find(
+    (a) => a.Ability === abilityName && a.Focus === character.focus1
+  );
+
+  console.log("Ability data found:", abilityData);
+
+  if (abilityData && (abilityData.PoolIncrease || abilityData.EdgeIncrease)) {
+    console.log("Stat increase detected for:", abilityName);
+    console.log("PoolIncrease:", abilityData.PoolIncrease);
+    console.log("EdgeIncrease:", abilityData.EdgeIncrease);
+    console.log("EdgeIncreaseStat:", abilityData.EdgeIncreaseStat);
+
+    // Create unique key for tracking
+    const abilityKey = `${character.focus1}_${abilityName}_EXTRA`;
+
+    if (!character.appliedFocusPoolIncreases) {
+      character.appliedFocusPoolIncreases = [];
+    }
+
+    // Check if not already applied
+    if (!character.appliedFocusPoolIncreases.includes(abilityKey)) {
+      character.appliedFocusPoolIncreases.push(abilityKey);
+
+      // Apply the increase after a short delay
       setTimeout(() => {
         applyFocusAbilityPoolIncrease(abilityData);
       }, 500);
     }
-  }
-}
-
-function grantExtraFocusAbilitySelection() {
-  character.extraFocusAbilitySelections.available++;
-  renderFocusAbilitiesTable();
-
-  alert(
-    `You can now select 1 additional Focus ability!\n\n` +
-      `Look for abilities marked "Select as Extra" in the Focus Abilities table.`
-  );
-}
-
-function updateFocusAbilityCounter() {
-  const counter = document.getElementById("focusAbilityCounter");
-  if (counter) {
-    let text = `Tier 1 & 2: Auto-gained`;
-
-    if (character.tier >= 3) {
-      const tier3Choice = character.focusTierChoices.tier3;
-      text += ` | Tier 3: ${tier3Choice || "Not chosen"}`;
-    }
-
-    if (character.tier >= 6) {
-      const tier6Choice = character.focusTierChoices.tier6;
-      text += ` | Tier 6: ${tier6Choice || "Not chosen"}`;
-    }
-
-    if (character.extraFocusAbilitySelections.available > 0) {
-      text += ` | Extra: ${character.extraFocusAbilitySelections.used}/${character.extraFocusAbilitySelections.available}`;
-    }
-
-    counter.textContent = text;
   }
 }
 

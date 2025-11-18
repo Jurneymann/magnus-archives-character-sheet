@@ -3921,7 +3921,7 @@ select {
 }
 
 .xp-input-wrapper input {
-  width: 100%;
+  width: calc(100% - 16px);
   padding: 8px;
   font-size: 1.5em;
   text-align: center;
@@ -6407,7 +6407,7 @@ select {
 }
 
 .manual-roll-input {
-  width: 100%;
+  width: calc(100% - 22px);
   padding: 10px;
   background: #2a2a2a;
   border: 2px solid #444;
@@ -7579,6 +7579,30 @@ select {
 
 .save-load-btn.secondary:hover .btn-icon {
   transform: scale(1.2);
+}
+
+.backup-btn {
+  background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+  color: white;
+  border: 2px solid #42a5f5;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.backup-btn:hover {
+  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+  box-shadow: 0 6px 12px rgba(25, 118, 210, 0.4);
+  transform: translateY(-2px);
+}
+
+.backup-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .save-load-btn:active {

@@ -41,10 +41,12 @@ console.log("✓ Descriptor bonus allocation functions added");
 window.confirmTypeAbilities = confirmTypeAbilities;
 window.chooseFocusTierAbility = chooseFocusTierAbility;
 window.selectExtraFocusAbility = selectExtraFocusAbility;
+window.grantExtraFocusAbility = grantExtraFocusAbility;
 window.toggleTypeAbility = toggleTypeAbility;
 window.toggleTemporaryBoost = toggleTemporaryBoost;
 window.updateTemporaryStatBoosts = updateTemporaryStatBoosts;
 window.diagnoseTypeAbilities = diagnoseTypeAbilities;
+window.diagnoseExtraFocusAbilities = diagnoseExtraFocusAbilities;
 
 // Recovery System
 window.adjustRecoveryBonus = adjustRecoveryBonus;
@@ -200,6 +202,8 @@ console.log(
 console.log("✓ Descriptor trained skill functions added");
 
 // Save/Load
+window.buildCharacterData = buildCharacterData;
+window.loadCharacterFromData = loadCharacterFromData;
 window.saveCharacter = saveCharacter;
 window.loadCharacter = loadCharacter;
 window.saveToJSON = saveCharacter; // Alias for backwards compatibility
@@ -207,6 +211,10 @@ window.loadFromJSON = loadCharacter; // Alias for backwards compatibility
 window.loadFromLocalStorage = loadFromLocalStorage;
 window.resetCharacter = resetCharacter;
 window.exportToText = exportToText;
+window.autoSave = autoSave;
+window.testAutoSave = testAutoSave;
+window.showAutoSaveNotification = showAutoSaveNotification;
+window.monitorLocalStorage = monitorLocalStorage;
 
 // Damage & Stress
 window.setDamageState = setDamageState;

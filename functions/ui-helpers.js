@@ -597,10 +597,11 @@ function cancelPoolAllocation() {
   const confirmation = confirm(
     "Are you sure you want to cancel? This will refund your 4 XP."
   );
+  const COST = 4;
 
   if (confirmation) {
     // Refund XP
-    character.xp++;
+    character.xp += COST;
     character.currentTierAdvancements.increasePools = false;
     character.advancementsPurchasedThisTier--;
 
@@ -712,10 +713,11 @@ function cancelEdgeSelection() {
   const confirmation = confirm(
     "Are you sure you want to cancel? This will refund your 4 XP."
   );
+  const COST = 4;
 
   if (confirmation) {
     // Refund XP
-    character.xp++;
+    character.xp += COST;
     character.currentTierAdvancements.increaseEdge = false;
     character.advancementsPurchasedThisTier--;
 

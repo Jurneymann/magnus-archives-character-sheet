@@ -263,16 +263,16 @@ function updateAvatarPostCommitmentDisplay() {
 
   const entity = ENTITIES[character.avatar.entity];
 
-  // Update tarot card image
+  // Update Tarot card image
   if (tarotImage) {
     const imageFile = ENTITY_TAROT_IMAGES[entity.name] || "default.jpg";
-    tarotImage.src = `assets/tarot/${imageFile}`;
+    tarotImage.src = `assets/Tarot/${imageFile}`;
     tarotImage.alt = `${entity.name} Tarot Card`;
 
     // Add error handler in case image doesn't exist
     tarotImage.onerror = function () {
-      console.warn(`Tarot card image not found: assets/tarot/${imageFile}`);
-      this.src = "assets/tarot/default.jpg"; // Fallback image
+      console.warn(`Tarot card image not found: assets/Tarot/${imageFile}`);
+      this.src = "assets/Tarot/default.jpg"; // Fallback image
       this.onerror = null; // Prevent infinite loop
     };
   }

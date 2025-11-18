@@ -252,6 +252,12 @@ function initializeTabSwitching() {
 document.addEventListener("DOMContentLoaded", function () {
   console.log("Initializing tab switching...");
   initializeTabSwitching();
+  const saved = localStorage.getItem("characterData");
+  if (saved) {
+    Object.assign(character, JSON.parse(saved));
+    renderEverything(); // You already have functions like renderStats(), renderSkillsTable(), etc.
+    console.log("Loaded saved character.");
+  }
 });
 
 // ==================== INITIALIZATION ==================== //
@@ -300,6 +306,14 @@ function initializeAbilitiesAndSkills() {
 
 // ==================== SINGLE DOM CONTENT LOADED EVENT ==================== //
 document.addEventListener("DOMContentLoaded", () => {
+  // Initialize auto-save system
+  if (typeof autoSave === "function") {
+    autoSave();
+    console.log("✓ Auto-save system started");
+  } else {
+    console.error("✗ autoSave function not found!");
+  }
+
   // Initialize basic functions
   if (typeof updateAdvancementButtons === "function") {
     updateAdvancementButtons();

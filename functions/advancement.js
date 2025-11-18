@@ -171,6 +171,13 @@ function purchaseExtraFocusAbility() {
     character.currentTierAdvancements.extraFocusAbility = true;
     character.advancementsPurchasedThisTier++;
 
+    // Grant 1 additional Focus ability selection
+    if (typeof grantExtraFocusAbility === "function") {
+      grantExtraFocusAbility();
+    } else {
+      console.error("grantExtraFocusAbility function not found!");
+    }
+
     alert(
       "Extra Focus ability purchased!\n\n" +
         "You can now select an additional Focus ability from your Focus."
