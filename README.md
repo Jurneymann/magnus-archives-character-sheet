@@ -49,13 +49,20 @@ This project has **no official affiliation** with either Rusty Quill or Monte Co
 
 ## How to Run
 
-### Option 1: Simple File Opening
+### Option 1: GitHub Pages (Easiest - Online Access)
+
+Once GitHub Pages is enabled for this repository, you can access the character sheet directly at:
+`https://jurneymann.github.io/magnus-archives-character-sheet/`
+
+> **Note**: The 3D dice roller works best when accessed via GitHub Pages or a local web server.
+
+### Option 2: Simple File Opening
 
 1. Download or clone this repository
 2. Open `index.html` in a modern web browser (Chrome, Firefox, Edge, Safari)
 3. Start creating your character!
 
-### Option 2: Local Web Server (Recommended for full functionality)
+### Option 3: Local Web Server (Recommended for development)
 
 1. Download or clone this repository
 2. Use a local web server:
