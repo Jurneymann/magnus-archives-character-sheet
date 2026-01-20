@@ -5,6 +5,7 @@ An interactive digital character sheet for **The Magnus Archives Roleplaying Gam
 ## ⚠️ Disclaimer
 
 This is a fan-made project based on:
+This project is free for use, but if you would like to contribute to my development costs, you can support me at [buymeacoffee/jurneymann](buymeacoffee.com/jurneymann)
 
 - **The Magnus Archives** podcast by [Rusty Quill](https://rustyquill.com)
 - **The Magnus Archives Roleplaying Game** by [Monte Cook Games](https://www.montecookgames.com/store/product/the-magnus-archives-roleplaying-game/)
