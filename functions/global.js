@@ -23,6 +23,10 @@ window.selectCharacterArc = selectCharacterArc;
 window.completeCharacterArc = completeCharacterArc;
 window.updateCharacterArcDisplay = updateCharacterArcDisplay;
 window.initializeCharacterArcs = initializeCharacterArcs;
+window.switchToArc = switchToArc;
+window.displayCurrentArc = displayCurrentArc;
+window.updateActiveArcsList = updateActiveArcsList;
+window.removeArc = removeArc;
 
 // Stat Allocation
 window.allocatePoint = allocatePoint;
@@ -196,7 +200,7 @@ window.checkAllFocusAbilitiesForPoolIncreases =
   checkAllFocusAbilitiesForPoolIncreases;
 
 console.log(
-  "✓ Updated descriptor system with multiple skills and characteristics"
+  "✓ Updated descriptor system with multiple skills and characteristics",
 );
 
 console.log("✓ Descriptor trained skill functions added");

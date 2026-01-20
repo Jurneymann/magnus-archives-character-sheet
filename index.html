@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <!-- Google tag (gtag.js) -->
@@ -77,7 +77,10 @@
                     type="text"
                     id="charName"
                     placeholder="Enter your character's name..."
-                    oninput="updateCharacterStatement(); validateCharacterOptions();"
+                    oninput="
+                      updateCharacterStatement();
+                      validateCharacterOptions();
+                    "
                   />
                 </div>
 
@@ -88,7 +91,10 @@
                   </label>
                   <select
                     id="descriptor"
-                    onchange="updateCharacterStatement(); validateCharacterOptions();"
+                    onchange="
+                      updateCharacterStatement();
+                      validateCharacterOptions();
+                    "
                   >
                     <option value="">-- Select Descriptor --</option>
                     <option value="Bold">Bold</option>
@@ -128,7 +134,10 @@
                   </label>
                   <select
                     id="type"
-                    onchange="updateCharacterStatement(); validateCharacterOptions();"
+                    onchange="
+                      updateCharacterStatement();
+                      validateCharacterOptions();
+                    "
                   >
                     <option value="">-- Select Type --</option>
                     <option value="Investigator">Investigator</option>
@@ -145,7 +154,10 @@
                   </label>
                   <select
                     id="focus1"
-                    onchange="updateCharacterStatement(); validateCharacterOptions();"
+                    onchange="
+                      updateCharacterStatement();
+                      validateCharacterOptions();
+                    "
                   >
                     <option value="">-- Select Focus --</option>
                     <option value="Carries a Gun">Carries a Gun</option>
@@ -348,13 +360,13 @@
 
           <!-- Character Arcs Section -->
           <div class="section character-arcs-section">
-            <h2>Character Arc</h2>
+            <h2>Character Arcs</h2>
 
             <!-- Arc Status Display -->
             <div class="arc-status-display">
               <div class="arc-status-item">
-                <span class="arc-status-label">Current Arc:</span>
-                <span class="arc-status-value" id="currentArcName">None</span>
+                <span class="arc-status-label">Active Arcs:</span>
+                <span class="arc-status-value" id="activeArcsCount">0</span>
               </div>
               <div class="arc-status-item">
                 <span class="arc-status-label">Arcs Completed:</span>
@@ -364,23 +376,26 @@
 
             <div class="character-arc-info">
               <p class="arc-info-text">
-                <strong>First arc is free!</strong> Changing or selecting a new
-                arc costs <strong>1 XP</strong>. Completing an arc awards
-                <strong>4 XP</strong>.
+                <strong>First arc is free!</strong> Additional arcs cost
+                <strong>1 XP</strong> each. You can have multiple arcs active
+                simultaneously.<br />
+                Completing an arc awards <strong>2 XP</strong>.
               </p>
             </div>
 
-            <div class="character-arc-container">
-              <!-- Arc Selection -->
-              <div class="arc-selection-row">
-                <label for="characterArcSelect">Select Character Arc:</label>
-                <select
-                  id="characterArcSelect"
-                  onchange="updateArcDescription()"
-                >
-                  <option value="">-- No Arc Selected --</option>
-                </select>
+            <!-- Active Arcs List -->
+            <div class="active-arcs-container">
+              <h3>Your Active Arcs</h3>
+              <div id="activeArcsList" class="active-arcs-list">
+                <div class="no-arcs-message">
+                  No active arcs. Select one below to get started!
+                </div>
               </div>
+            </div>
+
+            <!-- Currently Viewing Arc -->
+            <div class="character-arc-container">
+              <h3>Arc Details</h3>
 
               <!-- Arc Description (Read-only) -->
               <div class="arc-description-row">
@@ -388,7 +403,7 @@
                 <textarea
                   id="characterArcDescription"
                   readonly
-                  placeholder="Select a character arc to see its description..."
+                  placeholder="Select an arc from your active arcs above to view its description..."
                 ></textarea>
               </div>
 
@@ -399,22 +414,30 @@
                   id="characterArcNotes"
                   placeholder="Add your notes about your character arc progress, goals, and developments..."
                   oninput="saveArcNotes()"
+                  disabled
                 ></textarea>
               </div>
+            </div>
 
-              <!-- Action Buttons -->
+            <!-- Add New Arc Section -->
+            <div class="add-arc-container">
+              <h3>Add New Arc</h3>
+              <div class="arc-selection-row">
+                <label for="characterArcSelect">Select Character Arc:</label>
+                <select
+                  id="characterArcSelect"
+                  onchange="updateArcDescription()"
+                >
+                  <option value="">-- Select New Arc --</option>
+                </select>
+              </div>
+
               <div class="arc-action-buttons">
                 <button
                   class="button primary-button"
                   onclick="selectCharacterArc()"
                 >
-                  Select/Change Arc
-                </button>
-                <button
-                  class="button success-button"
-                  onclick="completeCharacterArc()"
-                >
-                  ✓ Complete Arc
+                  Add Arc
                 </button>
               </div>
             </div>
@@ -1451,7 +1474,7 @@
                 <div class="advancement-stat-box">
                   <label>Tier Progress</label>
                   <span class="stat-value">
-                    <span id="advancementCount">0</span> / 5
+                    <span id="advancementCount">0</span> / 4
                   </span>
                 </div>
               </div>
@@ -1473,7 +1496,7 @@
                   <span class="category-icon">⚡</span>
                   Required Advancements
                   <span class="category-note"
-                    >(Choose 4 of these to advance to next tier)</span
+                    >(Choose all 4, or 3 of these + 1 optional to advance)</span
                   >
                 </h3>
 
@@ -1642,7 +1665,7 @@
                     min="1"
                     max="6"
                     placeholder="1-6"
-                    onkeypress="if(event.key === 'Enter') submitManualD6()"
+                    onkeypress="if (event.key === 'Enter') submitManualD6();"
                   />
                   <button class="manual-roll-btn" onclick="submitManualD6()">
                     Submit
@@ -1668,7 +1691,7 @@
                     min="1"
                     max="20"
                     placeholder="1-20"
-                    onkeypress="if(event.key === 'Enter') submitManualD20()"
+                    onkeypress="if (event.key === 'Enter') submitManualD20();"
                   />
                   <button class="manual-roll-btn" onclick="submitManualD20()">
                     Submit
@@ -2632,7 +2655,7 @@
                   type="password"
                   id="avatarPassword"
                   placeholder="Password"
-                  onkeypress="if(event.key === 'Enter') unlockAvatarTab()"
+                  onkeypress="if (event.key === 'Enter') unlockAvatarTab();"
                 />
                 <div class="avatar-password-buttons">
                   <button
@@ -2851,7 +2874,7 @@
                 placeholder="1-20"
                 min="1"
                 max="20"
-                onkeypress="if(event.key==='Enter') submitManualRoll()"
+                onkeypress="if (event.key === 'Enter') submitManualRoll();"
               />
               <button onclick="submitManualRoll()">Submit</button>
             </div>

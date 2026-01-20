@@ -60,6 +60,23 @@ function initializeDiceBox() {
   }
 }
 
+// Suppress Three.js shader warnings (cosmetic only, no functional impact)
+const originalWarn = console.warn;
+console.warn = function (message) {
+  // Filter out Three.js shader loop warnings
+  if (
+    typeof message === "string" &&
+    (message.includes("gl.getProgramInfoLog") ||
+      message.includes("loop only executes for 1 iteration"))
+  ) {
+    return; // Suppress these specific warnings
+  }
+  // Pass through all other warnings
+  originalWarn.apply(console, arguments);
+};
+
+console.log("✓ Dice roller initialized (shader warnings suppressed)");
+
 // Show the dice roller modal
 function showDiceRoller(diceType = "d20", callback = null) {
   console.log(`Opening dice roller for ${diceType}`);

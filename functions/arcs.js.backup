@@ -12,26 +12,22 @@ if (!character.characterArc) {
 }
 
 // Migrate old single-arc data to new multi-arc structure
-if (
-  character.characterArc.currentArc !== undefined &&
-  character.characterArc.activeArcs === undefined
-) {
+if (character.characterArc.currentArc !== undefined && character.characterArc.activeArcs === undefined) {
   console.log("Migrating old single-arc data to new multi-arc structure");
   character.characterArc.activeArcs = [];
-
+  
   // If there was an active arc, migrate it
   if (character.characterArc.currentArc !== null) {
     character.characterArc.activeArcs.push({
       arcIndex: character.characterArc.currentArc,
       arcName: character.characterArc.arcName || "",
-      arcNotes: character.characterArc.arcNotes || "",
+      arcNotes: character.characterArc.arcNotes || ""
     });
   }
-
+  
   character.characterArc.currentlyViewingIndex = 0;
-  character.characterArc.totalArcsSelected =
-    character.characterArc.arcSelections || 0;
-
+  character.characterArc.totalArcsSelected = character.characterArc.arcSelections || 0;
+  
   // Clean up old properties
   delete character.characterArc.currentArc;
   delete character.characterArc.arcName;
@@ -46,9 +42,7 @@ function populateCharacterArcSelect() {
   if (!select) return;
 
   // Get list of currently active arc indices
-  const activeArcIndices = character.characterArc.activeArcs.map(
-    (arc) => arc.arcIndex,
-  );
+  const activeArcIndices = character.characterArc.activeArcs.map(arc => arc.arcIndex);
 
   // Clear existing options
   select.innerHTML = '<option value="">-- Select New Arc --</option>';
@@ -71,7 +65,7 @@ function populateCharacterArcSelect() {
 function updateArcDescription() {
   const select = document.getElementById("characterArcSelect");
   const descriptionTextarea = document.getElementById(
-    "characterArcDescription",
+    "characterArcDescription"
   );
 
   if (!select || !descriptionTextarea) return;
@@ -95,68 +89,16 @@ function updateArcDescription() {
   }
 }
 
-// Switch to viewing a different active arc
-function switchToArc(activeArcIndex) {
-  if (
-    activeArcIndex < 0 ||
-    activeArcIndex >= character.characterArc.activeArcs.length
-  ) {
-    console.error("Invalid arc index:", activeArcIndex);
-    return;
-  }
-
-  character.characterArc.currentlyViewingIndex = activeArcIndex;
-  displayCurrentArc();
-}
-
-// Save arc notes for the currently viewed arc
+// Switch to view for the currently viewed arc
 function saveArcNotes() {
   const notesTextarea = document.getElementById("characterArcNotes");
 
   if (!notesTextarea) return;
 
   const viewingIndex = character.characterArc.currentlyViewingIndex;
-
+  
   if (character.characterArc.activeArcs[viewingIndex]) {
-    character.characterArc.activeArcs[viewingIndex].arcNotes =
-      notesTextarea.value;
-  }
-}
-
-// Display the currently selected active arc
-function displayCurrentArc() {
-  const activeArcs = character.characterArc.activeArcs;
-  const viewingIndex = character.characterArc.currentlyViewingIndex;
-
-  const descriptionTextarea = document.getElementById(
-    "characterArcDescription",
-  );
-  const notesTextarea = document.getElementById("characterArcNotes");
-
-  if (!descriptionTextarea || !notesTextarea) return;
-
-  if (activeArcs.length === 0 || !activeArcs[viewingIndex]) {
-    // No active arcs
-    descriptionTextarea.value = "";
-    notesTextarea.value = "";
-    notesTextarea.disabled = true;
-    return;
-  }
-
-  const currentArc = activeArcs[viewingIndex];
-  const arcData = CHARACTER_ARCS[currentArc.arcIndex];
-
-  if (arcData) {
-    descriptionTextarea.value = arcData.description;
-    notesTextarea.value = currentArc.arcNotes || "";
-    notesTextarea.disabled = false;
-  }
-
-  // Update the active arcs list display
-  updateActiveArcsList();
-}
-
-// Add a new character arc to the active arcs list
+   Add a new character arc to the active arcs list
 function selectCharacterArc() {
   const select = document.getElementById("characterArcSelect");
   const selectedIndex = select.value;
@@ -174,7 +116,7 @@ function selectCharacterArc() {
   const cost = isFirstArc ? 0 : 1;
 
   let confirmMessage = "";
-
+  
   if (isFirstArc) {
     confirmMessage =
       `Add "${arc.name}" as your character arc?\n\n` +
@@ -208,15 +150,14 @@ function selectCharacterArc() {
   character.characterArc.activeArcs.push({
     arcIndex: arcIndex,
     arcName: arc.name,
-    arcNotes: "",
+    arcNotes: ""
   });
 
   character.characterArc.totalArcsSelected++;
   character.characterArc.firstArcFree = false;
 
   // Switch to viewing the newly added arc
-  character.characterArc.currentlyViewingIndex =
-    character.characterArc.activeArcs.length - 1;
+  character.characterArc.currentlyViewingIndex = character.characterArc.activeArcs.length - 1;
 
   // Update displays
   updateXPDisplay();
@@ -230,18 +171,12 @@ function selectCharacterArc() {
         ? `1 XP spent. Current XP: ${character.xp}\n`
         : `First arc is free!\n`) +
       `\nYou now have ${character.characterArc.activeArcs.length} active arc(s).\n` +
-      `Complete arcs to earn 2 XP each!`,
-  );
-}
-
-// Complete the currently viewed character arc
+      `Complthe currently viewed character arc
 function completeCharacterArc() {
   const activeArcs = character.characterArc.activeArcs;
 
   if (activeArcs.length === 0) {
-    alert(
-      "You don't have any active character arcs to complete.\n\nAdd an arc first!",
-    );
+    alert("You don't have any active character arcs to complete.\n\nAdd an arc first!");
     return;
   }
 
@@ -259,9 +194,7 @@ function completeCharacterArc() {
     `Complete character arc: "${arcName}"?\n\n` +
       `You will receive 2 XP as a reward!\n\n` +
       `This arc will be removed from your active arcs.\n` +
-      (activeArcs.length > 1
-        ? `You will still have ${activeArcs.length - 1} active arc(s) remaining.`
-        : `You can then select a new arc.`),
+      (activeArcs.length > 1 ? `You will still have ${activeArcs.length - 1} active arc(s) remaining.` : `You can then select a new arc.`)
   );
 
   if (!confirmation) return;
@@ -275,14 +208,8 @@ function completeCharacterArc() {
   character.characterArc.activeArcs.splice(viewingIndex, 1);
 
   // Adjust viewing index if needed
-  if (
-    character.characterArc.currentlyViewingIndex >=
-    character.characterArc.activeArcs.length
-  ) {
-    character.characterArc.currentlyViewingIndex = Math.max(
-      0,
-      character.characterArc.activeArcs.length - 1,
-    );
+  if (character.characterArc.currentlyViewingIndex >= character.characterArc.activeArcs.length) {
+    character.characterArc.currentlyViewingIndex = Math.max(0, character.characterArc.activeArcs.length - 1);
   }
 
   // Update displays
@@ -309,16 +236,13 @@ function completeCharacterArc() {
       `Current XP: ${character.xp}\n` +
       `Total Arcs Completed: ${character.characterArc.arcsCompleted}\n` +
       `Active Arcs: ${character.characterArc.activeArcs.length}\n\n` +
-      `You can add another arc for 1 XP.`,
+      `You can add another arc for 1 XP.`
   );
 }
 
 // Remove an active arc without completing it
 function removeArc(activeArcIndex) {
-  if (
-    activeArcIndex < 0 ||
-    activeArcIndex >= character.characterArc.activeArcs.length
-  ) {
+  if (activeArcIndex < 0 || activeArcIndex >= character.characterArc.activeArcs.length) {
     console.error("Invalid arc index:", activeArcIndex);
     return;
   }
@@ -328,36 +252,11 @@ function removeArc(activeArcIndex) {
   const confirmation = confirm(
     `Remove arc "${arc.arcName}" without completing it?\n\n` +
       `You will NOT receive any XP reward.\n` +
-      `This arc can be selected again later for 1 XP.`,
+      `This arc can be selected again later for 1 XP.`
   );
 
   if (!confirmation) return;
-
-  // Remove the arc
-  character.characterArc.activeArcs.splice(activeArcIndex, 1);
-
-  // Adjust viewing index if needed
-  if (
-    character.characterArc.currentlyViewingIndex >=
-    character.characterArc.activeArcs.length
-  ) {
-    character.characterArc.currentlyViewingIndex = Math.max(
-      0,
-      character.characterArc.activeArcs.length - 1,
-    );
-  }
-
-  // Update displays
-  updateCharacterArcDisplay();
-  populateCharacterArcSelect();
-  displayCurrentArc();
-
-  alert(
-    `Arc "${arc.arcName}" removed.\n\nYou can select it again later for 1 XP.`,
-  );
-}
-
-// Update character arc display - show summary and active arcs list
+ - show summary and active arcs list
 function updateCharacterArcDisplay() {
   const arcsCompletedCount = document.getElementById("arcsCompletedCount");
   const activeArcsCount = document.getElementById("activeArcsCount");
@@ -377,15 +276,14 @@ function updateCharacterArcDisplay() {
 // Update the list of active arcs
 function updateActiveArcsList() {
   const container = document.getElementById("activeArcsList");
-
+  
   if (!container) return;
 
   const activeArcs = character.characterArc.activeArcs;
   const viewingIndex = character.characterArc.currentlyViewingIndex;
 
   if (activeArcs.length === 0) {
-    container.innerHTML =
-      '<div class="no-arcs-message">No active arcs. Select one below to get started!</div>';
+    container.innerHTML = '<div class="no-arcs-message">No active arcs. Select one below to get started!</div>';
     return;
   }
 
@@ -393,15 +291,15 @@ function updateActiveArcsList() {
 
   activeArcs.forEach((arc, index) => {
     const arcCard = document.createElement("div");
-    arcCard.className = `active-arc-card ${index === viewingIndex ? "viewing" : ""}`;
-
+    arcCard.className = `active-arc-card ${index === viewingIndex ? 'viewing' : ''}`;
+    
     arcCard.innerHTML = `
       <div class="arc-card-header">
         <div class="arc-card-title">${arc.arcName}</div>
-        ${index === viewingIndex ? '<span class="viewing-badge">Viewing</span>' : ""}
+        ${index === viewingIndex ? '<span class="viewing-badge">Viewing</span>' : ''}
       </div>
       <div class="arc-card-actions">
-        ${index !== viewingIndex ? `<button class="arc-card-btn view-btn" onclick="switchToArc(${index})">View</button>` : ""}
+        ${index !== viewingIndex ? `<button class="arc-card-btn view-btn" onclick="switchToArc(${index})">View</button>` : ''}
         <button class="arc-card-btn complete-btn" onclick="completeCharacterArc()">Complete</button>
         <button class="arc-card-btn remove-btn" onclick="removeArc(${index})">Remove</button>
       </div>
