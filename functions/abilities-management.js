@@ -21,28 +21,9 @@ if (!character.extraFocusAbilitySelections) {
   };
 }
 
-function getAvailableFocusAbilities() {
-  const focus1 = character.focus1;
-  const playerTier = character.tier || 1;
-
-  if (!focus1) {
-    return [];
-  }
-
-  // Check if focusAbilities is loaded
-  if (typeof focusAbilities === "undefined") {
-    console.error("focusAbilities is not loaded!");
-    return [];
-  }
-
-  // Get abilities for focus
-  let abilities = focusAbilities.filter(
-    (ability) =>
-      ability.Focus === focus1 && parseInt(ability.Tier) <= playerTier
-  );
-
-  return abilities;
-}
+// Track current focus abilities view mode
+let focusAbilitiesViewMode = "all"; // 'all' or 'selected'
+let focusAbilitiesViewManuallySet = false; // true when player has explicitly toggled the view
 
 function renderFocusAbilitiesTable() {
   console.log("renderFocusAbilitiesTable called");
@@ -84,9 +65,49 @@ function renderFocusAbilitiesTable() {
 
   console.log("Available focus abilities:", availableAbilities.length);
 
+  // Check if there are new abilities to select
+  const hasTier3Choice =
+    character.tier >= 3 && !character.focusTierChoices?.tier3;
+  const hasTier6Choice =
+    character.tier >= 6 && !character.focusTierChoices?.tier6;
+  const hasExtraSelections =
+    (character.extraFocusAbilitySelections?.available || 0) >
+    (character.extraFocusAbilitySelections?.used || 0);
+  const hasNewAbilities =
+    hasTier3Choice || hasTier6Choice || hasExtraSelections;
+
+  // Auto-switch to "Show Selected Only" when no new abilities to select (unless player has manually toggled)
+  if (!hasNewAbilities && !focusAbilitiesViewManuallySet) {
+    focusAbilitiesViewMode = "selected";
+  } else if (hasNewAbilities) {
+    // Reset manual override when new abilities become available so the view opens fully
+    focusAbilitiesViewManuallySet = false;
+  }
+
   // Build the HTML
   let html = `
     <h2>Focus Abilities</h2>
+    
+    <!-- View Mode Toggle -->
+    <div class="filter-buttons" style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px; padding: 10px; background: #1a1a1a; border-radius: 4px;">
+      <span style="color: #ddd; font-weight: 500">View:</span>
+      <button
+        id="focusAbilitiesShowAll"
+        class="filter-btn ${focusAbilitiesViewMode === "all" ? "active" : ""}"
+        onclick="toggleFocusAbilitiesView('all')"
+        style="padding: 8px 16px; background: ${focusAbilitiesViewMode === "all" ? "#317e30" : "#555"}; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;"
+      >
+        Show All Available
+      </button>
+      <button
+        id="focusAbilitiesShowSelected"
+        class="filter-btn ${focusAbilitiesViewMode === "selected" ? "active" : ""}"
+        onclick="toggleFocusAbilitiesView('selected')"
+        style="padding: 8px 16px; background: ${focusAbilitiesViewMode === "selected" ? "#317e30" : "#555"}; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;"
+      >
+        Show Selected Only
+      </button>
+    </div>
     
     <p id="focusAbilityCounter" style="background: #1a1a1a; border: 2px solid #317e30; border-radius: 6px; padding: 12px 20px; margin-bottom: 15px; text-align: center; font-size: 1.1em; font-weight: 600; color: #4caf50;">
       ${buildFocusCounterText()}
@@ -160,8 +181,14 @@ function renderFocusAbilitiesTable() {
             character.focusTierChoices?.[choiceKey] === ability.Ability;
           const isAvailableChoice = isChoiceAbility && !hasChosenForTier;
           const isExtraSelection = character.selectedFocusAbilities?.includes(
-            ability.Ability
+            ability.Ability,
           );
+
+          // Filter based on view mode
+          const isSelected = isAutoGained || isChosen || isExtraSelection;
+          if (focusAbilitiesViewMode === "selected" && !isSelected) {
+            return; // Skip this ability in "selected" view mode
+          }
 
           // Check if this ability can be selected as an extra
           const availableExtras =
@@ -176,7 +203,7 @@ function renderFocusAbilitiesTable() {
             remainingExtras > 0;
 
           console.log(
-            `${ability.Ability}: canSelectExtra=${canSelectExtra}, remainingExtras=${remainingExtras}`
+            `${ability.Ability}: canSelectExtra=${canSelectExtra}, remainingExtras=${remainingExtras}`,
           );
 
           // Build meta string for mobile
@@ -194,37 +221,37 @@ function renderFocusAbilitiesTable() {
             isAutoGained
               ? `<div class="ability-status-badge auto-gained">Auto</div>`
               : isChosen
-              ? `<div class="ability-status-badge chosen">Chosen</div>`
-              : isExtraSelection
-              ? `
+                ? `<div class="ability-status-badge chosen">Chosen</div>`
+                : isExtraSelection
+                  ? `
                 <div class="ability-status-badge extra">Extra</div>
                               `
-              : isAvailableChoice
-              ? `
+                  : isAvailableChoice
+                    ? `
                 <button
                   class="ability-choice-btn"
                   onclick="chooseFocusTierAbility(${tierNum}, '${ability.Ability.replace(
-                  /'/g,
-                  "\\'"
-                )}')"
+                    /'/g,
+                    "\\'",
+                  )}')"
                 >
                   Choose
                 </button>
               `
-              : canSelectExtra
-              ? `
+                    : canSelectExtra
+                      ? `
                 <button
                   class="ability-extra-btn"
                   onclick="selectExtraFocusAbility('${ability.Ability.replace(
                     /'/g,
-                    "\\'"
+                    "\\'",
                   )}')"
                   style="background: #4a4a4a; color: #4caf50; border: 2px solid #4caf50; padding: 8px 16px; font-weight: bold;"
                 >
                   Select Extra
                 </button>
               `
-              : `<div class="ability-status-badge unavailable">—</div>`
+                      : `<div class="ability-status-badge unavailable">—</div>`
           }
         </div>
 
@@ -283,59 +310,6 @@ function buildFocusCounterText() {
   return text;
 }
 
-function chooseFocusTierAbility(tier, abilityName) {
-  const choiceKey = `tier${tier}`;
-
-  const confirmation = confirm(
-    `Choose "${abilityName}" as your Tier ${tier} Focus ability?\n\n` +
-      `This choice is permanent and cannot be changed.`
-  );
-
-  if (confirmation) {
-    character.focusTierChoices[choiceKey] = abilityName;
-
-    renderFocusAbilitiesTable();
-
-    alert(
-      `You have chosen "${abilityName}" as your Tier ${tier} Focus ability!`
-    );
-
-    // Find the ability data
-    const abilityData = focusAbilities.find(
-      (a) =>
-        a.Ability === abilityName &&
-        a.Focus === character.focus1 &&
-        parseInt(a.Tier) === tier
-    );
-
-    if (abilityData && (abilityData.PoolIncrease || abilityData.EdgeIncrease)) {
-      console.log("Stat increase detected for:", abilityName);
-      console.log("Full ability data:", abilityData);
-
-      // Create unique key
-      const abilityKey = `${character.focus1}_${abilityName}_T${tier}`;
-
-      // Initialize tracking if needed
-      if (!character.appliedFocusPoolIncreases) {
-        character.appliedFocusPoolIncreases = [];
-      }
-
-      // Check if already applied
-      if (!character.appliedFocusPoolIncreases.includes(abilityKey)) {
-        // Mark as applied
-        character.appliedFocusPoolIncreases.push(abilityKey);
-
-        // Apply the increase
-        setTimeout(() => {
-          applyFocusAbilityPoolIncrease(abilityData);
-        }, 500);
-      } else {
-        console.log("Already applied:", abilityKey);
-      }
-    }
-  }
-}
-
 function grantExtraFocusAbility() {
   console.log("=== grantExtraFocusAbility called ===");
 
@@ -350,7 +324,7 @@ function grantExtraFocusAbility() {
   character.extraFocusAbilitySelections.available++;
 
   console.log(
-    `✓ Extra Focus ability granted. Available: ${character.extraFocusAbilitySelections.available}, Used: ${character.extraFocusAbilitySelections.used}`
+    `✓ Extra Focus ability granted. Available: ${character.extraFocusAbilitySelections.available}, Used: ${character.extraFocusAbilitySelections.used}`,
   );
 
   // Save the data immediately
@@ -394,7 +368,7 @@ function grantExtraFocusAbility() {
       `You can now select 1 additional Focus ability.\n\n` +
       `Available selections: ${character.extraFocusAbilitySelections.available}\n` +
       `Already selected: ${character.extraFocusAbilitySelections.used}\n\n` +
-      `Look for "Select Extra" buttons in the Focus Abilities section on the Abilities tab.`
+      `Look for "Select Extra" buttons in the Focus Abilities section on the Abilities tab.`,
   );
 }
 
@@ -421,19 +395,25 @@ function updateFocusAbilityCounter() {
   }
 }
 
+function toggleFocusAbilitiesView(mode) {
+  focusAbilitiesViewMode = mode;
+  focusAbilitiesViewManuallySet = true;
+  renderFocusAbilitiesTable();
+}
+
 function diagnoseExtraFocusAbilities() {
   console.log("\n=== EXTRA FOCUS ABILITIES DIAGNOSTIC ===\n");
 
   console.log("1. Extra selections data:");
   console.log(
     "   Available:",
-    character.extraFocusAbilitySelections?.available || 0
+    character.extraFocusAbilitySelections?.available || 0,
   );
   console.log("   Used:", character.extraFocusAbilitySelections?.used || 0);
   console.log(
     "   Remaining:",
     (character.extraFocusAbilitySelections?.available || 0) -
-      (character.extraFocusAbilitySelections?.used || 0)
+      (character.extraFocusAbilitySelections?.used || 0),
   );
 
   console.log("\n2. Selected extra abilities:");
@@ -442,7 +422,7 @@ function diagnoseExtraFocusAbilities() {
   console.log("\n3. Current tier advancement:");
   console.log(
     "   extraFocusAbility purchased:",
-    character.currentTierAdvancements?.extraFocusAbility
+    character.currentTierAdvancements?.extraFocusAbility,
   );
 
   console.log("\n4. Testing canSelectExtra calculation:");
@@ -450,7 +430,7 @@ function diagnoseExtraFocusAbilities() {
   const usedExtras = character.extraFocusAbilitySelections?.used || 0;
   const remainingExtras = availableExtras - usedExtras;
   console.log(
-    `   ${availableExtras} available - ${usedExtras} used = ${remainingExtras} remaining`
+    `   ${availableExtras} available - ${usedExtras} used = ${remainingExtras} remaining`,
   );
 
   console.log("\n5. Checking if buttons should appear:");
@@ -464,7 +444,7 @@ function diagnoseExtraFocusAbilities() {
       (parseInt(ability.Tier) === 6 &&
         character.focusTierChoices?.tier6 === ability.Ability);
     const isExtraSelection = character.selectedFocusAbilities?.includes(
-      ability.Ability
+      ability.Ability,
     );
 
     const canSelectExtra =
@@ -522,7 +502,7 @@ function getAvailableAbilities() {
 
   if (typeof ABILITIES_DATA !== "undefined" && ABILITIES_DATA.length > 0) {
     abilities = ABILITIES_DATA.filter(
-      (ability) => ability.type === type && ability.tier <= tier
+      (ability) => ability.type === type && ability.tier <= tier,
     );
   }
 
@@ -530,7 +510,7 @@ function getAvailableAbilities() {
     if (focus1) {
       const focus1Abilities = focusAbilities.filter(
         (ability) =>
-          ability.focus === focus1 && (!ability.tier || ability.tier <= tier)
+          ability.focus === focus1 && (!ability.tier || ability.tier <= tier),
       );
       abilities = abilities.concat(focus1Abilities);
     }
@@ -538,7 +518,7 @@ function getAvailableAbilities() {
     if (focus2) {
       const focus2Abilities = focusAbilities.filter(
         (ability) =>
-          ability.focus === focus2 && (!ability.tier || ability.tier <= tier)
+          ability.focus === focus2 && (!ability.tier || ability.tier <= tier),
       );
       abilities = abilities.concat(focus2Abilities);
     }
@@ -587,6 +567,7 @@ let typeAbilitiesFilters = {
   sortBy: "tier",
   viewMode: "all", // 'all' or 'selected'
 };
+let typeAbilitiesViewManuallySet = false; // true when player has explicitly toggled the view
 
 function getAvailableTypeAbilities() {
   const type = character.type;
@@ -617,7 +598,7 @@ function getAvailableTypeAbilities() {
     console.error("❌ Type abilities data not loaded!");
     console.error(
       "Available globals:",
-      Object.keys(window).filter((k) => k.toLowerCase().includes("abilit"))
+      Object.keys(window).filter((k) => k.toLowerCase().includes("abilit")),
     );
     return [];
   }
@@ -640,7 +621,7 @@ function getAvailableTypeAbilities() {
   });
 
   console.log(
-    `Found ${abilities.length} abilities for ${type} at tier ${playerTier}`
+    `Found ${abilities.length} abilities for ${type} at tier ${playerTier}`,
   );
 
   if (abilities.length > 0) {
@@ -670,12 +651,23 @@ function renderTypeAbilitiesTable() {
     return;
   }
 
+  // Auto-switch to "Show Selected Only" when no new abilities to select (unless player has manually toggled)
+  const hasNewAbilities =
+    character.typeAbilitySelections.used <
+    character.typeAbilitySelections.available;
+  if (!hasNewAbilities && !typeAbilitiesViewManuallySet) {
+    typeAbilitiesFilters.viewMode = "selected";
+  } else if (hasNewAbilities) {
+    // Reset manual override when new abilities become available so the view opens fully
+    typeAbilitiesViewManuallySet = false;
+  }
+
   // Get all available abilities
   let abilities = getAvailableTypeAbilities();
 
   console.log(
     "Raw abilities from getAvailableTypeAbilities:",
-    abilities.length
+    abilities.length,
   );
 
   // Apply filters
@@ -700,7 +692,7 @@ function renderTypeAbilitiesTable() {
                 (t) =>
                   `<option value="${t}" ${
                     typeAbilitiesFilters.tier == t ? "selected" : ""
-                  }>Tier ${t}</option>`
+                  }>Tier ${t}</option>`,
               )
               .join("")}
           </select>
@@ -1018,6 +1010,7 @@ function clearTypeAbilitiesFilters() {
 
 function toggleTypeAbilitiesView(mode) {
   typeAbilitiesFilters.viewMode = mode;
+  typeAbilitiesViewManuallySet = true;
   renderTypeAbilitiesTable();
 }
 
@@ -1033,7 +1026,7 @@ function toggleTypeAbility(abilityName) {
   if (isSelected) {
     // Deselect
     character.selectedTypeAbilities = character.selectedTypeAbilities.filter(
-      (name) => name !== abilityName
+      (name) => name !== abilityName,
     );
     character.typeAbilitySelections.used--;
   } else {
@@ -1043,7 +1036,7 @@ function toggleTypeAbility(abilityName) {
       character.typeAbilitySelections.available
     ) {
       alert(
-        `You can only select ${character.typeAbilitySelections.available} Type abilities.`
+        `You can only select ${character.typeAbilitySelections.available} Type abilities.`,
       );
       return;
     }
@@ -1104,7 +1097,7 @@ function confirmTypeAbilities() {
   const confirmation = confirm(
     `Confirm your ${selected} Type ability selections?\n\n` +
       `Selected abilities:\n${character.selectedTypeAbilities.join("\n")}\n\n` +
-      `Once confirmed, you cannot change these selections without GM approval.`
+      `Once confirmed, you cannot change these selections without GM approval.`,
   );
 
   if (confirmation) {
@@ -1115,7 +1108,7 @@ function confirmTypeAbilities() {
     alert(
       "Type abilities confirmed!\n\n" +
         "Your selections have been locked in.\n" +
-        "You can now proceed with character creation."
+        "You can now proceed with character creation.",
     );
   }
 }
@@ -1126,7 +1119,7 @@ function grantTypeAbilitySelections(count) {
   character.typeAbilitySelections.confirmed = false;
 
   console.log(
-    `Granted ${count} Type ability selections. Total available: ${character.typeAbilitySelections.available}`
+    `Granted ${count} Type ability selections. Total available: ${character.typeAbilitySelections.available}`,
   );
 
   renderTypeAbilitiesTable();
@@ -1193,12 +1186,12 @@ function applyFocusAbilityPoolIncrease(ability) {
         console.log(`>>> Updated DOM element for ${stat} Edge`);
       } else {
         console.log(
-          `ERROR: Could not find DOM element ${stat.toLowerCase()}Edge`
+          `ERROR: Could not find DOM element ${stat.toLowerCase()}Edge`,
         );
       }
 
       alert(
-        `${ability.Ability} granted!\n\n+${edgeIncrease} to ${stat} Edge\n\nYour ${stat} Edge is now ${character.edge[stat]}`
+        `${ability.Ability} granted!\n\n+${edgeIncrease} to ${stat} Edge\n\nYour ${stat} Edge is now ${character.edge[stat]}`,
       );
       return;
     }
@@ -1246,7 +1239,7 @@ function applyFocusAbilityPoolIncrease(ability) {
     if (poolElement) poolElement.textContent = character.currentPools[stat];
 
     alert(
-      `${ability.Ability} granted!\n\n+${poolIncrease} to ${stat} Pool\n\nYour ${stat} Pool is now ${character.stats[stat]}`
+      `${ability.Ability} granted!\n\n+${poolIncrease} to ${stat} Pool\n\nYour ${stat} Pool is now ${character.stats[stat]}`,
     );
     return;
   }
@@ -1344,7 +1337,7 @@ function showFocusPoolAllocationUI(ability, stats, totalPoints) {
             </button>
           </div>
         </div>
-      `
+      `,
         )
         .join("")}
     </div>
@@ -1404,7 +1397,7 @@ function adjustFocusPoolAllocation(stat, change) {
   // Calculate current total allocated
   const currentTotal = Object.values(allocation).reduce(
     (sum, val) => sum + val,
-    0
+    0,
   );
 
   // Check if we can make this change
@@ -1468,7 +1461,7 @@ function confirmFocusPoolAllocation(abilityName) {
   // Verify all points are allocated
   const allocated = Object.values(allocation).reduce(
     (sum, val) => sum + val,
-    0
+    0,
   );
 
   if (allocated !== totalPoints) {
@@ -1482,7 +1475,7 @@ function confirmFocusPoolAllocation(abilityName) {
         .filter(([_, val]) => val > 0)
         .map(([stat, val]) => `${stat}: +${val}`)
         .join("\n") +
-      `\n\nThis cannot be changed once confirmed.`
+      `\n\nThis cannot be changed once confirmed.`,
   );
 
   if (!confirmation) return;
@@ -1512,9 +1505,9 @@ function confirmFocusPoolAllocation(abilityName) {
         .filter(([_, val]) => val > 0)
         .map(
           ([stat, val]) =>
-            `${stat} Pool: +${val} (now ${character.stats[stat]})`
+            `${stat} Pool: +${val} (now ${character.stats[stat]})`,
         )
-        .join("\n")
+        .join("\n"),
   );
 }
 
@@ -1537,7 +1530,7 @@ function getAvailableFocusAbilities() {
   let abilities = focusAbilities.filter(
     (ability) =>
       (ability.Focus === focus1 || (focus2 && ability.Focus === focus2)) &&
-      parseInt(ability.Tier) <= playerTier
+      parseInt(ability.Tier) <= playerTier,
   );
 
   return abilities;
@@ -1548,7 +1541,7 @@ function chooseFocusTierAbility(tier, abilityName) {
 
   const confirmation = confirm(
     `Choose "${abilityName}" as your Tier ${tier} Focus ability?\n\n` +
-      `This choice is permanent and cannot be changed.`
+      `This choice is permanent and cannot be changed.`,
   );
 
   if (confirmation) {
@@ -1557,7 +1550,7 @@ function chooseFocusTierAbility(tier, abilityName) {
     renderFocusAbilitiesTable();
 
     alert(
-      `You have chosen "${abilityName}" as your Tier ${tier} Focus ability!`
+      `You have chosen "${abilityName}" as your Tier ${tier} Focus ability!`,
     );
 
     // Find the ability data
@@ -1565,7 +1558,7 @@ function chooseFocusTierAbility(tier, abilityName) {
       (a) =>
         a.Ability === abilityName &&
         a.Focus === character.focus1 &&
-        parseInt(a.Tier) === tier
+        parseInt(a.Tier) === tier,
     );
 
     if (abilityData && (abilityData.PoolIncrease || abilityData.EdgeIncrease)) {
@@ -1604,7 +1597,7 @@ function selectExtraFocusAbility(abilityName) {
   const remainingExtras = availableExtras - usedExtras;
 
   console.log(
-    `Available: ${availableExtras}, Used: ${usedExtras}, Remaining: ${remainingExtras}`
+    `Available: ${availableExtras}, Used: ${usedExtras}, Remaining: ${remainingExtras}`,
   );
 
   if (remainingExtras <= 0) {
@@ -1616,7 +1609,7 @@ function selectExtraFocusAbility(abilityName) {
   const confirmation = confirm(
     `Select "${abilityName}" as an extra Focus ability?\n\n` +
       `This will use one of your extra Focus ability selections.\n\n` +
-      `Remaining extra selections after this: ${remainingExtras - 1}`
+      `Remaining extra selections after this: ${remainingExtras - 1}`,
   );
 
   if (!confirmation) return;
@@ -1639,7 +1632,7 @@ function selectExtraFocusAbility(abilityName) {
 
   console.log(`✓ Selected extra Focus ability: ${abilityName}`);
   console.log(
-    `  Available: ${character.extraFocusAbilitySelections.available}, Used: ${character.extraFocusAbilitySelections.used}`
+    `  Available: ${character.extraFocusAbilitySelections.available}, Used: ${character.extraFocusAbilitySelections.used}`,
   );
 
   // Save immediately
@@ -1654,7 +1647,7 @@ function selectExtraFocusAbility(abilityName) {
 
   // Check if this ability grants a pool or edge increase
   const abilityData = focusAbilities.find(
-    (a) => a.Ability === abilityName && a.Focus === character.focus1
+    (a) => a.Ability === abilityName && a.Focus === character.focus1,
   );
 
   console.log("Ability data found:", abilityData);
@@ -1888,8 +1881,8 @@ function updateTemporaryStatBoosts() {
                     ability.stat
                   }`
                 : ability.cost
-                ? `Cost: ${ability.cost} points`
-                : "No cost"
+                  ? `Cost: ${ability.cost} points`
+                  : "No cost"
             }
             ${ability.stress ? ` | Stress: ${ability.stress}` : ""}
           </div>
@@ -1899,7 +1892,7 @@ function updateTemporaryStatBoosts() {
             id="toggleBoost_${ability.name.replace(/\s/g, "_")}"
             onclick="toggleTemporaryBoost('${ability.name.replace(
               /'/g,
-              "\\'"
+              "\\'",
             )}')"
             class="button ${isActive ? "primary-button" : "secondary-button"}"
             style="padding: 12px 24px; font-size: 1em; min-width: 120px; ${
@@ -1946,7 +1939,7 @@ function toggleTemporaryBoost(abilityName) {
     // Deactivate
     const confirmation = confirm(
       `Deactivate ${abilityName}?\n\n` +
-        `This will remove the temporary stat bonuses.`
+        `This will remove the temporary stat bonuses.`,
     );
 
     if (!confirmation) return;
@@ -1970,7 +1963,7 @@ function toggleTemporaryBoost(abilityName) {
         alert(
           `Not enough ${statName} points!\n\n` +
             `Required: ${cost}\n` +
-            `Current: ${currentPool}`
+            `Current: ${currentPool}`,
         );
         return;
       }
@@ -1985,7 +1978,7 @@ function toggleTemporaryBoost(abilityName) {
             : "No cost"
         }\n` +
         `${ability.stress ? `Stress: ${ability.stress}` : ""}\n\n` +
-        `Remember to deactivate when the effect expires!`
+        `Remember to deactivate when the effect expires!`,
     );
 
     if (!confirmation) return;
@@ -2012,7 +2005,7 @@ function toggleTemporaryBoost(abilityName) {
     alert(
       `${abilityName} activated!\n\n` +
         `Temporary bonuses applied.\n\n` +
-        `Don't forget to deactivate when done!`
+        `Don't forget to deactivate when done!`,
     );
   }
 
@@ -2068,7 +2061,7 @@ function applyTemporaryBoostModifiers(ability, apply) {
           // When deactivating, don't let current exceed new max
           character[poolKey].current = Math.min(
             character[poolKey].current,
-            character[poolKey].max
+            character[poolKey].max,
           );
         }
       }
@@ -2084,15 +2077,15 @@ function diagnoseTypeAbilities() {
   // Check all possible variable names
   console.log(
     "1. Checking for typeAbilities:",
-    typeof typeAbilities !== "undefined"
+    typeof typeAbilities !== "undefined",
   );
   console.log(
     "2. Checking for ABILITIES_DATA:",
-    typeof ABILITIES_DATA !== "undefined"
+    typeof ABILITIES_DATA !== "undefined",
   );
   console.log(
     "3. Checking for abilitiesData:",
-    typeof window.abilitiesData !== "undefined"
+    typeof window.abilitiesData !== "undefined",
   );
 
   // List all global variables that contain 'abilit'
@@ -2103,7 +2096,7 @@ function diagnoseTypeAbilities() {
       const value = window[key];
       console.log(
         `   - ${key}:`,
-        Array.isArray(value) ? `Array(${value.length})` : typeof value
+        Array.isArray(value) ? `Array(${value.length})` : typeof value,
       );
     });
 
@@ -2122,7 +2115,7 @@ function diagnoseTypeAbilities() {
     console.log("\n7. Sample abilities:");
     abilities.slice(0, 3).forEach((a, i) => {
       console.log(
-        `   ${i + 1}. ${a.Ability || a.name} (Tier ${a.Tier || a.tier})`
+        `   ${i + 1}. ${a.Ability || a.name} (Tier ${a.Tier || a.tier})`,
       );
     });
   }

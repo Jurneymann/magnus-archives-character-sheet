@@ -2,6 +2,8 @@
 
 let weaponsViewMode = "all";
 let itemsViewMode = "all";
+let weaponsViewManuallySet = false;
+let itemsViewManuallySet = false;
 let weaponsData = [];
 let itemsData = [];
 let weaponIdCounter = 0;
@@ -60,6 +62,10 @@ function addWeaponRow() {
     alert("Please complete or cancel the current weapon entry first.");
     return;
   }
+
+  // Ensure "show all" while the add row is open (don't touch manuallySet — preserve player's explicit choice)
+  weaponsViewMode = "all";
+  updateWeaponsButtonStyles();
 
   // Create new row with input fields
   const row = document.createElement("tr");
@@ -188,6 +194,7 @@ function saveNewWeapon() {
 function cancelNewWeapon() {
   const addRow = document.getElementById("addWeaponRow");
   if (addRow) addRow.remove();
+  renderWeaponsTable();
 }
 
 function removeWeapon(weaponName) {
@@ -200,6 +207,10 @@ function removeWeapon(weaponName) {
 
   console.log("Weapon removed:", weaponName);
   console.log("Remaining weapons:", character.weapons.length);
+
+  // Keep showing all while player is actively modifying inventory
+  weaponsViewMode = "all";
+  weaponsViewManuallySet = true;
 
   // Re-render
   renderWeaponsTable();
@@ -229,6 +240,10 @@ function addWeaponFromList(weaponName) {
   console.log("Weapon added from list:", weapon.Item);
   console.log("Total weapons:", character.weapons.length);
 
+  // Keep showing all while player is actively adding items
+  weaponsViewMode = "all";
+  weaponsViewManuallySet = true;
+
   // Re-render
   renderWeaponsTable();
 
@@ -238,9 +253,29 @@ function addWeaponFromList(weaponName) {
   alert(`Added "${weapon.Item}" to your weapons!`);
 }
 
+function updateWeaponsButtonStyles() {
+  const allBtn = document.getElementById("weaponsShowAll");
+  const selectedBtn = document.getElementById("weaponsShowSelected");
+  if (allBtn && selectedBtn) {
+    allBtn.style.background = weaponsViewMode === "all" ? "#317e30" : "#555";
+    selectedBtn.style.background =
+      weaponsViewMode === "selected" ? "#317e30" : "#555";
+    allBtn.classList.toggle("active", weaponsViewMode === "all");
+    selectedBtn.classList.toggle("active", weaponsViewMode === "selected");
+  }
+}
+
 function renderWeaponsTable() {
   const tbody = document.getElementById("weaponsTableBody");
   if (!tbody) return;
+
+  // Auto-determine view mode unless manually overridden or add row is open
+  const addRowOpen = !!document.getElementById("addWeaponRow");
+  if (!weaponsViewManuallySet && !addRowOpen) {
+    weaponsViewMode =
+      character.weapons && character.weapons.length > 0 ? "selected" : "all";
+  }
+  updateWeaponsButtonStyles();
 
   tbody.innerHTML = "";
 
@@ -308,22 +343,7 @@ function renderWeaponsTable() {
 
 function toggleWeaponsView(mode) {
   weaponsViewMode = mode;
-
-  // Update button styles
-  const allBtn = document.getElementById("weaponsShowAll");
-  const selectedBtn = document.getElementById("weaponsShowSelected");
-
-  if (allBtn && selectedBtn) {
-    if (mode === "all") {
-      allBtn.classList.add("active");
-      selectedBtn.classList.remove("active");
-    } else {
-      allBtn.classList.remove("active");
-      selectedBtn.classList.add("active");
-    }
-  }
-
-  // Re-render the table with the new filter
+  weaponsViewManuallySet = true;
   renderWeaponsTable();
 }
 
@@ -338,6 +358,10 @@ function addItemRow() {
     alert("Please complete or cancel the current item entry first.");
     return;
   }
+
+  // Ensure "show all" while the add row is open (don't touch manuallySet — preserve player's explicit choice)
+  itemsViewMode = "all";
+  updateItemsButtonStyles();
 
   // Create new row with input fields
   const row = document.createElement("tr");
@@ -437,6 +461,7 @@ function saveNewItem() {
 function cancelNewItem() {
   const addRow = document.getElementById("addItemRow");
   if (addRow) addRow.remove();
+  renderItemsTable();
 }
 
 function removeItem(itemName) {
@@ -446,6 +471,10 @@ function removeItem(itemName) {
 
   // Remove from character items
   character.items = character.items.filter((i) => i.Item !== itemName);
+
+  // Keep showing all while player is actively modifying inventory
+  itemsViewMode = "all";
+  itemsViewManuallySet = true;
 
   // Re-render
   renderItemsTable();
@@ -464,15 +493,39 @@ function addItemFromList(itemName) {
   // Add to character's items
   character.items.push({ ...item });
 
+  // Keep showing all while player is actively adding items
+  itemsViewMode = "all";
+  itemsViewManuallySet = true;
+
   // Re-render
   renderItemsTable();
 
   alert(`Added "${item.Item}" to your items!`);
 }
 
+function updateItemsButtonStyles() {
+  const allBtn = document.getElementById("itemsShowAll");
+  const selectedBtn = document.getElementById("itemsShowSelected");
+  if (allBtn && selectedBtn) {
+    allBtn.style.background = itemsViewMode === "all" ? "#317e30" : "#555";
+    selectedBtn.style.background =
+      itemsViewMode === "selected" ? "#317e30" : "#555";
+    allBtn.classList.toggle("active", itemsViewMode === "all");
+    selectedBtn.classList.toggle("active", itemsViewMode === "selected");
+  }
+}
+
 function renderItemsTable() {
   const tbody = document.getElementById("itemsTableBody");
   if (!tbody) return;
+
+  // Auto-determine view mode unless manually overridden or add row is open
+  const addRowOpen = !!document.getElementById("addItemRow");
+  if (!itemsViewManuallySet && !addRowOpen) {
+    itemsViewMode =
+      character.items && character.items.length > 0 ? "selected" : "all";
+  }
+  updateItemsButtonStyles();
 
   tbody.innerHTML = "";
 
@@ -538,21 +591,6 @@ function renderItemsTable() {
 
 function toggleItemsView(mode) {
   itemsViewMode = mode;
-
-  // Update button styles
-  const allBtn = document.getElementById("itemsShowAll");
-  const selectedBtn = document.getElementById("itemsShowSelected");
-
-  if (allBtn && selectedBtn) {
-    if (mode === "all") {
-      allBtn.classList.add("active");
-      selectedBtn.classList.remove("active");
-    } else {
-      allBtn.classList.remove("active");
-      selectedBtn.classList.add("active");
-    }
-  }
-
-  // Re-render the table with the new filter
+  itemsViewManuallySet = true;
   renderItemsTable();
 }

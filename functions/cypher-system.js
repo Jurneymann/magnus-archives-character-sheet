@@ -390,29 +390,6 @@ function calculateCypherEdgeBonus(cypher) {
   return level >= 5 ? 2 : 1;
 }
 
-function updateEdgeDisplay() {
-  console.log("updateEdgeDisplay() called");
-
-  // Update Edge display for each stat
-  ["Might", "Speed", "Intellect"].forEach((stat) => {
-    const edgeEl = document.getElementById(`${stat.toLowerCase()}Edge`);
-    const edgeValue =
-      character.edge[stat] || character[`${stat.toLowerCase()}Edge`] || 0;
-
-    if (edgeEl) {
-      edgeEl.textContent = edgeValue;
-      console.log(`✓ Updated ${stat} Edge display to:`, edgeValue);
-    } else {
-      console.warn(`✗ ${stat} Edge element not found`);
-    }
-  });
-
-  // Update Edge displays in calculators if they exist
-  if (typeof updateCalculatorEdgeValues === "function") {
-    updateCalculatorEdgeValues();
-  }
-}
-
 function updateCypherBoosts() {
   console.log("updateCypherBoosts() called");
 

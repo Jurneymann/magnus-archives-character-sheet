@@ -35,7 +35,7 @@ function checkAvatarRequirements() {
   console.log(
     "- Supernatural Stress >= 10:",
     hasSupernaturalStress,
-    `(Current: ${character.supernaturalStress || 0})`
+    `(Current: ${character.supernaturalStress || 0})`,
   );
   console.log("- Tier >= 4:", hasTier, `(Current: ${character.tier || 1})`);
   console.log("- Has Supernatural Ability:", hasSupernaturalAbility);
@@ -51,10 +51,15 @@ function updateAvatarTabVisibility() {
   if (!avatarTabBtn) return;
 
   const meetsRequirements = checkAvatarRequirements();
+  const gmUnlocked = character.avatar && character.avatar.gmUnlocked === true;
 
-  if (meetsRequirements || character.avatar.isAvatar) {
+  if (meetsRequirements || character.avatar.isAvatar || gmUnlocked) {
     avatarTabBtn.style.display = "block";
-    console.log("Avatar Requirements met. Tab is visible");
+    console.log("Avatar Requirements met. Tab is visible", {
+      meetsRequirements,
+      isAvatar: character.avatar.isAvatar,
+      gmUnlocked,
+    });
   } else {
     avatarTabBtn.style.display = "none";
     console.log("Avatar Requirements NOT met. Tab is hidden");
@@ -79,6 +84,9 @@ function initializeAvatarTab() {
     return;
   }
 
+  // Check if GM has manually unlocked the tab
+  const gmUnlocked = character.avatar.gmUnlocked === true;
+
   if (character.avatar.isAvatar) {
     console.log("Showing post-commitment content");
     // Already an Avatar - show post-commitment content
@@ -86,9 +94,13 @@ function initializeAvatarTab() {
     preCommitment.style.display = "none";
     postCommitment.style.display = "block";
     updateAvatarPostCommitmentDisplay();
-  } else if (character.avatar.hasUnlockedTab) {
+  } else if (character.avatar.hasUnlockedTab || gmUnlocked) {
     console.log("Showing entity selection (pre-commitment)");
     // Unlocked but not committed - show entity selection
+    // If GM unlocked, also set hasUnlockedTab to true
+    if (gmUnlocked && !character.avatar.hasUnlockedTab) {
+      character.avatar.hasUnlockedTab = true;
+    }
     passwordOverlay.style.display = "none";
     preCommitment.style.display = "block";
     postCommitment.style.display = "none";
@@ -111,7 +123,7 @@ function closeAvatarPasswordOverlay() {
 
   // Switch back to Character tab
   const characterTab = document.querySelector(
-    '.tab-button[data-tab="character"]'
+    '.tab-button[data-tab="character"]',
   );
   if (characterTab) {
     characterTab.click();
@@ -129,6 +141,18 @@ function unlockAvatarTab() {
   const passwordInput = document.getElementById("avatarPassword");
   const password = passwordInput.value.trim();
 
+  // Check if GM has already unlocked (shouldn't reach here if so, but safety check)
+  if (character.avatar.gmUnlocked === true) {
+    character.avatar.hasUnlockedTab = true;
+    passwordInput.value = "";
+    initializeAvatarTab();
+    alert(
+      "Something is reaching for you. Slow, inevitable, and hungry.\n\n" +
+        "You know you should recoil, escape, scream, but instead, your skin tingles with a dark thrill, like a dangerous secret waking inside you.",
+    );
+    return;
+  }
+
   // Use the configured password from the top of the file
   if (password.toLowerCase() === AVATAR_PASSWORD.toLowerCase()) {
     character.avatar.hasUnlockedTab = true;
@@ -142,7 +166,7 @@ function unlockAvatarTab() {
     // Show success message
     alert(
       "Something is reaching for you. Slow, inevitable, and hungry.\n\n" +
-        "You know you should recoil, escape, scream, but instead, your skin tingles with a dark thrill, like a dangerous secret waking inside you."
+        "You know you should recoil, escape, scream, but instead, your skin tingles with a dark thrill, like a dangerous secret waking inside you.",
     );
   } else {
     alert("Incorrect password. The path remains closed.");
@@ -201,7 +225,7 @@ function confirmEntityChoice() {
     `Become an Avatar of ${entity.name}?\n\n` +
       `${entity.description}\n\n` +
       `THIS CHOICE IS PERMANENT AND CANNOT BE UNDONE.\n\n` +
-      `Do you wish to proceed?`
+      `Do you wish to proceed?`,
   );
 
   if (!confirmation) return;
@@ -210,7 +234,7 @@ function confirmEntityChoice() {
   const finalConfirmation = confirm(
     `Are you absolutely certain?\n\n` +
       `This will permanently transform your character into an Avatar of Fear.\n\n` +
-      `There is no going back.`
+      `There is no going back.`,
   );
 
   if (!finalConfirmation) return;
@@ -248,7 +272,7 @@ function confirmEntityChoice() {
 
   alert(
     `You have become an Avatar of ${entity.name}.\n\n` +
-      `The transformation is complete. You are forever changed.`
+      `The transformation is complete. You are forever changed.`,
   );
 }
 
@@ -393,7 +417,7 @@ function populateAvatarPowersTable() {
     const isEntitySpecific = power.fear === entityName;
 
     console.log(
-      `Power ${index}: ${power.name}, Universal: ${isUniversal}, Entity: ${isEntitySpecific}`
+      `Power ${index}: ${power.name}, Universal: ${isUniversal}, Entity: ${isEntitySpecific}`,
     );
 
     // Only show Universal or Entity-specific powers
@@ -570,7 +594,7 @@ function selectTetheredPower(powerIndex) {
     `Power Selected: ${power.name}\n\n` +
       (cost > 0
         ? `4 XP spent. Current XP: ${character.xp}`
-        : `First selection is free!`)
+        : `First selection is free!`),
   );
 }
 
@@ -578,7 +602,7 @@ function selectTetheredPower(powerIndex) {
 function changeTetheredPower() {
   alert(
     "Select a different Entity-Specific power from the table below.\n\n" +
-      "Changing your power costs 4 XP."
+      "Changing your power costs 4 XP.",
   );
 }
 
@@ -616,7 +640,7 @@ function useAvatarPower(powerIndex) {
       `Not enough Intellect to use ${power.name}!\n\n` +
         `Required: ${actualCost} Intellect (after Edge)\n` +
         `Current: ${currentIntellect} Intellect\n\n` +
-        `You need ${actualCost - currentIntellect} more Intellect points.`
+        `You need ${actualCost - currentIntellect} more Intellect points.`,
     );
     return;
   }
@@ -631,7 +655,7 @@ function useAvatarPower(powerIndex) {
       `New Intellect: ${currentIntellect - actualCost}\n\n` +
       `Current Stress: ${character.stress || 0}\n` +
       `New Stress: ${(character.stress || 0) + power.stress}\n\n` +
-      `Confirm?`
+      `Confirm?`,
   );
 
   if (!confirmation) return;
@@ -652,7 +676,7 @@ function useAvatarPower(powerIndex) {
     `${power.name} activated!\n\n` +
       `Intellect: ${currentIntellect} → ${character.currentPools.Intellect}\n` +
       `Stress: ${oldStress} → ${character.stress}\n\n` +
-      `${power.description}`
+      `${power.description}`,
   );
 
   console.log(`✓ Power used successfully`);

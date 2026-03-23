@@ -1,45 +1,101 @@
 // ==================== CHARACTER ARCS SYSTEM ==================== //
 
-// Initialize character arc data
+// Initialize character arc data - NEW: Support multiple active arcs
 if (!character.characterArc) {
   character.characterArc = {
-    currentArc: null,
-    arcName: "",
-    arcNotes: "",
+    activeArcs: [], // Array of active arc objects: {arcIndex, arcName, arcNotes}
+    currentlyViewingIndex: 0, // Which active arc is currently being viewed (index in activeArcs array)
     arcsCompleted: 0,
-    arcSelections: 0, // Track how many times an arc has been selected
+    totalArcsSelected: 0, // Total number of arcs ever selected (for tracking first arc free)
     firstArcFree: true,
   };
 }
 
-// Populate the character arc dropdown
+// Ensure activeArcs array exists (for old character sheets)
+if (!character.characterArc.activeArcs) {
+  character.characterArc.activeArcs = [];
+}
+
+// Ensure other required properties exist
+if (character.characterArc.currentlyViewingIndex === undefined) {
+  character.characterArc.currentlyViewingIndex = 0;
+}
+if (character.characterArc.arcsCompleted === undefined) {
+  character.characterArc.arcsCompleted = 0;
+}
+if (character.characterArc.totalArcsSelected === undefined) {
+  character.characterArc.totalArcsSelected = 0;
+}
+if (character.characterArc.firstArcFree === undefined) {
+  character.characterArc.firstArcFree = true;
+}
+
+// Migrate old single-arc data to new multi-arc structure
+if (
+  character.characterArc.currentArc !== undefined &&
+  character.characterArc.activeArcs.length === 0
+) {
+  console.log("Migrating old single-arc data to new multi-arc structure");
+  character.characterArc.activeArcs = [];
+
+  // If there was an active arc, migrate it
+  if (character.characterArc.currentArc !== null) {
+    character.characterArc.activeArcs.push({
+      arcIndex: character.characterArc.currentArc,
+      arcName: character.characterArc.arcName || "",
+      arcNotes: character.characterArc.arcNotes || "",
+    });
+  }
+
+  character.characterArc.currentlyViewingIndex = 0;
+  character.characterArc.totalArcsSelected =
+    character.characterArc.arcSelections || 0;
+
+  // Clean up old properties
+  delete character.characterArc.currentArc;
+  delete character.characterArc.arcName;
+  delete character.characterArc.arcNotes;
+  delete character.characterArc.arcSelections;
+}
+
+// Populate the character arc dropdown - only show arcs not currently active
 function populateCharacterArcSelect() {
   const select = document.getElementById("characterArcSelect");
 
   if (!select) return;
 
-  // Clear existing options except the first one
-  select.innerHTML = '<option value="">-- No Arc Selected --</option>';
+  // Ensure activeArcs exists
+  if (!character.characterArc.activeArcs) {
+    character.characterArc.activeArcs = [];
+  }
 
-  // Add all character arcs
+  // Get list of currently active arc indices
+  const activeArcIndices = character.characterArc.activeArcs.map(
+    (arc) => arc.arcIndex,
+  );
+
+  // Clear existing options
+  select.innerHTML = '<option value="">-- Select New Arc --</option>';
+
+  // Add all character arcs that aren't already active
   CHARACTER_ARCS.forEach((arc, index) => {
-    const option = document.createElement("option");
-    option.value = index;
-    option.textContent = arc.name;
-    select.appendChild(option);
+    if (!activeArcIndices.includes(index)) {
+      const option = document.createElement("option");
+      option.value = index;
+      option.textContent = arc.name;
+      select.appendChild(option);
+    }
   });
 
-  // Set current selection
-  if (character.characterArc.currentArc !== null) {
-    select.value = character.characterArc.currentArc;
-  }
+  // Reset to default selection
+  select.value = "";
 }
 
-// Update the arc description when selection changes
+// Update the arc description when selection changes (for adding new arcs)
 function updateArcDescription() {
   const select = document.getElementById("characterArcSelect");
   const descriptionTextarea = document.getElementById(
-    "characterArcDescription"
+    "characterArcDescription",
   );
 
   if (!select || !descriptionTextarea) return;
@@ -63,16 +119,73 @@ function updateArcDescription() {
   }
 }
 
-// Save arc notes
+// Switch to viewing a different active arc
+function switchToArc(activeArcIndex) {
+  if (
+    activeArcIndex < 0 ||
+    activeArcIndex >= character.characterArc.activeArcs.length
+  ) {
+    console.error("Invalid arc index:", activeArcIndex);
+    return;
+  }
+
+  character.characterArc.currentlyViewingIndex = activeArcIndex;
+  displayCurrentArc();
+}
+
+// Save arc notes for the currently viewed arc
 function saveArcNotes() {
   const notesTextarea = document.getElementById("characterArcNotes");
 
   if (!notesTextarea) return;
 
-  character.characterArc.arcNotes = notesTextarea.value;
+  const viewingIndex = character.characterArc.currentlyViewingIndex;
+
+  if (character.characterArc.activeArcs[viewingIndex]) {
+    character.characterArc.activeArcs[viewingIndex].arcNotes =
+      notesTextarea.value;
+  }
 }
 
-// Select or change character arc
+// Display the currently selected active arc
+function displayCurrentArc() {
+  // Ensure activeArcs exists
+  if (!character.characterArc.activeArcs) {
+    character.characterArc.activeArcs = [];
+  }
+
+  const activeArcs = character.characterArc.activeArcs;
+  const viewingIndex = character.characterArc.currentlyViewingIndex || 0;
+
+  const descriptionTextarea = document.getElementById(
+    "characterArcDescription",
+  );
+  const notesTextarea = document.getElementById("characterArcNotes");
+
+  if (!descriptionTextarea || !notesTextarea) return;
+
+  if (!activeArcs || activeArcs.length === 0 || !activeArcs[viewingIndex]) {
+    // No active arcs
+    descriptionTextarea.value = "";
+    notesTextarea.value = "";
+    notesTextarea.disabled = true;
+    return;
+  }
+
+  const currentArc = activeArcs[viewingIndex];
+  const arcData = CHARACTER_ARCS[currentArc.arcIndex];
+
+  if (arcData) {
+    descriptionTextarea.value = arcData.description;
+    notesTextarea.value = currentArc.arcNotes || "";
+    notesTextarea.disabled = false;
+  }
+
+  // Update the active arcs list display
+  updateActiveArcsList();
+}
+
+// Add a new character arc to the active arcs list
 function selectCharacterArc() {
   const select = document.getElementById("characterArcSelect");
   const selectedIndex = select.value;
@@ -82,34 +195,28 @@ function selectCharacterArc() {
     return;
   }
 
-  const arc = CHARACTER_ARCS[parseInt(selectedIndex)];
+  const arcIndex = parseInt(selectedIndex);
+  const arc = CHARACTER_ARCS[arcIndex];
 
-  // Check if this is a change or first selection
-  const isChanging = character.characterArc.currentArc !== null;
-  const isFirstArc = character.characterArc.arcSelections === 0;
+  // Check if first arc (free)
+  const isFirstArc = character.characterArc.totalArcsSelected === 0;
+  const cost = isFirstArc ? 0 : 1;
 
   let confirmMessage = "";
-  let cost = 0;
 
   if (isFirstArc) {
     confirmMessage =
-      `Select "${arc.name}" as your character arc?\n\n` +
+      `Add "${arc.name}" as your character arc?\n\n` +
       `Your first arc is FREE!\n\n` +
+      `You can have multiple arcs active at once.\n` +
       `Completing this arc will award 2 XP.`;
-    cost = 0;
-  } else if (isChanging) {
-    confirmMessage =
-      `Change your character arc to "${arc.name}"?\n\n` +
-      `Current Arc: ${character.characterArc.arcName}\n` +
-      `Cost: 1 XP\n\n` +
-      `Completing the new arc will award 2 XP.`;
-    cost = 1;
   } else {
     confirmMessage =
-      `Select "${arc.name}" as your new character arc?\n\n` +
+      `Add "${arc.name}" as a new character arc?\n\n` +
       `Cost: 1 XP\n\n` +
+      `You currently have ${character.characterArc.activeArcs.length} active arc(s).\n` +
+      `You can work on multiple arcs simultaneously.\n\n` +
       `Completing this arc will award 2 XP.`;
-    cost = 1;
   }
 
   const confirmation = confirm(confirmMessage);
@@ -119,133 +226,243 @@ function selectCharacterArc() {
   // Deduct XP if not first arc
   if (cost > 0) {
     if (character.xp < cost) {
-      alert("Not enough XP! You need 1 XP to select a new arc.");
+      alert("Not enough XP! You need 1 XP to add a new arc.");
       return;
     }
 
-    character.xp = Math.max(0, character.xp - cost); // Ensure XP doesn't go negative
+    character.xp = Math.max(0, character.xp - cost);
   }
 
-  // Set the new arc
-  character.characterArc.currentArc = parseInt(selectedIndex);
-  character.characterArc.arcName = arc.name;
-  character.characterArc.arcSelections++;
+  // Add the new arc to active arcs
+  character.characterArc.activeArcs.push({
+    arcIndex: arcIndex,
+    arcName: arc.name,
+    arcNotes: "",
+  });
+
+  character.characterArc.totalArcsSelected++;
   character.characterArc.firstArcFree = false;
+
+  // Switch to viewing the newly added arc
+  character.characterArc.currentlyViewingIndex =
+    character.characterArc.activeArcs.length - 1;
 
   // Update displays
   updateXPDisplay();
   updateCharacterArcDisplay();
+  populateCharacterArcSelect(); // Refresh dropdown to remove the newly selected arc
+  displayCurrentArc();
 
   alert(
-    `Character Arc Selected: ${arc.name}\n\n` +
+    `Character Arc Added: ${arc.name}\n\n` +
       (cost > 0
         ? `1 XP spent. Current XP: ${character.xp}\n`
         : `First arc is free!\n`) +
-      `Complete this arc to earn 2 XP!`
+      `\nYou now have ${character.characterArc.activeArcs.length} active arc(s).\n` +
+      `Complete arcs to earn 2 XP each!`,
   );
 }
 
-// Complete character arc
-function completeCharacterArc() {
-  if (character.characterArc.currentArc === null) {
-    alert("You don't have an active character arc to complete.");
+// Complete a specific character arc by index
+function completeArc(activeArcIndex) {
+  if (
+    activeArcIndex < 0 ||
+    activeArcIndex >= character.characterArc.activeArcs.length
+  ) {
+    console.error("Invalid arc index:", activeArcIndex);
     return;
   }
 
-  const arcName = character.characterArc.arcName;
+  const activeArcs = character.characterArc.activeArcs;
+  const currentArc = activeArcs[activeArcIndex];
+
+  if (!currentArc) {
+    alert("Error: No arc is currently being viewed.");
+    return;
+  }
+
+  const arcName = currentArc.arcName;
 
   const confirmation = confirm(
-    `Complete your character arc: "${arcName}"?\n\n` +
+    `Complete character arc: "${arcName}"?\n\n` +
       `You will receive 2 XP as a reward!\n\n` +
-      `After completing this arc, you can select a new one.`
+      `This arc will be removed from your active arcs.\n` +
+      (activeArcs.length > 1
+        ? `You will still have ${activeArcs.length - 1} active arc(s) remaining.`
+        : `You can then select a new arc.`),
   );
 
   if (!confirmation) return;
 
-  // Award XP - ensure it's a valid number operation
+  // Award XP
   const currentXP = parseInt(character.xp) || 0;
   character.xp = currentXP + 2;
   character.characterArc.arcsCompleted++;
 
-  // Clear current arc
-  character.characterArc.currentArc = null;
-  character.characterArc.arcName = "";
-  character.characterArc.arcNotes = "";
+  // Remove the completed arc from active arcs
+  character.characterArc.activeArcs.splice(activeArcIndex, 1);
 
-  // Update XP display - try both methods
-  const xpInput = document.getElementById("xp");
-  if (xpInput) {
-    xpInput.value = character.xp;
+  // Adjust viewing index if needed
+  if (
+    character.characterArc.currentlyViewingIndex >=
+    character.characterArc.activeArcs.length
+  ) {
+    character.characterArc.currentlyViewingIndex = Math.max(
+      0,
+      character.characterArc.activeArcs.length - 1,
+    );
   }
 
-  // Also call the update function if it exists
+  // Update displays
   if (typeof updateXPDisplay === "function") {
     updateXPDisplay();
   } else {
-    // Manually update advancement display
-    updateAdvancementDisplay();
+    const xpInput = document.getElementById("xp");
+    if (xpInput) {
+      xpInput.value = character.xp;
+    }
+    if (typeof updateAdvancementDisplay === "function") {
+      updateAdvancementDisplay();
+    }
   }
 
-  // Update character arc display
   updateCharacterArcDisplay();
-
-  // Clear the form
-  const select = document.getElementById("characterArcSelect");
-  const notesTextarea = document.getElementById("characterArcNotes");
-  const descriptionTextarea = document.getElementById(
-    "characterArcDescription"
-  );
-
-  if (select) {
-    select.value = "";
-    // Manually trigger change event
-    const event = new Event("change", { bubbles: true });
-    select.dispatchEvent(event);
-  }
-  if (notesTextarea) {
-    notesTextarea.value = "";
-  }
-  if (descriptionTextarea) {
-    descriptionTextarea.value = "";
-  }
+  populateCharacterArcSelect(); // Refresh dropdown - completed arc is now available again
+  displayCurrentArc(); // Display the next arc or clear if none
 
   alert(
     `Character Arc Completed!\n\n` +
       `"${arcName}"\n\n` +
       `You have been awarded 2 XP!\n` +
       `Current XP: ${character.xp}\n` +
-      `Total Arcs Completed: ${character.characterArc.arcsCompleted}\n\n` +
-      `You can now select a new character arc for 1 XP.`
+      `Total Arcs Completed: ${character.characterArc.arcsCompleted}\n` +
+      `Active Arcs: ${character.characterArc.activeArcs.length}\n\n` +
+      `You can add another arc for 1 XP.`,
   );
 }
 
-// Update character arc display
-function updateCharacterArcDisplay() {
-  const currentArcName = document.getElementById("currentArcName");
-  const arcsCompletedCount = document.getElementById("arcsCompletedCount");
-  const notesTextarea = document.getElementById("characterArcNotes");
-
-  if (currentArcName) {
-    currentArcName.textContent = character.characterArc.arcName || "None";
+// Remove an active arc without completing it
+function removeArc(activeArcIndex) {
+  if (
+    activeArcIndex < 0 ||
+    activeArcIndex >= character.characterArc.activeArcs.length
+  ) {
+    console.error("Invalid arc index:", activeArcIndex);
+    return;
   }
+
+  const arc = character.characterArc.activeArcs[activeArcIndex];
+
+  const confirmation = confirm(
+    `Remove arc "${arc.arcName}" without completing it?\n\n` +
+      `You will NOT receive any XP reward.\n` +
+      `This arc can be selected again later for 1 XP.`,
+  );
+
+  if (!confirmation) return;
+
+  // Remove the arc
+  character.characterArc.activeArcs.splice(activeArcIndex, 1);
+
+  // Adjust viewing index if needed
+  if (
+    character.characterArc.currentlyViewingIndex >=
+    character.characterArc.activeArcs.length
+  ) {
+    character.characterArc.currentlyViewingIndex = Math.max(
+      0,
+      character.characterArc.activeArcs.length - 1,
+    );
+  }
+
+  // Update displays
+  updateCharacterArcDisplay();
+  populateCharacterArcSelect();
+  displayCurrentArc();
+
+  alert(
+    `Arc "${arc.arcName}" removed.\n\nYou can select it again later for 1 XP.`,
+  );
+}
+
+// Update character arc display - show summary and active arcs list
+function updateCharacterArcDisplay() {
+  // Ensure activeArcs exists
+  if (!character.characterArc.activeArcs) {
+    character.characterArc.activeArcs = [];
+  }
+
+  const arcsCompletedCount = document.getElementById("arcsCompletedCount");
+  const activeArcsCount = document.getElementById("activeArcsCount");
 
   if (arcsCompletedCount) {
     arcsCompletedCount.textContent = character.characterArc.arcsCompleted || 0;
   }
 
-  if (notesTextarea) {
-    notesTextarea.value = character.characterArc.arcNotes || "";
+  if (activeArcsCount) {
+    activeArcsCount.textContent = character.characterArc.activeArcs.length;
   }
+
+  // Update the active arcs list
+  updateActiveArcsList();
+}
+
+// Update the list of active arcs
+function updateActiveArcsList() {
+  const container = document.getElementById("activeArcsList");
+
+  if (!container) return;
+
+  // Ensure activeArcs exists
+  if (!character.characterArc.activeArcs) {
+    character.characterArc.activeArcs = [];
+  }
+
+  const activeArcs = character.characterArc.activeArcs;
+  const viewingIndex = character.characterArc.currentlyViewingIndex || 0;
+
+  if (activeArcs.length === 0) {
+    container.innerHTML =
+      '<div class="no-arcs-message">No active arcs. Select one below to get started!</div>';
+    return;
+  }
+
+  container.innerHTML = "";
+
+  activeArcs.forEach((arc, index) => {
+    const arcCard = document.createElement("div");
+    arcCard.className = `active-arc-card ${index === viewingIndex ? "viewing" : ""}`;
+    
+    // Make the entire card clickable to view/refresh the arc
+    arcCard.style.cursor = "pointer";
+    arcCard.onclick = (e) => {
+      // Don't trigger if clicking a button
+      if (e.target.tagName !== 'BUTTON') {
+        switchToArc(index);
+      }
+    };
+
+    arcCard.innerHTML = `
+      <div class="arc-card-header">
+        <div class="arc-card-title">${arc.arcName}</div>
+        ${index === viewingIndex ? '<span class="viewing-badge">Viewing</span>' : ""}
+      </div>
+      <div class="arc-card-actions">
+        <button class="arc-card-btn view-btn" onclick="event.stopPropagation(); switchToArc(${index})">View</button>
+        <button class="arc-card-btn complete-btn" onclick="event.stopPropagation(); completeArc(${index})">Complete</button>
+        <button class="arc-card-btn remove-btn" onclick="event.stopPropagation(); removeArc(${index})">Remove</button>
+      </div>
+    `;
+
+    container.appendChild(arcCard);
+  });
 }
 
 // Initialize character arcs on page load
 function initializeCharacterArcs() {
   populateCharacterArcSelect();
   updateCharacterArcDisplay();
-
-  // If there's a current arc, show its description
-  if (character.characterArc.currentArc !== null) {
-    updateArcDescription();
-  }
+  displayCurrentArc();
 }
-console.log("✓ Character Arcs system initialized");
+
+console.log("✓ Character Arcs system initialized (Multi-Arc Support)");

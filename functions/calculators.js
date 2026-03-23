@@ -189,6 +189,27 @@ function rollActionDice() {
   // Show dice roller and pass callback
   showDiceRoller("d20", (roll) => {
     processDiceRoll("action", roll, targetNumber, stat, effort);
+
+    // Broadcast roll to GM if connected to multiplayer
+    if (
+      typeof multiplayerManager !== "undefined" &&
+      multiplayerManager &&
+      multiplayerManager.roomCode
+    ) {
+      const success = roll >= targetNumber;
+      multiplayerManager.broadcastDiceRoll({
+        characterName: character.name || "Unknown",
+        type: "action",
+        roll: roll,
+        targetNumber: targetNumber,
+        success: success,
+        details: {
+          stat: stat,
+          difficulty: difficulty,
+          effort: effort,
+        },
+      });
+    }
   });
 }
 
@@ -823,6 +844,29 @@ function rollAttackDice() {
   // Show dice roller and pass callback
   showDiceRoller("d20", (roll) => {
     processDiceRoll("attack", roll, targetNumber, stat, effort);
+
+    // Broadcast roll to GM if connected to multiplayer
+    if (
+      typeof multiplayerManager !== "undefined" &&
+      multiplayerManager &&
+      multiplayerManager.roomCode
+    ) {
+      const success =
+        opponentType !== "player-player" ? roll >= targetNumber : null;
+      multiplayerManager.broadcastDiceRoll({
+        characterName: character.name || "Unknown",
+        type: "attack",
+        roll: roll,
+        targetNumber: targetNumber || null,
+        success: success,
+        details: {
+          stat: stat,
+          weapon: weapon,
+          opponentLevel: opponentLevel,
+          effort: effort,
+        },
+      });
+    }
   });
 }
 
@@ -1876,6 +1920,30 @@ function rollDefendDice() {
   // Show dice roller and pass callback
   showDiceRoller("d20", (roll) => {
     processDiceRoll("defend", roll, targetNumber, stat, effort);
+
+    // Broadcast roll to GM if connected to multiplayer
+    if (
+      typeof multiplayerManager !== "undefined" &&
+      multiplayerManager &&
+      multiplayerManager.roomCode
+    ) {
+      const success =
+        opponentType !== "player-player" && cooperative !== "take"
+          ? roll >= targetNumber
+          : null;
+      multiplayerManager.broadcastDiceRoll({
+        characterName: character.name || "Unknown",
+        type: "defend",
+        roll: roll,
+        targetNumber: targetNumber || null,
+        success: success,
+        details: {
+          stat: stat,
+          opponentLevel: opponentLevel,
+          effort: effort,
+        },
+      });
+    }
   });
 }
 
@@ -3179,16 +3247,52 @@ function clearAbilityCalculator() {
 // Quick roll d6
 function quickRollD6() {
   showDiceRoller("d6", (result) => {
-    // Just show an alert with the result
+    // Show alert with the result
     alert(`You rolled a d6: ${result}`);
+
+    // Broadcast roll to GM if connected to multiplayer
+    if (
+      typeof multiplayerManager !== "undefined" &&
+      multiplayerManager &&
+      multiplayerManager.roomCode
+    ) {
+      multiplayerManager.broadcastDiceRoll({
+        characterName: character.name || "Unknown",
+        type: "d6",
+        roll: result,
+        targetNumber: null,
+        success: null,
+        details: {
+          rollType: "quick",
+        },
+      });
+    }
   });
 }
 
 // Quick roll d20
 function quickRollD20() {
   showDiceRoller("d20", (result) => {
-    // Just show an alert with the result
+    // Show alert with the result
     alert(`You rolled a d20: ${result}`);
+
+    // Broadcast roll to GM if connected to multiplayer
+    if (
+      typeof multiplayerManager !== "undefined" &&
+      multiplayerManager &&
+      multiplayerManager.roomCode
+    ) {
+      multiplayerManager.broadcastDiceRoll({
+        characterName: character.name || "Unknown",
+        type: "d20",
+        roll: result,
+        targetNumber: null,
+        success: null,
+        details: {
+          rollType: "quick",
+        },
+      });
+    }
   });
 }
 

@@ -30,6 +30,8 @@ This project has **no official affiliation** with either Rusty Quill or Monte Co
 - **Attack Calculator**: Combat rolls with damage calculation and multiple attack types
 - **Defense Calculator**: Defensive rolls with stress calculation and armor effects
 - **Integrated 3D Dice Roller**: 3D animated dice with physics (d6, d20)
+- **Dice Customiser**: Personalise your dice roller with custom backgrounds, themed dice designs, and lighting colours
+- **Avatar Dice**: Exclusive stone-textured dice with coloured glows (red, blue, green, purple, amber) unlocked for players who reach Avatar status
 - **Manual Input Option**: Enter physical dice rolls for hybrid gameplay
 
 ### Avatar Powers System (Password Protected)

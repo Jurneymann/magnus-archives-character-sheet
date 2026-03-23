@@ -25,7 +25,7 @@ function spendXP(cost, description) {
 
   if (currentXP < costAmount) {
     alert(
-      `Not enough XP! You need ${costAmount} XP but only have ${currentXP} XP.`
+      `Not enough XP! You need ${costAmount} XP but only have ${currentXP} XP.`,
     );
     return false;
   }
@@ -34,7 +34,7 @@ function spendXP(cost, description) {
     `Spend ${costAmount} XP to: ${description}\n\n` +
       `Current XP: ${currentXP}\n` +
       `After purchase: ${currentXP - costAmount}\n\n` +
-      `Confirm?`
+      `Confirm?`,
   );
 
   if (confirmation) {
@@ -68,18 +68,26 @@ function checkTierAdvancement() {
     currentTier: character.tier,
   });
 
-  const requiredComplete = requiredAdvancements >= 4;
-  const optionalComplete = optionalAdvancements >= 1;
+  // Tier advancement requires 4 total advancements:
+  // - All 4 required advancements, OR
+  // - 3 required advancements + 1 optional advancement
+  const totalAdvancements = requiredAdvancements + optionalAdvancements;
+  const canAdvance =
+    (requiredAdvancements === 4 && totalAdvancements === 4) ||
+    (requiredAdvancements === 3 &&
+      optionalAdvancements === 1 &&
+      totalAdvancements === 4);
 
-  if (requiredComplete && optionalComplete) {
+  if (canAdvance) {
     const confirmation = confirm(
       `Congratulations! You have completed all requirements for tier advancement!\n\n` +
-        `Required Advancements: ${requiredAdvancements}/4 ✓\n` +
-        `Optional Advancements: ${optionalAdvancements}/1 ✓\n\n` +
+        `Required Advancements: ${requiredAdvancements}/4${requiredAdvancements === 4 ? " ✓" : ""}\n` +
+        `Optional Advancements: ${optionalAdvancements}/1${optionalAdvancements === 1 ? " ✓" : ""}\n` +
+        `Total Advancements: ${totalAdvancements}/4 ✓\n\n` +
         `You are ready to advance from Tier ${character.tier} to Tier ${
           character.tier + 1
         }!\n\n` +
-        `Advance now?`
+        `Advance now?`,
     );
 
     if (confirmation) {
@@ -186,7 +194,7 @@ function advanceTier() {
       `You can now purchase Tier ${newTier} advancements!\n\n` +
       `Requirements for next tier:\n` +
       `- All 4 required advancements (Pools, Edge, Effort, Skill)\n` +
-      `- 1 optional advancement (Recovery, Focus Ability, or Type Ability)`
+      `- 1 optional advancement (Recovery, Focus Ability, or Type Ability)`,
   );
 
   console.log("Tier advancement complete:", {
@@ -501,7 +509,7 @@ function enablePoolAllocation(points) {
             <button onclick="allocateTempPoint('${stat}', 1)" style="width: 30px; height: 30px; background: #317e30; color: white; border: none; border-radius: 4px; cursor: pointer;">+</button>
           </div>
         </div>
-      `
+      `,
         )
         .join("")}
     </div>
@@ -554,7 +562,7 @@ function confirmPoolAllocation() {
         .filter(([_, val]) => val > 0)
         .map(([stat, val]) => `${stat}: +${val}`)
         .join("\n") +
-      `\n\nThis cannot be changed once confirmed.`
+      `\n\nThis cannot be changed once confirmed.`,
   );
 
   if (!confirmation) return;
@@ -584,9 +592,9 @@ function confirmPoolAllocation() {
         .filter(([_, val]) => val > 0)
         .map(
           ([stat, val]) =>
-            `${stat} Pool: +${val} (now ${character.stats[stat]})`
+            `${stat} Pool: +${val} (now ${character.stats[stat]})`,
         )
-        .join("\n")
+        .join("\n"),
   );
 
   // Clear pending flag
@@ -595,7 +603,7 @@ function confirmPoolAllocation() {
 
 function cancelPoolAllocation() {
   const confirmation = confirm(
-    "Are you sure you want to cancel? This will refund your 4 XP."
+    "Are you sure you want to cancel? This will refund your 4 XP.",
   );
   const COST = 4;
 
@@ -662,7 +670,7 @@ function enableEdgeSelection() {
         >
           Increase ${stat} Edge (Currently: ${character.edge[stat]})
         </button>
-      `
+      `,
         )
         .join("")}
     </div>
@@ -711,7 +719,7 @@ function confirmEdgeIncrease(stat) {
 
 function cancelEdgeSelection() {
   const confirmation = confirm(
-    "Are you sure you want to cancel? This will refund your 4 XP."
+    "Are you sure you want to cancel? This will refund your 4 XP.",
   );
   const COST = 4;
 
@@ -734,7 +742,7 @@ function cancelEdgeSelection() {
 
 function showSkillTrainingUI() {
   alert(
-    "Go to the Skills & Abilities tab to add your trained/specialized skill."
+    "Go to the Skills & Abilities tab to add your trained/specialized skill.",
   );
   switchToTab("skills");
 }

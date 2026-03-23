@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <!-- Google tag (gtag.js) -->
@@ -77,7 +77,10 @@
                     type="text"
                     id="charName"
                     placeholder="Enter your character's name..."
-                    oninput="updateCharacterStatement(); validateCharacterOptions();"
+                    oninput="
+                      updateCharacterStatement();
+                      validateCharacterOptions();
+                    "
                   />
                 </div>
 
@@ -88,7 +91,10 @@
                   </label>
                   <select
                     id="descriptor"
-                    onchange="updateCharacterStatement(); validateCharacterOptions();"
+                    onchange="
+                      updateCharacterStatement();
+                      validateCharacterOptions();
+                    "
                   >
                     <option value="">-- Select Descriptor --</option>
                     <option value="Bold">Bold</option>
@@ -128,7 +134,10 @@
                   </label>
                   <select
                     id="type"
-                    onchange="updateCharacterStatement(); validateCharacterOptions();"
+                    onchange="
+                      updateCharacterStatement();
+                      validateCharacterOptions();
+                    "
                   >
                     <option value="">-- Select Type --</option>
                     <option value="Investigator">Investigator</option>
@@ -145,7 +154,10 @@
                   </label>
                   <select
                     id="focus1"
-                    onchange="updateCharacterStatement(); validateCharacterOptions();"
+                    onchange="
+                      updateCharacterStatement();
+                      validateCharacterOptions();
+                    "
                   >
                     <option value="">-- Select Focus --</option>
                     <option value="Carries a Gun">Carries a Gun</option>
@@ -348,13 +360,13 @@
 
           <!-- Character Arcs Section -->
           <div class="section character-arcs-section">
-            <h2>Character Arc</h2>
+            <h2>Character Arcs</h2>
 
             <!-- Arc Status Display -->
             <div class="arc-status-display">
               <div class="arc-status-item">
-                <span class="arc-status-label">Current Arc:</span>
-                <span class="arc-status-value" id="currentArcName">None</span>
+                <span class="arc-status-label">Active Arcs:</span>
+                <span class="arc-status-value" id="activeArcsCount">0</span>
               </div>
               <div class="arc-status-item">
                 <span class="arc-status-label">Arcs Completed:</span>
@@ -364,23 +376,26 @@
 
             <div class="character-arc-info">
               <p class="arc-info-text">
-                <strong>First arc is free!</strong> Changing or selecting a new
-                arc costs <strong>1 XP</strong>. Completing an arc awards
-                <strong>4 XP</strong>.
+                <strong>First arc is free!</strong> Additional arcs cost
+                <strong>1 XP</strong> each. You can have multiple arcs active
+                simultaneously.<br />
+                Completing an arc awards <strong>2 XP</strong>.
               </p>
             </div>
 
-            <div class="character-arc-container">
-              <!-- Arc Selection -->
-              <div class="arc-selection-row">
-                <label for="characterArcSelect">Select Character Arc:</label>
-                <select
-                  id="characterArcSelect"
-                  onchange="updateArcDescription()"
-                >
-                  <option value="">-- No Arc Selected --</option>
-                </select>
+            <!-- Active Arcs List -->
+            <div class="active-arcs-container">
+              <h3>Your Active Arcs</h3>
+              <div id="activeArcsList" class="active-arcs-list">
+                <div class="no-arcs-message">
+                  No active arcs. Select one below to get started!
+                </div>
               </div>
+            </div>
+
+            <!-- Currently Viewing Arc -->
+            <div class="character-arc-container">
+              <h3>Arc Details</h3>
 
               <!-- Arc Description (Read-only) -->
               <div class="arc-description-row">
@@ -388,7 +403,7 @@
                 <textarea
                   id="characterArcDescription"
                   readonly
-                  placeholder="Select a character arc to see its description..."
+                  placeholder="Select an arc from your active arcs above to view its description..."
                 ></textarea>
               </div>
 
@@ -399,22 +414,30 @@
                   id="characterArcNotes"
                   placeholder="Add your notes about your character arc progress, goals, and developments..."
                   oninput="saveArcNotes()"
+                  disabled
                 ></textarea>
               </div>
+            </div>
 
-              <!-- Action Buttons -->
+            <!-- Add New Arc Section -->
+            <div class="add-arc-container">
+              <h3>Add New Arc</h3>
+              <div class="arc-selection-row">
+                <label for="characterArcSelect">Select Character Arc:</label>
+                <select
+                  id="characterArcSelect"
+                  onchange="updateArcDescription()"
+                >
+                  <option value="">-- Select New Arc --</option>
+                </select>
+              </div>
+
               <div class="arc-action-buttons">
                 <button
                   class="button primary-button"
                   onclick="selectCharacterArc()"
                 >
-                  Select/Change Arc
-                </button>
-                <button
-                  class="button success-button"
-                  onclick="completeCharacterArc()"
-                >
-                  ✓ Complete Arc
+                  Add Arc
                 </button>
               </div>
             </div>
@@ -1422,7 +1445,6 @@
           </div>
         </div>
 
-        <!-- ==================== ADVANCEMENT SECTION ==================== -->
         <div id="advancement" class="tab-content">
           <div class="section">
             <h2>Character Advancement</h2>
@@ -1451,7 +1473,7 @@
                 <div class="advancement-stat-box">
                   <label>Tier Progress</label>
                   <span class="stat-value">
-                    <span id="advancementCount">0</span> / 5
+                    <span id="advancementCount">0</span> / 4
                   </span>
                 </div>
               </div>
@@ -1473,7 +1495,7 @@
                   <span class="category-icon">⚡</span>
                   Required Advancements
                   <span class="category-note"
-                    >(Choose 4 of these to advance to next tier)</span
+                    >(Choose all 4, or 3 of these + 1 optional to advance)</span
                   >
                 </h3>
 
@@ -1642,7 +1664,7 @@
                     min="1"
                     max="6"
                     placeholder="1-6"
-                    onkeypress="if(event.key === 'Enter') submitManualD6()"
+                    onkeypress="if (event.key === 'Enter') submitManualD6();"
                   />
                   <button class="manual-roll-btn" onclick="submitManualD6()">
                     Submit
@@ -1668,7 +1690,7 @@
                     min="1"
                     max="20"
                     placeholder="1-20"
-                    onkeypress="if(event.key === 'Enter') submitManualD20()"
+                    onkeypress="if (event.key === 'Enter') submitManualD20();"
                   />
                   <button class="manual-roll-btn" onclick="submitManualD20()">
                     Submit
@@ -2632,7 +2654,7 @@
                   type="password"
                   id="avatarPassword"
                   placeholder="Password"
-                  onkeypress="if(event.key === 'Enter') unlockAvatarTab()"
+                  onkeypress="if (event.key === 'Enter') unlockAvatarTab();"
                 />
                 <div class="avatar-password-buttons">
                   <button
@@ -2851,7 +2873,7 @@
                 placeholder="1-20"
                 min="1"
                 max="20"
-                onkeypress="if(event.key==='Enter') submitManualRoll()"
+                onkeypress="if (event.key === 'Enter') submitManualRoll();"
               />
               <button onclick="submitManualRoll()">Submit</button>
             </div>
@@ -2934,5 +2956,1157 @@
 
     <!-- Testing tools -->
     <script src="testing/testtools.js"></script>
+
+    <!-- ==================== BATTLE MAP MODAL ==================== -->
+    <style>
+      /* Battle Map Modal Styles */
+      #battleMapModalContainer {
+        min-height: 600px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+      }
+
+      #battleMapModalCanvas {
+        border: 2px solid #4caf50;
+        box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+        background: #1a1a1a;
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: crisp-edges;
+      }
+
+      #noMapMessageModal {
+        text-align: center;
+        color: #888;
+        padding: 60px;
+      }
+
+      #noMapMessageModal h2 {
+        color: #4caf50;
+        margin-bottom: 20px;
+      }
+
+      .player-control-button {
+        background: rgba(76, 175, 80, 0.2);
+        border: 1px solid #4caf50;
+        color: #4caf50;
+        padding: 10px 20px;
+        font-family: "libre baskerville", serif;
+        font-size: 0.9em;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+      }
+
+      .player-control-button:hover {
+        background: rgba(76, 175, 80, 0.4);
+        transform: translateY(-2px);
+      }
+
+      .player-control-button.active {
+        background: rgba(76, 175, 80, 0.6);
+        border-color: #66bb6a;
+        color: #fff;
+      }
+    </style>
+
+    <!-- Battle Map Modal -->
+    <div
+      id="battleMapModal"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 2000;
+        overflow: auto;
+      "
+    >
+      <div
+        style="
+          position: relative;
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+        "
+      >
+        <!-- Modal Header -->
+        <div
+          style="
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d1a0d 100%);
+            border-bottom: 2px solid #4caf50;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 2001;
+          "
+        >
+          <h2 style="margin: 0; color: #4caf50; font-size: 1.5em">
+            🗺️ Battle Map
+          </h2>
+          <button
+            onclick="toggleBattleMapModal()"
+            style="
+              background: transparent;
+              border: 2px solid #4caf50;
+              color: #4caf50;
+              font-size: 1.5em;
+              cursor: pointer;
+              padding: 5px 15px;
+              line-height: 1;
+              font-weight: bold;
+              border-radius: 4px;
+              transition: all 0.3s ease;
+            "
+            onmouseover="this.style.background = 'rgba(76, 175, 80, 0.2)'"
+            onmouseout="this.style.background = 'transparent'"
+          >
+            ✖
+          </button>
+        </div>
+
+        <!-- Battle Map Content -->
+        <div
+          style="
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+          "
+        >
+          <div id="battleMapModalContainer">
+            <div id="noMapMessageModal">
+              <h2>🗺️ Battle Map</h2>
+              <p>The GM hasn't shared a battle map yet.</p>
+              <p>When the GM shares the map, it will appear here.</p>
+            </div>
+            <canvas id="battleMapModalCanvas" style="display: none"></canvas>
+          </div>
+        </div>
+
+        <!-- Terrain Legend -->
+        <div
+          id="terrainLegendModal"
+          style="
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: rgba(26, 26, 26, 0.95);
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 15px;
+            z-index: 2002;
+            display: none;
+          "
+        >
+          <h3 style="color: #4caf50; margin-top: 0">Terrain Legend</h3>
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <div style="display: flex; align-items: center; gap: 10px">
+              <div
+                style="
+                  width: 30px;
+                  height: 30px;
+                  background: #424242;
+                  border: 1px solid #666;
+                "
+              ></div>
+              <span>Wall</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <div
+                style="
+                  width: 30px;
+                  height: 30px;
+                  background: #795548;
+                  border: 1px solid #666;
+                "
+              ></div>
+              <span>Furniture</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <div
+                style="
+                  width: 30px;
+                  height: 30px;
+                  background: #4caf50;
+                  border: 1px solid #666;
+                "
+              ></div>
+              <span>Landscape</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <div
+                style="
+                  width: 30px;
+                  height: 30px;
+                  background: #2196f3;
+                  border: 1px solid #666;
+                "
+              ></div>
+              <span>Water</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <div
+                style="
+                  width: 30px;
+                  height: 30px;
+                  background: #ff9800;
+                  border: 1px solid #666;
+                "
+              ></div>
+              <span>Difficult</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Measurement Display -->
+        <div
+          id="measureDisplayModal"
+          style="
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(76, 175, 80, 0.95);
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 10px 20px;
+            z-index: 2002;
+            display: none;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+          "
+        ></div>
+
+        <!-- Controls -->
+        <div
+          style="
+            background: rgba(26, 26, 26, 0.95);
+            border-top: 2px solid #4caf50;
+            padding: 15px 25px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+          "
+        >
+          <button
+            class="player-control-button"
+            onclick="toggleMeasureModal()"
+            id="measureBtnModal"
+          >
+            📏 Measure Distance
+          </button>
+          <button
+            class="player-control-button"
+            onclick="toggleTerrainLegend()"
+            id="legendBtn"
+          >
+            🗺️ Terrain Legend
+          </button>
+          <button class="player-control-button" onclick="zoomIn()">
+            🔍+ Zoom In
+          </button>
+          <button class="player-control-button" onclick="zoomOut()">
+            🔍- Zoom Out
+          </button>
+          <button class="player-control-button" onclick="resetZoom()">
+            ↺ Reset Zoom
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Battle Map Rendering Script -->
+    <script>
+      // Player Battle Map View Functions
+      const playerView = {
+        canvas: null,
+        ctx: null,
+        mapData: null,
+        zoom: 1,
+        measureActive: false,
+        measureStart: null,
+        measureEnd: null,
+      };
+
+      function initPlayerBattleView() {
+        const canvas = document.getElementById("battleMapModalCanvas");
+        if (!canvas) {
+          console.error("❌ Battle map modal canvas not found");
+          return;
+        }
+
+        playerView.canvas = canvas;
+        playerView.ctx = canvas.getContext("2d");
+
+        // Add click handler for measurement
+        canvas.addEventListener("click", handleCanvasClick);
+
+        console.log("✅ Battle map view initialized");
+      }
+
+      function handleCanvasClick(event) {
+        if (!playerView.measureActive) return;
+
+        const canvas = playerView.canvas;
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const x = (event.clientX - rect.left) * scaleX;
+        const y = (event.clientY - rect.top) * scaleY;
+
+        if (!playerView.measureStart) {
+          // First click - set start point
+          playerView.measureStart = { x, y };
+          console.log("📏 Measurement started at", x, y);
+        } else {
+          // Second click - set end point and calculate
+          playerView.measureEnd = { x, y };
+          console.log("📏 Measurement ended at", x, y);
+          calculateDistance();
+          renderBattleMap(playerView.mapData); // Redraw with measurement line
+        }
+      }
+
+      function calculateDistance() {
+        if (!playerView.measureStart || !playerView.measureEnd) return;
+
+        const cellSize = 40;
+        const dx = playerView.measureEnd.x - playerView.measureStart.x;
+        const dy = playerView.measureEnd.y - playerView.measureStart.y;
+        const pixels = Math.sqrt(dx * dx + dy * dy);
+        const squares = pixels / cellSize;
+
+        const display = document.getElementById("measureDisplayModal");
+        if (display) {
+          display.textContent = `📏 Distance: ${squares.toFixed(1)} squares`;
+          display.style.display = "block";
+        }
+      }
+
+      function toggleMeasureModal() {
+        playerView.measureActive = !playerView.measureActive;
+        const btn = document.getElementById("measureBtnModal");
+        if (btn) {
+          btn.classList.toggle("active", playerView.measureActive);
+          btn.textContent = playerView.measureActive
+            ? "✓ Measuring..."
+            : "📏 Measure Distance";
+        }
+        if (!playerView.measureActive) {
+          playerView.measureStart = null;
+          playerView.measureEnd = null;
+          const display = document.getElementById("measureDisplayModal");
+          if (display) display.style.display = "none";
+          if (playerView.mapData) {
+            renderBattleMap(playerView.mapData);
+          }
+        }
+      }
+
+      function toggleTerrainLegend() {
+        const legend = document.getElementById("terrainLegendModal");
+        const btn = document.getElementById("legendBtn");
+        if (legend) {
+          const isVisible = legend.style.display !== "none";
+          legend.style.display = isVisible ? "none" : "block";
+          if (btn) {
+            btn.classList.toggle("active", !isVisible);
+          }
+        }
+      }
+
+      // Helper functions for fog of war
+      function calculateLightBlocking(x0, y0, x1, y1, mapData) {
+        // Early exit if no terrain to check
+        if (!mapData.terrain || mapData.terrain.length === 0) {
+          return 1.0;
+        }
+
+        // Bresenham's line algorithm to trace ray from light to cell
+        const dx = Math.abs(x1 - x0);
+        const dy = Math.abs(y1 - y0);
+
+        // If adjacent cells, skip ray tracing
+        if (dx <= 1 && dy <= 1) {
+          return 1.0;
+        }
+
+        const sx = x0 < x1 ? 1 : -1;
+        const sy = y0 < y1 ? 1 : -1;
+        let err = dx - dy;
+        let currentX = x0;
+        let currentY = y0;
+        let lightReduction = 1.0;
+
+        while (true) {
+          if (
+            (currentX !== x0 || currentY !== y0) &&
+            (currentX !== x1 || currentY !== y1)
+          ) {
+            const terrainCell = mapData.terrain.find(
+              (t) => t.x === currentX && t.y === currentY,
+            );
+
+            if (terrainCell) {
+              if (terrainCell.type === "wall") {
+                return 0.0;
+              } else if (terrainCell.type === "furniture") {
+                lightReduction *= 0.5;
+              } else if (terrainCell.type === "landscape") {
+                lightReduction *= 0.7;
+              }
+            }
+
+            if (lightReduction < 0.01) {
+              return 0.0;
+            }
+          }
+
+          if (currentX === x1 && currentY === y1) {
+            break;
+          }
+
+          const e2 = 2 * err;
+          if (e2 > -dy) {
+            err -= dy;
+            currentX += sx;
+          }
+          if (e2 < dx) {
+            err += dx;
+            currentY += sy;
+          }
+        }
+
+        return lightReduction;
+      }
+
+      function getLightIntensityAtCell(x, y, mapData) {
+        if (!mapData.lights || mapData.lights.length === 0) {
+          return 0;
+        }
+
+        let maxIntensity = 0;
+        mapData.lights.forEach((light) => {
+          const dx = x - light.x;
+          const dy = y - light.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance <= light.radius) {
+            const blockingFactor = calculateLightBlocking(
+              light.x,
+              light.y,
+              x,
+              y,
+              mapData,
+            );
+
+            if (blockingFactor > 0) {
+              const falloff = 1 - distance / light.radius;
+              const intensity = falloff * light.intensity * blockingFactor;
+              maxIntensity = Math.max(maxIntensity, intensity);
+            }
+          }
+        });
+
+        return maxIntensity;
+      }
+
+      function getVisibleCells(mapData) {
+        const visibleCells = new Set();
+        const config = mapData.config || {};
+        const width = config.width || 10;
+        const height = config.height || 10;
+        const visionDistance = mapData.fogOfWar?.visionDistance || 5;
+
+        const pcData = Object.entries(mapData.combatants || {})
+          .filter(([id, c]) => {
+            const isPC = c && (c.type || "").toUpperCase() === "PC";
+            return isPC;
+          })
+          .map(([id, c]) => ({ id, combatant: c }));
+
+        console.log(`👁️ Found ${pcData.length} PCs for visibility calculation`);
+        if (pcData.length > 0) {
+          console.log(
+            "PC data:",
+            pcData.map((p) => ({
+              name: p.combatant.name,
+              type: p.combatant.type,
+              x: p.combatant.x,
+              y: p.combatant.y,
+            })),
+          );
+        }
+
+        if (mapData.fogOfWar?.mode === "lineOfSight") {
+          pcData.forEach((pc) => {
+            const pcPos = { x: pc.combatant.x, y: pc.combatant.y };
+            const facing = pc.combatant.facing || 0;
+            const facingRad = (facing * Math.PI) / 180;
+
+            for (let y = 0; y < height; y++) {
+              for (let x = 0; x < width; x++) {
+                const dx = x - pcPos.x;
+                const dy = y - pcPos.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance === 0) {
+                  visibleCells.add(`${x},${y}`);
+                  continue;
+                }
+
+                let angleToCell = Math.atan2(dx, -dy);
+                let relativeAngle = angleToCell - facingRad;
+
+                while (relativeAngle > Math.PI) relativeAngle -= 2 * Math.PI;
+                while (relativeAngle < -Math.PI) relativeAngle += 2 * Math.PI;
+
+                const isInFront = Math.abs(relativeAngle) <= Math.PI / 2;
+                const effectiveVisionDistance = isInFront
+                  ? visionDistance
+                  : visionDistance * 0.5;
+
+                if (distance <= effectiveVisionDistance) {
+                  visibleCells.add(`${x},${y}`);
+                }
+              }
+            }
+          });
+        } else {
+          pcData.forEach((pc) => {
+            const pcPos = { x: pc.combatant.x, y: pc.combatant.y };
+            const facing = pc.combatant.facing || 0;
+            const facingRad = (facing * Math.PI) / 180;
+
+            for (let dy = -visionDistance; dy <= visionDistance; dy++) {
+              for (let dx = -visionDistance; dx <= visionDistance; dx++) {
+                const x = pcPos.x + dx;
+                const y = pcPos.y + dy;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (x >= 0 && x < width && y >= 0 && y < height) {
+                  if (distance === 0) {
+                    visibleCells.add(`${x},${y}`);
+                    continue;
+                  }
+
+                  let angleToCell = Math.atan2(dx, -dy);
+                  let relativeAngle = angleToCell - facingRad;
+
+                  while (relativeAngle > Math.PI) relativeAngle -= 2 * Math.PI;
+                  while (relativeAngle < -Math.PI) relativeAngle += 2 * Math.PI;
+
+                  const isInFront = Math.abs(relativeAngle) <= Math.PI / 2;
+                  const effectiveVisionDistance = isInFront
+                    ? visionDistance
+                    : visionDistance * 0.5;
+
+                  if (distance <= effectiveVisionDistance) {
+                    visibleCells.add(`${x},${y}`);
+                  }
+                }
+              }
+            }
+          });
+
+          if (mapData.fogOfWar?.revealedCells) {
+            Object.keys(mapData.fogOfWar.revealedCells).forEach((key) => {
+              visibleCells.add(key);
+            });
+          }
+        }
+
+        return visibleCells;
+      }
+
+      function isCellVisible(x, y, visibleCells) {
+        return visibleCells.has(`${x},${y}`);
+      }
+
+      function renderBattleMap(mapData) {
+        console.log("🗺️ renderBattleMap called with:", mapData);
+
+        if (!mapData) {
+          console.log("⚠️ No map data - showing no map message");
+          // Hide canvas, show no map message
+          const canvas = document.getElementById("battleMapModalCanvas");
+          const noMapMsg = document.getElementById("noMapMessageModal");
+          if (canvas) canvas.style.display = "none";
+          if (noMapMsg) noMapMsg.style.display = "block";
+          return;
+        }
+
+        console.log("✅ Map data exists - rendering map");
+
+        if (!playerView.canvas || !playerView.ctx) {
+          console.error("❌ Canvas or context not initialized");
+          return;
+        }
+
+        // Show canvas, hide no map message
+        const noMapMsg = document.getElementById("noMapMessageModal");
+        if (playerView.canvas) playerView.canvas.style.display = "block";
+        if (noMapMsg) noMapMsg.style.display = "none";
+
+        const config = mapData.config || {};
+        const cellSize = 40;
+        const width = (config.width || 10) * cellSize;
+        const height = (config.height || 10) * cellSize;
+
+        playerView.canvas.width = width;
+        playerView.canvas.height = height;
+        playerView.mapData = mapData;
+
+        const ctx = playerView.ctx;
+        ctx.clearRect(0, 0, width, height);
+
+        // Start drawing map layers
+        drawMapLayers();
+
+        function drawMapLayers() {
+          // Draw background image if present
+          if (mapData.backgroundImage) {
+            console.log(
+              "🖼️ Loading background image:",
+              mapData.backgroundImage,
+            );
+            const img = new Image();
+            img.onload = function () {
+              ctx.drawImage(img, 0, 0, width, height);
+              drawGridAndFeatures(); // Draw everything else after background loads
+            };
+            img.onerror = function () {
+              console.error("❌ Failed to load background image");
+              drawGridAndFeatures(); // Draw without background
+            };
+            img.src = mapData.backgroundImage;
+          } else {
+            drawGridAndFeatures(); // No background, draw immediately
+          }
+        }
+
+        function drawGridAndFeatures() {
+          // Calculate visible cells once if fog of war is enabled
+          let visibleCells = null;
+          if (mapData.fogOfWar && mapData.fogOfWar.enabled) {
+            visibleCells = getVisibleCells(mapData);
+            console.log(`🌫️ Calculated ${visibleCells.size} visible cells`);
+          }
+
+          // Draw grid
+          ctx.strokeStyle = "#333";
+          ctx.lineWidth = 1;
+          for (let x = 0; x <= width; x += cellSize) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, height);
+            ctx.stroke();
+          }
+          for (let y = 0; y <= height; y += cellSize) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(width, y);
+            ctx.stroke();
+          }
+
+          // Draw terrain with proper types
+          if (mapData.terrain && Array.isArray(mapData.terrain)) {
+            mapData.terrain.forEach((t) => {
+              const x = t.x * cellSize;
+              const y = t.y * cellSize;
+              const w = (t.width || 1) * cellSize;
+              const h = (t.height || 1) * cellSize;
+
+              const colors = {
+                wall: "#424242",
+                furniture: "#795548",
+                landscape: "#4caf50",
+                water: "#2196f3",
+                difficult: "#ff9800",
+              };
+              ctx.fillStyle = colors[t.type] || "#666";
+              ctx.globalAlpha = 0.7;
+              ctx.fillRect(x, y, w, h);
+
+              // Add texture for walls
+              if (t.type === "wall") {
+                ctx.strokeStyle = "#000";
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x, y, w, h);
+              }
+              ctx.globalAlpha = 1;
+            });
+          }
+
+          // Draw AoE templates
+          if (mapData.aoeTemplates && Array.isArray(mapData.aoeTemplates)) {
+            console.log(
+              `🎯 Drawing ${mapData.aoeTemplates.length} AoE templates`,
+            );
+            mapData.aoeTemplates.forEach((aoe) => {
+              const centerX = aoe.x * cellSize + cellSize / 2;
+              const centerY = aoe.y * cellSize + cellSize / 2;
+
+              ctx.globalAlpha = 0.4;
+              ctx.fillStyle = aoe.color || "#ff9800";
+              ctx.strokeStyle = aoe.color || "#ff9800";
+              ctx.lineWidth = 2;
+
+              if (aoe.type === "circle") {
+                const radius = aoe.size * cellSize;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+              } else if (aoe.type === "cone") {
+                const length = aoe.size * cellSize;
+                const width = (aoe.coneWidth || 3) * cellSize;
+                const rotation = ((aoe.rotation || 0) * Math.PI) / 180;
+
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(rotation);
+
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(length, -width / 2);
+                ctx.lineTo(length, width / 2);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                ctx.restore();
+              } else if (aoe.type === "line") {
+                const length = aoe.size * cellSize;
+                const rotation = ((aoe.rotation || 0) * Math.PI) / 180;
+
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(rotation);
+                ctx.lineWidth = cellSize / 2;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(length, 0);
+                ctx.stroke();
+                ctx.restore();
+              } else if (aoe.type === "square") {
+                const size = aoe.size * cellSize;
+                ctx.fillRect(
+                  centerX - size / 2,
+                  centerY - size / 2,
+                  size,
+                  size,
+                );
+                ctx.strokeRect(
+                  centerX - size / 2,
+                  centerY - size / 2,
+                  size,
+                  size,
+                );
+              }
+
+              ctx.globalAlpha = 1;
+            });
+          }
+
+          // Draw dynamic lighting
+          if (mapData.lights && Array.isArray(mapData.lights)) {
+            console.log(`💡 Drawing ${mapData.lights.length} lights`);
+            mapData.lights.forEach((light) => {
+              const centerX = light.x * cellSize + cellSize / 2;
+              const centerY = light.y * cellSize + cellSize / 2;
+              const radius = (light.radius || 5) * cellSize;
+
+              const gradient = ctx.createRadialGradient(
+                centerX,
+                centerY,
+                0,
+                centerX,
+                centerY,
+                radius,
+              );
+              gradient.addColorStop(0, light.color || "#ffeb3b");
+              gradient.addColorStop(0.5, "rgba(255, 235, 59, 0.3)");
+              gradient.addColorStop(1, "rgba(255, 235, 59, 0)");
+
+              ctx.globalAlpha = light.intensity || 0.8;
+              ctx.fillStyle = gradient;
+              ctx.fillRect(
+                centerX - radius,
+                centerY - radius,
+                radius * 2,
+                radius * 2,
+              );
+              ctx.globalAlpha = 1;
+            });
+          }
+
+          // Draw fog of war with proper visibility and light transparency
+          if (mapData.fogOfWar && mapData.fogOfWar.enabled && visibleCells) {
+            console.log("🌫️ Drawing fog of war");
+            const config = mapData.config || {};
+            const gridWidth = config.width || 10;
+            const gridHeight = config.height || 10;
+
+            for (let y = 0; y < gridHeight; y++) {
+              for (let x = 0; x < gridWidth; x++) {
+                const isVisible = isCellVisible(x, y, visibleCells);
+
+                if (!isVisible) {
+                  const lightIntensity = getLightIntensityAtCell(x, y, mapData);
+                  const baseOpacity = 1.0;
+                  const finalOpacity =
+                    baseOpacity * (1 - lightIntensity * lightTransparency);
+
+                  ctx.fillStyle = `rgba(0, 0, 0, ${finalOpacity})`;
+                  ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                }
+              }
+            }
+          }
+
+          // Draw combatants with enhanced features
+          if (mapData.combatants) {
+            console.log(
+              `👥 Drawing ${Object.keys(mapData.combatants).length} combatants`,
+            );
+            console.log("🔍 CustomTokens available:", mapData.customTokens);
+            Object.values(mapData.combatants).forEach((c) => {
+              console.log(
+                `👤 Combatant ${c.name}: id=${c.id}, has token:`,
+                mapData.customTokens?.[c.id],
+              );
+              if (!c.x && c.x !== 0) return;
+              if (!c.y && c.y !== 0) return;
+
+              // Check if combatant is visible (skip if fog enabled and not visible)
+              const combatantType = (c.type || "").toUpperCase();
+              let combatantOpacity = 1.0; // Full opacity by default
+              let isInLineOfSight = true;
+
+              if (visibleCells && !isCellVisible(c.x, c.y, visibleCells)) {
+                isInLineOfSight = false;
+                // Check if cell is lit by dynamic lighting
+                const lightIntensity = getLightIntensityAtCell(
+                  c.x,
+                  c.y,
+                  mapData,
+                );
+                const isLit = lightIntensity > 0.2; // Threshold for visibility
+
+                // Only PCs are always visible to themselves, or if area is lit
+                if (combatantType !== "PC" && !isLit) {
+                  console.log(
+                    `🙈 Hiding ${c.name} (${c.type}) - not visible (light: ${lightIntensity.toFixed(2)})`,
+                  );
+                  return;
+                }
+                if (isLit && combatantType !== "PC") {
+                  // Set opacity based on light intensity for NPCs/Enemies
+                  combatantOpacity = Math.min(lightIntensity, 0.8); // Cap at 0.8 to show they're not fully visible
+                  console.log(
+                    `💡 Showing ${c.name} via dynamic lighting (${lightIntensity.toFixed(2)}, opacity: ${combatantOpacity.toFixed(2)})`,
+                  );
+                } else {
+                  console.log(`👁️ Showing ${c.name} as PC despite fog`);
+                }
+              }
+
+              // Apply opacity for combatants visible only through lighting
+              if (combatantOpacity < 1.0) {
+                ctx.save();
+                ctx.globalAlpha = combatantOpacity;
+              }
+
+              const size = c.size || 1;
+              const cellsOccupied = size;
+              const combatantSize = cellSize * cellsOccupied;
+              const x = c.x * cellSize + combatantSize / 2;
+              const y = c.y * cellSize + combatantSize / 2;
+              const radius = combatantSize / 2 - 5;
+
+              // Draw facing indicator cone
+              if (c.facing !== undefined && mapData.showLineOfSight !== false) {
+                const facingRad = (c.facing * Math.PI) / 180;
+                const coneLength = combatantSize * 1.5;
+                const coneWidth = Math.PI / 3; // 60 degrees
+
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(facingRad);
+
+                const cType = (c.type || "").toLowerCase();
+                ctx.fillStyle =
+                  cType === "pc"
+                    ? "rgba(76, 175, 80, 0.3)"
+                    : cType === "npc"
+                      ? "rgba(33, 150, 243, 0.3)"
+                      : "rgba(244, 67, 54, 0.3)";
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.arc(0, 0, coneLength, -coneWidth / 2, coneWidth / 2);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+              }
+
+              // Check for custom token
+              const customToken =
+                mapData.customTokens && mapData.customTokens[c.id];
+
+              if (customToken && customToken.type === "emoji") {
+                // Draw emoji token
+                const cType = (c.type || "").toLowerCase();
+                ctx.fillStyle =
+                  cType === "pc"
+                    ? "#4caf50"
+                    : cType === "npc"
+                      ? "#2196f3"
+                      : "#f44336";
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = "#fff";
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                ctx.font = `${combatantSize * 0.5}px sans-serif`;
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(customToken.value, x, y);
+              } else if (customToken && customToken.type === "image") {
+                // Draw image token
+                const img = new Image();
+                img.onload = function () {
+                  ctx.save();
+                  ctx.beginPath();
+                  ctx.arc(x, y, radius, 0, Math.PI * 2);
+                  ctx.clip();
+                  ctx.drawImage(
+                    img,
+                    x - radius,
+                    y - radius,
+                    radius * 2,
+                    radius * 2,
+                  );
+                  ctx.restore();
+
+                  ctx.strokeStyle = "#fff";
+                  ctx.lineWidth = 3;
+                  ctx.beginPath();
+                  ctx.arc(x, y, radius, 0, Math.PI * 2);
+                  ctx.stroke();
+                };
+                img.src = customToken.value;
+              } else {
+                // Draw default colored circle
+                const cType = (c.type || "").toLowerCase();
+                ctx.fillStyle =
+                  cType === "pc"
+                    ? "#4caf50"
+                    : cType === "npc"
+                      ? "#2196f3"
+                      : "#f44336";
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.strokeStyle = "#fff";
+                ctx.lineWidth = 3;
+                ctx.stroke();
+              }
+
+              // Draw name (if enabled or always for PCs)
+              const cType = (c.type || "").toLowerCase();
+              if (mapData.showNames !== false || cType === "pc") {
+                ctx.fillStyle = "#fff";
+                ctx.strokeStyle = "#000";
+                ctx.lineWidth = 3;
+                ctx.font = "bold 14px sans-serif";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "alphabetic";
+                ctx.strokeText(c.name || "?", x, y - radius - 12);
+                ctx.fillText(c.name || "?", x, y - radius - 12);
+              }
+
+              // Draw health bar for damaged combatants
+              if (
+                c.health !== undefined &&
+                c.maxHealth !== undefined &&
+                c.health < c.maxHealth
+              ) {
+                const barWidth = combatantSize;
+                const barHeight = 6;
+                const barX = x - barWidth / 2;
+                const barY = y + radius + 8;
+
+                ctx.fillStyle = "#333";
+                ctx.fillRect(barX, barY, barWidth, barHeight);
+
+                const healthPercent = Math.max(0, c.health / c.maxHealth);
+                ctx.fillStyle =
+                  healthPercent > 0.5
+                    ? "#4caf50"
+                    : healthPercent > 0.25
+                      ? "#ff9800"
+                      : "#f44336";
+                ctx.fillRect(barX, barY, barWidth * healthPercent, barHeight);
+
+                ctx.strokeStyle = "#fff";
+                ctx.lineWidth = 1;
+                ctx.strokeRect(barX, barY, barWidth, barHeight);
+              }
+
+              // Restore opacity if it was modified for lighting visibility
+              if (combatantOpacity < 1.0) {
+                ctx.restore();
+              }
+            });
+          }
+
+          // Draw measurement line if active
+          if (
+            playerView.measureActive &&
+            playerView.measureStart &&
+            playerView.measureEnd
+          ) {
+            ctx.strokeStyle = "#4caf50";
+            ctx.lineWidth = 3;
+            ctx.setLineDash([10, 5]);
+            ctx.beginPath();
+            ctx.moveTo(playerView.measureStart.x, playerView.measureStart.y);
+            ctx.lineTo(playerView.measureEnd.x, playerView.measureEnd.y);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Draw start and end markers
+            ctx.fillStyle = "rgba(76, 175, 80, 0.5)";
+            ctx.beginPath();
+            ctx.arc(
+              playerView.measureStart.x,
+              playerView.measureStart.y,
+              8,
+              0,
+              Math.PI * 2,
+            );
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(
+              playerView.measureEnd.x,
+              playerView.measureEnd.y,
+              8,
+              0,
+              Math.PI * 2,
+            );
+            ctx.fill();
+
+            ctx.strokeStyle = "#4caf50";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(
+              playerView.measureStart.x,
+              playerView.measureStart.y,
+              8,
+              0,
+              Math.PI * 2,
+            );
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(
+              playerView.measureEnd.x,
+              playerView.measureEnd.y,
+              8,
+              0,
+              Math.PI * 2,
+            );
+            ctx.stroke();
+          } else if (
+            playerView.measureActive &&
+            playerView.measureStart &&
+            !playerView.measureEnd
+          ) {
+            // Draw only start marker if measuring but haven't clicked end yet
+            ctx.fillStyle = "rgba(76, 175, 80, 0.5)";
+            ctx.beginPath();
+            ctx.arc(
+              playerView.measureStart.x,
+              playerView.measureStart.y,
+              8,
+              0,
+              Math.PI * 2,
+            );
+            ctx.fill();
+
+            ctx.strokeStyle = "#4caf50";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(
+              playerView.measureStart.x,
+              playerView.measureStart.y,
+              8,
+              0,
+              Math.PI * 2,
+            );
+            ctx.stroke();
+          }
+        }
+      }
+
+      function zoomIn() {
+        playerView.zoom = Math.min(3, playerView.zoom + 0.1);
+        if (playerView.canvas) {
+          playerView.canvas.style.transform = `scale(${playerView.zoom})`;
+        }
+      }
+
+      function zoomOut() {
+        playerView.zoom = Math.max(0.5, playerView.zoom - 0.1);
+        if (playerView.canvas) {
+          playerView.canvas.style.transform = `scale(${playerView.zoom})`;
+        }
+      }
+
+      function resetZoom() {
+        playerView.zoom = 1;
+        if (playerView.canvas) {
+          playerView.canvas.style.transform = "scale(1)";
+        }
+      }
+
+      // Toggle battle map modal
+      function toggleBattleMapModal() {
+        const modal = document.getElementById("battleMapModal");
+        if (modal) {
+          if (modal.style.display === "none" || modal.style.display === "") {
+            modal.style.display = "block";
+            // Initialize canvas if not done yet
+            if (!playerView.canvas) {
+              initPlayerBattleView();
+            }
+          } else {
+            modal.style.display = "none";
+          }
+        }
+      }
+
+      // Initialize on DOM load
+      window.addEventListener("DOMContentLoaded", () => {
+        // Initialize battle map view when ready
+        setTimeout(() => {
+          initPlayerBattleView();
+        }, 100);
+      });
+    </script>
   </body>
 </html>

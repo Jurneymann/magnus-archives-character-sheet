@@ -5,6 +5,21 @@ All notable changes to The Magnus Archives Character Sheet project will be docum
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+#### Dice Customiser
+
+- **Dice Roller Backgrounds**: 18 atmospheric background images for the dice roller canvas, arranged in a 3×6 picker grid with thumbnail previews
+- **Dice Design Presets**: 10 themed dice presets (The Archive, Magnus Green, Bone White, Void Black, All-Seeing, Amber Trail, Dying Ember, Flesh & Bone, Open Sky, Fraying Edge) arranged in 2 rows of 5
+- **Lighting Colour**: 8 muted lighting colour swatches (Default, Warm Amber, Magnus Green, Cold Blue, Blood Red, Golden, Moonlight, Eldritch) that control the scene's ambient and spot lighting
+- **Avatar Dice**: A separate, exclusive row of 5 stone-textured dice designs (The Marked, The Witnessed, The Archivist, The Herald, The Chronicler) with coloured number glows (red, blue, green, purple, amber). Intended as a reward for players who reach Avatar status in their campaign
+- **Avatar Dice Effects**: When Avatar dice are selected, the roll sound is pitch-shifted lower for a heavier, more sinister feel, and the dice roller canvas pulses with a coloured glow matching the chosen die when the dice land
+- **Settings Persistence**: All customiser choices are saved to localStorage and restored on page load
+
+---
+
 ## [1.0.0] - 2025-11-11
 
 ### Initial Release 🎉

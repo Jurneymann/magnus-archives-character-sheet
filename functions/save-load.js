@@ -30,12 +30,16 @@ function buildCharacterData(isAutoSave = false) {
 
     // === CHARACTER ARC ===
     characterArc: {
+      activeArcs: character.characterArc?.activeArcs || [],
+      currentlyViewingIndex: character.characterArc?.currentlyViewingIndex || 0,
+      arcsCompleted: character.characterArc?.arcsCompleted || 0,
+      totalArcsSelected: character.characterArc?.totalArcsSelected || 0,
+      firstArcFree: character.characterArc?.firstArcFree ?? false,
+      // Legacy fields for backward compatibility
       currentArc: character.characterArc?.currentArc ?? null,
       arcName: character.characterArc?.arcName || "",
       arcNotes: character.characterArc?.arcNotes || "",
-      arcsCompleted: character.characterArc?.arcsCompleted || 0,
       arcSelections: character.characterArc?.arcSelections || 0,
-      firstArcFree: character.characterArc?.firstArcFree ?? true,
     },
 
     // === TIER & XP ===
@@ -212,7 +216,7 @@ function loadCharacterFromData(data) {
     console.log("Identity is confirmed, hiding identity section");
 
     const identitySection = document.querySelector(
-      ".character-identity-section"
+      ".character-identity-section",
     );
     if (identitySection) {
       identitySection.classList.add("confirmed");
@@ -416,7 +420,7 @@ function loadCharacterFromData(data) {
     character.descriptorCharacteristics.forEach((characteristic) => {
       // Re-add each characteristic to the display
       const characteristicsSection = document.getElementById(
-        "descriptorCharacteristics"
+        "descriptorCharacteristics",
       );
 
       if (!characteristicsSection) {
@@ -443,19 +447,19 @@ function loadCharacterFromData(data) {
       }
 
       const characteristicsList = document.getElementById(
-        "characteristicsList"
+        "characteristicsList",
       );
 
       if (
         characteristicsList &&
         !characteristicsList.querySelector(
-          `[data-characteristic="${characteristic.name}"]`
+          `[data-characteristic="${characteristic.name}"]`,
         )
       ) {
         const characteristicItem = document.createElement("div");
         characteristicItem.setAttribute(
           "data-characteristic",
-          characteristic.name
+          characteristic.name,
         );
         characteristicItem.style.cssText = `
           background: #1a1a1a;
@@ -534,7 +538,7 @@ function loadCharacterFromData(data) {
       const level = parseInt(cypher.level);
       cypher.calculatedEdgeBonus = level >= 5 ? 2 : 1;
       console.log(
-        `✓ Calculated Edge Bonus: +${cypher.calculatedEdgeBonus} ${cypher.EdgeBonusStat} Edge (level ${level})`
+        `✓ Calculated Edge Bonus: +${cypher.calculatedEdgeBonus} ${cypher.EdgeBonusStat} Edge (level ${level})`,
       );
     }
 
@@ -551,13 +555,14 @@ function loadCharacterFromData(data) {
   // Check if any loaded cyphers need the roll table
   const hasRollEffectCypher = assignedCyphers.some(
     (c) =>
-      c && (c.name === "Librarian's pupil" || c.name === "Learn from The Web")
+      c && (c.name === "Librarian's pupil" || c.name === "Learn from The Web"),
   );
 
   if (hasRollEffectCypher) {
     const firstRollEffectCypher = assignedCyphers.find(
       (c) =>
-        c && (c.name === "Librarian's pupil" || c.name === "Learn from The Web")
+        c &&
+        (c.name === "Librarian's pupil" || c.name === "Learn from The Web"),
     );
     if (firstRollEffectCypher) {
       showCypherRollEffectTable(firstRollEffectCypher.name);
@@ -607,7 +612,7 @@ function loadCharacterFromData(data) {
 
         if (!cypher) {
           console.warn(
-            `WARNING: Active boost for missing cypher at index ${index}`
+            `WARNING: Active boost for missing cypher at index ${index}`,
           );
           delete character.activeCypherBoosts[index];
           return;
@@ -619,7 +624,7 @@ function loadCharacterFromData(data) {
           if (character[statName + "Edge"] !== undefined) {
             character[statName + "Edge"] += cypher.calculatedEdgeBonus;
             console.log(
-              `✓ Reapplied ${cypher.calculatedEdgeBonus} to ${cypher.EdgeBonusStat} Edge from ${cypher.name}`
+              `✓ Reapplied ${cypher.calculatedEdgeBonus} to ${cypher.EdgeBonusStat} Edge from ${cypher.name}`,
             );
           }
         }
@@ -738,7 +743,7 @@ function saveCharacter() {
     alert(
       `Character saved!\n\n` +
         `File: ${filename}\n\n` +
-        `Check your Downloads folder for the JSON file.`
+        `Check your Downloads folder for the JSON file.`,
     );
   } catch (error) {
     console.error("Error saving character:", error);
@@ -752,8 +757,8 @@ function autoSave() {
   console.log(`Auto-save will run every 10 minute (600000ms)`);
   console.log(
     `First auto-save will occur at: ${new Date(
-      Date.now() + 600000
-    ).toLocaleTimeString()}`
+      Date.now() + 600000,
+    ).toLocaleTimeString()}`,
   );
 
   setInterval(() => {
@@ -780,7 +785,7 @@ function autoSave() {
       console.log(`  - Data size: ${(jsonString.length / 1024).toFixed(2)} KB`);
       console.log(`  - Timestamp: ${characterData.autoSavedDate}`);
       console.log(
-        `  - Next save: ${new Date(Date.now() + 60000).toLocaleTimeString()}`
+        `  - Next save: ${new Date(Date.now() + 60000).toLocaleTimeString()}`,
       );
 
       // Verify it was saved
@@ -807,7 +812,7 @@ function autoSave() {
         console.error("localStorage quota exceeded! Data may be too large.");
         alert(
           "Warning: Auto-save failed because browser storage is full.\n\n" +
-            "Please manually save your character and clear browser data."
+            "Please manually save your character and clear browser data.",
         );
       }
     }
@@ -899,14 +904,14 @@ function loadCharacter() {
               data.savedDate
                 ? `Saved: ${new Date(data.savedDate).toLocaleString()}`
                 : ""
-            }`
+            }`,
         );
 
         console.log("✓ Character loaded successfully");
       } catch (error) {
         console.error("Error loading character:", error);
         alert(
-          `Error loading character file:\n\n${error.message}\n\nPlease check the file format.`
+          `Error loading character file:\n\n${error.message}\n\nPlease check the file format.`,
         );
       }
     };
@@ -927,7 +932,7 @@ function loadFromLocalStorage() {
         "No saved character found in browser storage.\n\n" +
           "Browser backup data is created automatically every 10 minutes " +
           "or when you manually save your character.\n\n" +
-          "If you've never saved before, there won't be any backup data."
+          "If you've never saved before, there won't be any backup data.",
       );
       return;
     }
@@ -948,7 +953,7 @@ function loadFromLocalStorage() {
       "Load the character saved in your browser?" +
         characterInfo +
         backupInfo +
-        "\n\nThis will overwrite any unsaved changes to your current character."
+        "\n\nThis will overwrite any unsaved changes to your current character.",
     );
 
     if (!confirmation) return;
@@ -959,7 +964,7 @@ function loadFromLocalStorage() {
       "Character loaded from browser backup!" +
         characterInfo +
         backupInfo +
-        "\n\n💡 Tip: Use 'Save Character' to download a backup file too!"
+        "\n\n💡 Tip: Use 'Save Character' to download a backup file too!",
     );
 
     console.log("✓ Character loaded from localStorage");
@@ -987,7 +992,7 @@ function resetCharacter() {
     !confirm(
       "Are you sure you want to reset your character?\n\n" +
         "This will erase ALL character data and cannot be undone.\n\n" +
-        "Your current character will be lost forever."
+        "Your current character will be lost forever.",
     )
   ) {
     return;
@@ -997,7 +1002,7 @@ function resetCharacter() {
   if (
     !confirm(
       "FINAL WARNING: This action is permanent.\n\n" +
-        "Click OK to permanently delete your character data."
+        "Click OK to permanently delete your character data.",
     )
   ) {
     return;
@@ -1105,7 +1110,7 @@ function resetCharacter() {
     // Reload the page to reset all UI elements
     alert(
       "Character has been reset.\n\n" +
-        "The page will now reload to display the fresh character sheet."
+        "The page will now reload to display the fresh character sheet.",
     );
 
     location.reload();
@@ -1113,7 +1118,7 @@ function resetCharacter() {
     console.error("Error resetting character:", error);
     alert(
       `Error resetting character:\n\n${error.message}\n\n` +
-        `You may need to manually refresh the page.`
+        `You may need to manually refresh the page.`,
     );
   }
 }
@@ -1330,7 +1335,7 @@ function exportToText() {
     alert(
       `Character sheet exported to text!\n\n` +
         `File: ${filename}\n\n` +
-        `Check your Downloads folder.`
+        `Check your Downloads folder.`,
     );
   } catch (error) {
     console.error("Error exporting to text:", error);
@@ -1409,7 +1414,7 @@ function monitorLocalStorage() {
 
       if (minutesAgo > 10) {
         console.warn(
-          "  ⚠️ Auto-save may not be running (last save was over 10 minutes ago)"
+          "  ⚠️ Auto-save may not be running (last save was over 10 minutes ago)",
         );
       } else {
         console.log("  ✓ Auto-save appears to be running");
@@ -1419,7 +1424,7 @@ function monitorLocalStorage() {
     if (parsed.savedDate) {
       console.log(
         "  Last manual save:",
-        new Date(parsed.savedDate).toLocaleString()
+        new Date(parsed.savedDate).toLocaleString(),
       );
     }
 
