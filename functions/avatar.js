@@ -270,10 +270,43 @@ function confirmEntityChoice() {
   // Update display
   initializeAvatarTab();
 
+  // Refresh the Dice Customiser UI so avatar options become visible immediately
+  if (typeof buildDiceCustomiserUI === "function") {
+    buildDiceCustomiserUI();
+  }
+
   alert(
     `You have become an Avatar of ${entity.name}.\n\n` +
       `The transformation is complete. You are forever changed.`,
   );
+
+  // Notify player that Avatar dice customisation options are now unlocked
+  setTimeout(() => {
+    const _notif = document.createElement("div");
+    _notif.textContent = `🎲 New Dice Customisation options unlocked! Open the Dice Customiser to style your dice as an Avatar of ${entity.name}.`;
+    _notif.style.cssText = [
+      "position:fixed",
+      "top:80px",
+      "right:20px",
+      "max-width:320px",
+      "padding:14px 18px",
+      "background:rgba(76,175,80,0.15)",
+      "border:2px solid #4caf50",
+      "border-radius:6px",
+      "color:#e0e0e0",
+      "font-size:0.95em",
+      "z-index:99999",
+      "box-shadow:0 4px 16px rgba(0,0,0,0.6)",
+      "transition:opacity 0.4s ease",
+    ].join(";");
+    document.body.appendChild(_notif);
+    setTimeout(() => {
+      _notif.style.opacity = "0";
+    }, 4500);
+    setTimeout(() => {
+      _notif.remove();
+    }, 5000);
+  }, 300);
 }
 
 // Update post-commitment display

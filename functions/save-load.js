@@ -34,7 +34,7 @@ function buildCharacterData(isAutoSave = false) {
       currentlyViewingIndex: character.characterArc?.currentlyViewingIndex || 0,
       arcsCompleted: character.characterArc?.arcsCompleted || 0,
       totalArcsSelected: character.characterArc?.totalArcsSelected || 0,
-      firstArcFree: character.characterArc?.firstArcFree ?? false,
+      firstArcFree: character.characterArc?.firstArcFree ?? true,
       // Legacy fields for backward compatibility
       currentArc: character.characterArc?.currentArc ?? null,
       arcName: character.characterArc?.arcName || "",
@@ -295,16 +295,60 @@ function loadCharacterFromData(data) {
   renderConnectionsTable();
 
   // === CHARACTER ARC ===
-  character.characterArc = data.characterArc || {
-    currentArc: null,
-    arcName: "",
-    arcNotes: "",
-    arcsCompleted: 0,
-    arcSelections: 0,
-    firstArcFree: true,
-  };
+  // Support both new multi-arc format and old single-arc format
+  if (data.characterArc) {
+    // Check if data has new format (activeArcs array)
+    if (data.characterArc.activeArcs !== undefined) {
+      character.characterArc = {
+        activeArcs: data.characterArc.activeArcs || [],
+        currentlyViewingIndex: data.characterArc.currentlyViewingIndex || 0,
+        arcsCompleted: data.characterArc.arcsCompleted || 0,
+        totalArcsSelected:
+          data.characterArc.totalArcsSelected ||
+          data.characterArc.arcSelections ||
+          0,
+        firstArcFree: data.characterArc.firstArcFree ?? true,
+      };
+    } else {
+      // Old format - migrate to new format
+      character.characterArc = {
+        activeArcs: [],
+        currentlyViewingIndex: 0,
+        arcsCompleted: data.characterArc.arcsCompleted || 0,
+        totalArcsSelected: data.characterArc.arcSelections || 0,
+        firstArcFree: data.characterArc.firstArcFree ?? true,
+      };
 
-  updateCharacterArcDisplay();
+      // If there was an active arc in old format, migrate it
+      if (
+        data.characterArc.currentArc !== null &&
+        data.characterArc.currentArc !== undefined
+      ) {
+        character.characterArc.activeArcs.push({
+          arcIndex: data.characterArc.currentArc,
+          arcName: data.characterArc.arcName || "",
+          arcNotes: data.characterArc.arcNotes || "",
+        });
+      }
+    }
+  } else {
+    // No arc data at all - initialize
+    character.characterArc = {
+      activeArcs: [],
+      currentlyViewingIndex: 0,
+      arcsCompleted: 0,
+      totalArcsSelected: 0,
+      firstArcFree: true,
+    };
+  }
+
+  if (typeof updateCharacterArcDisplay === "function") {
+    updateCharacterArcDisplay();
+  }
+
+  if (typeof displayCurrentArc === "function") {
+    displayCurrentArc();
+  }
 
   // === TIER & XP ===
   character.tier = data.tier || 1;
@@ -1069,11 +1113,10 @@ function resetCharacter() {
       descriptorCharacteristics: [],
       descriptorSuggestions: {},
       characterArc: {
-        currentArc: null,
-        arcName: "",
-        arcNotes: "",
+        activeArcs: [],
+        currentlyViewingIndex: 0,
         arcsCompleted: 0,
-        arcSelections: 0,
+        totalArcsSelected: 0,
         firstArcFree: true,
       },
       avatar: {

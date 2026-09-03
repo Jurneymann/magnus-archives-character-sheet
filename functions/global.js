@@ -23,6 +23,10 @@ window.selectCharacterArc = selectCharacterArc;
 window.completeArc = completeArc;
 window.updateCharacterArcDisplay = updateCharacterArcDisplay;
 window.initializeCharacterArcs = initializeCharacterArcs;
+window.switchToArc = switchToArc;
+window.displayCurrentArc = displayCurrentArc;
+window.updateActiveArcsList = updateActiveArcsList;
+window.removeArc = removeArc;
 
 // Stat Allocation
 window.allocatePoint = allocatePoint;

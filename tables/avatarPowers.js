@@ -19,22 +19,22 @@ const ENTITIES = [
   {
     name: "The Buried",
     description:
-      "The weight above is unbearable… until it isn’t. Down here, there is no sound, no expectation — only the still, endless hush of the earth pressing close. You tell yourself it’s a prison, but deep down you know: it’s home.",
+      "The weight above is unbearable… until it isn’t. Down here, there is no sound, no expectation. Only the still, endless hush of the earth pressing close. You tell yourself it’s a prison, but deep down you know: it’s home.",
   },
   {
     name: "The Corruption",
     description:
-      "Something festers beneath your skin. It begins as a blemish — a spot, a sting, a tickle. Then it spreads, warm and alive, until you can’t tell where you end and the rot begins. You’ve begun to understand its purpose: to spread, to consume, to thrive in what others discard.",
+      "Something festers beneath your skin. It begins as a blemish, a spot, a sting, a tickle. Then it spreads, warm and alive, until you can’t tell where you end and the rot begins. You’ve begun to understand its purpose: to spread, to consume, to thrive in what others discard.",
   },
   {
     name: "The Dark",
     description:
-      "The dark is older than mercy, older than sight. It waits, patient and endless, until you remember that light was never your ally. In the black, you are not lost — you are found, and it has been waiting for you.",
+      "The dark is older than mercy, older than sight. It waits, patient and endless, until you remember that light was never your ally. In the black, you are not lost, you are found, and it has been waiting for you.",
   },
   {
     name: "The Desolation",
     description:
-      "Fire does not ask permission; it simply devours. In its blaze, everything false is stripped away, until only pain remains — clean, radiant, true. You are what’s left when the world burns down.",
+      "Fire does not ask permission; it simply devours. In its blaze, everything false is stripped away, until only pain remains: clean, radiant, true. You are what’s left when the world burns down.",
   },
   {
     name: "The End",
@@ -44,32 +44,32 @@ const ENTITIES = [
   {
     name: "The Eye",
     description:
-      "You cannot close your eyes anymore. Truth seeps through lids and walls alike. Every secret revealed, every hidden thing dragged into light. You thought knowing would save you; now you know better.",
+      "You cannot close your eyes any longer. Truth seeps through lids, doors and walls alike. Every secret revealed, every hidden thing dragged into light. You thought knowing would save you; now you know better.",
   },
   {
     name: "The Flesh",
     description:
-      "The body was never a cage — it was clay. Soft. Malleable. Eager. You’ve felt the pulse beneath your skin, begging to be remade. It hurts, yes, but only because you are still resisting the change. You’re not sure what you’re becoming, only that it’s hungry. And you’re starting to like the way it feels.",
+      "The body was never a cage. It was clay. Soft. Malleable. Eager. You’ve felt the pulse beneath your skin, begging to be remade. It hurts, yes, but only because you are still resisting the change. You’re not sure what you’re becoming, only that it’s hungry. And you’re starting to like the way it feels.",
   },
   {
     name: "The Hunt",
     description:
-      "There is no thought in pursuit, only rhythm. Heartbeat, breath, motion — the world narrowing to the space between you and what flees. The chase is the truth, and you have never felt so alive. You are the predator now.",
+      "There is no thought in pursuit, only rhythm. Heartbeat, breath, motion, the world narrowing to the space between you and what flees. The chase is the truth, and you have never felt so alive. You are the predator now.",
   },
   {
     name: "The Lonely",
     description:
-      "The noise of others fades until only silence remains. It hurts at first — the emptiness, the ache — but soon you realize it’s cleaner this way. Their voices grate. Their presence clings. You’ve learned that solitude isn’t emptiness: it’s clarity. And every time someone draws close, it feels like a violation. They don't belong in your silence.",
+      "The noise of others fades until only silence remains. It hurts at first.  The emptiness, the ache, but soon you realize it’s cleaner this way. Their voices grate. Their presence clings. You’ve learned that solitude isn’t emptiness: it’s clarity. And every time someone draws close, it feels like a violation. They don't belong in your silence.",
   },
   {
     name: "The Slaughter",
     description:
-      "Violence is an old god. It doesn’t whisper — it roars in your veins, a rhythm older than language. You don’t seek cruelty, only the moment when blood and purpose become the same thing.",
+      "Violence is an old god. It doesn’t whisper. It roars in your veins, a rhythm older than language. You don’t seek cruelty, only the moment when blood and purpose become the same thing.",
   },
   {
     name: "The Spiral",
     description:
-      "The world tilts and folds, and meaning slips through your fingers like water. You tell yourself you can find the pattern if you just look hard enough — but the pattern is looking back, and it’s smiling.",
+      "The world tilts and folds, and meaning slips through your fingers like water. You tell yourself you can find the pattern if you just look hard enough, but the pattern is looking back, and it’s smiling.",
   },
   {
     name: "The Stranger",
@@ -84,7 +84,7 @@ const ENTITIES = [
   {
     name: "The Web",
     description:
-      "You see the strands now. Every choice, every movement, every fragile knot. The pattern is perfect, elegant, alive. You thought you were free, but every move you make hums along its threads. The secret isn’t escape — it’s learning which strands to pluck to make the world dance.",
+      "You see the strands now. Every choice, every movement, every fragile knot. The pattern is perfect, elegant, alive. You thought you were free, but every move you make hums along its threads. The secret isn’t escape, it’s learning which strands to pluck to make the world dance.",
   },
 ];
 

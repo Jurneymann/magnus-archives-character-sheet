@@ -159,10 +159,17 @@ The first public release of The Magnus Archives Character Sheet - a complete dig
 
 ### Planned Features
 
-- [ ] Campaign notes section
 - [ ] Relationship tracking system
-- [ ] Session tracker
 - [ ] PDF export functionality
+- [ ] Rule section updates as follows
+  - Stats Tab "How Effort Works"
+  - Stats Tab "Recover Roll Rules"
+  - Equipment Tab "Equipment Guidelines"
+  - Stress and Injury "Damage Track Effects and Pentalties"
+  - GM Tool Quick Reference
+    - Stress
+    - Special Rolls
+    - Damage Track
 
 ### Known Issues
 

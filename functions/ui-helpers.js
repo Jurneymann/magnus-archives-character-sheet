@@ -68,22 +68,14 @@ function checkTierAdvancement() {
     currentTier: character.tier,
   });
 
-  // Tier advancement requires 4 total advancements:
-  // - All 4 required advancements, OR
-  // - 3 required advancements + 1 optional advancement
-  const totalAdvancements = requiredAdvancements + optionalAdvancements;
-  const canAdvance =
-    (requiredAdvancements === 4 && totalAdvancements === 4) ||
-    (requiredAdvancements === 3 &&
-      optionalAdvancements === 1 &&
-      totalAdvancements === 4);
+  const requiredComplete = requiredAdvancements >= 4;
+  const optionalComplete = optionalAdvancements >= 1;
 
-  if (canAdvance) {
+  if (requiredComplete && optionalComplete) {
     const confirmation = confirm(
       `Congratulations! You have completed all requirements for tier advancement!\n\n` +
-        `Required Advancements: ${requiredAdvancements}/4${requiredAdvancements === 4 ? " ✓" : ""}\n` +
-        `Optional Advancements: ${optionalAdvancements}/1${optionalAdvancements === 1 ? " ✓" : ""}\n` +
-        `Total Advancements: ${totalAdvancements}/4 ✓\n\n` +
+        `Required Advancements: ${requiredAdvancements}/4 ✓\n` +
+        `Optional Advancements: ${optionalAdvancements}/1 ✓\n\n` +
         `You are ready to advance from Tier ${character.tier} to Tier ${
           character.tier + 1
         }!\n\n` +

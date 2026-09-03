@@ -432,12 +432,12 @@ function updateActiveArcsList() {
   activeArcs.forEach((arc, index) => {
     const arcCard = document.createElement("div");
     arcCard.className = `active-arc-card ${index === viewingIndex ? "viewing" : ""}`;
-    
+
     // Make the entire card clickable to view/refresh the arc
     arcCard.style.cursor = "pointer";
     arcCard.onclick = (e) => {
       // Don't trigger if clicking a button
-      if (e.target.tagName !== 'BUTTON') {
+      if (e.target.tagName !== "BUTTON") {
         switchToArc(index);
       }
     };
