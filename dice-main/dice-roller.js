@@ -77,6 +77,132 @@ console.warn = function (message) {
 
 console.log("✓ Dice roller initialized (shader warnings suppressed)");
 
+const DICE_BACKGROUNDS = [
+  ["", "The Statement"], ["archive.jpg", "The Archive"],
+  ["institute.jpg", "The Institute"], ["logo.jpg", "The Icon"],
+  ["library.jpg", "The Library"], ["hallway.jpg", "The Corridor"],
+  ["darkroom.jpg", "The Darkroom"], ["windowface.jpg", "The Spectre"],
+  ["mirror.jpg", "The Beast"], ["eater.jpg", "The Creature"],
+  ["ensnared.jpg", "The Ensnared"], ["spiders.jpg", "The Swarm"],
+  ["graffiti.jpg", "The Message"], ["alleyway.jpg", "The Alleyway"],
+  ["pursuit.jpg", "The Pursuit"], ["shadow.jpg", "The Shadow"],
+  ["trapdoor.jpg", "The Passage"], ["cavern.jpg", "The Cavern"],
+  ["coffin.jpg", "The Coffin"], ["body.jpg", "The Remains"],
+  ["choke.jpg", "The Attack"], ["doorway.jpg", "The Threshold"],
+  ["wasteland.jpg", "The Wasteland"], ["bluesky.jpg", "The Sky"],
+  ["manwhowasntthere.jpg", "The Imposter"], ["archivist.jpg", "The Archivist"],
+  ["nikola.jpg", "The Ringmaster"], ["weaver.jpg", "The Weaver"],
+  ["mrspider.jpg", "Mr. Spider"], ["feast.jpg", "The Feast"],
+];
+
+const DICE_CUSTOMISER_DEFAULTS = {
+  background: "",
+  diceColor: "#202020",
+  labelColor: "#aaaaaa",
+  lightColor: "#f0f0f0",
+  matteFinish: false,
+  avatarPreset: "crimson",
+  avatarTexture: "",
+};
+
+const AVATAR_PRESETS = {
+  crimson: ["The Marked", "#0f0000", "#e05060", "#000000", "#200408"],
+  sapphire: ["The Witnessed", "#000a18", "#60b8e8", "#000000", "#040a1a"],
+  emerald: ["The Archivist", "#001008", "#50d870", "#000000", "#031a08"],
+  amethyst: ["The Herald", "#0e0018", "#c070e8", "#000000", "#14021e"],
+  amber: ["The Chronicler", "#140800", "#e8a830", "#000000", "#1e0d00"],
+  obsidian: ["The Consumed", "#000000", "#e8e8e8", "#000000", "#080808"],
+  ivory: ["The Ancient", "#d8d0c0", "#101010", "#c0b8a8", "#b0a890"],
+};
+
+const AVATAR_TEXTURES = ["", "bonestexture.png", "burningearthtexture.png", "fleshtexture.jpg", "hivetexture.png", "nebulatexture.png", "obsidiantexture.png", "rusttexture.png", "shardtexture.png", "stonetexture.png", "twistedtexture.png", "watchertexture.png", "wavestexture.png", "webbingtexture.png"];
+
+function getDiceSettings() {
+  try {
+    return { ...DICE_CUSTOMISER_DEFAULTS, ...JSON.parse(localStorage.getItem("magnusDiceCustomiser") || "{}") };
+  } catch (error) {
+    return { ...DICE_CUSTOMISER_DEFAULTS };
+  }
+}
+
+function applyDiceSettings() {
+  const settings = getDiceSettings();
+  const container = document.getElementById("dice-canvas-container");
+  if (container) {
+    container.style.backgroundImage = settings.background ? `url('assets/DiceBackgrounds/${settings.background}')` : "";
+    container.style.backgroundSize = "cover";
+    container.style.backgroundPosition = "center";
+  }
+  if (typeof DICE !== "undefined" && DICE.setTheme) {
+    const lightColor = parseInt(settings.lightColor.replace("#", ""), 16);
+    const preset = AVATAR_PRESETS[settings.avatarPreset] || AVATAR_PRESETS.crimson;
+    const theme = {
+      dice_color: settings.diceColor,
+      label_color: settings.labelColor,
+      label_font: "Georgia",
+      ambient_light_color: lightColor,
+      spot_light_color: lightColor,
+      shininess: settings.matteFinish ? 0 : 40,
+      specular: settings.matteFinish ? 0x000000 : 0x172022,
+      use_avatar_style: !!settings.avatarTexture,
+      avatar_number_outline: "#000000",
+      avatar_inner_color: preset[3],
+      avatar_rim_color: preset[4],
+    };
+    if (settings.avatarTexture) {
+      theme.dice_color = preset[1];
+      theme.label_color = preset[2];
+      const image = new Image();
+      image.onload = () => DICE.setTheme({ ...theme, avatar_face_texture: image });
+      image.onerror = () => DICE.setTheme(theme);
+      image.src = "assets/Texture/" + settings.avatarTexture;
+    } else {
+      DICE.setTheme({ ...theme, avatar_face_texture: null });
+    }
+  }
+}
+
+function initialiseDiceCustomiser() {
+  const settings = getDiceSettings();
+  const backgroundPicker = document.getElementById("diceBackgroundPicker");
+  const colorPicker = document.getElementById("diceColorPicker");
+  const labelPicker = document.getElementById("diceLabelColorPicker");
+  const lightPicker = document.getElementById("diceLightColorPicker");
+  const mattePicker = document.getElementById("diceMattePicker");
+  const avatarOptions = document.getElementById("avatarDiceOptions");
+  const avatarPreset = document.getElementById("avatarDicePreset");
+  const avatarTexture = document.getElementById("avatarDiceTexture");
+  if (!backgroundPicker) return;
+  backgroundPicker.innerHTML = DICE_BACKGROUNDS.map(([file, label]) => `<option value="${file}">${label}</option>`).join("");
+  backgroundPicker.value = settings.background;
+  colorPicker.value = settings.diceColor;
+  labelPicker.value = settings.labelColor;
+  lightPicker.value = settings.lightColor;
+  mattePicker.checked = settings.matteFinish;
+  const isAvatarPlayer = typeof character !== "undefined" && character.avatar && (character.avatar.isAvatar === true || character.avatar.gmUnlocked === true);
+  avatarOptions.style.display = isAvatarPlayer ? "contents" : "none";
+  avatarPreset.innerHTML = Object.entries(AVATAR_PRESETS).map(([id, preset]) => `<option value="${id}">${preset[0]}</option>`).join("");
+  avatarTexture.innerHTML = AVATAR_TEXTURES.map((texture) => `<option value="${texture}">${texture ? texture.replace(/texture|\.(png|jpg)/g, "") : "No texture"}</option>`).join("");
+  avatarPreset.value = settings.avatarPreset;
+  avatarTexture.value = settings.avatarTexture;
+  const save = () => {
+    localStorage.setItem("magnusDiceCustomiser", JSON.stringify({
+      background: backgroundPicker.value,
+      diceColor: colorPicker.value,
+      labelColor: labelPicker.value,
+      lightColor: lightPicker.value,
+      matteFinish: mattePicker.checked,
+      avatarPreset: avatarPreset.value,
+      avatarTexture: isAvatarPlayer ? avatarTexture.value : "",
+    }));
+    applyDiceSettings();
+  };
+  [backgroundPicker, colorPicker, labelPicker, lightPicker, mattePicker, avatarPreset, avatarTexture].forEach((input) => input.addEventListener("input", save));
+  applyDiceSettings();
+}
+
+document.addEventListener("DOMContentLoaded", initialiseDiceCustomiser);
+
 // Show the dice roller modal
 function showDiceRoller(diceType = "d20", callback = null) {
   console.log(`Opening dice roller for ${diceType}`);
@@ -135,6 +261,7 @@ function showDiceRoller(diceType = "d20", callback = null) {
   if (!diceRollerInitialized) {
     initializeDiceBox();
   }
+  applyDiceSettings();
 }
 
 // Update rollDice to set the flag:

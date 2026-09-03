@@ -37,7 +37,13 @@ const DICE = (function() {
             shading: THREE.FlatShading,
         },
         label_color: '#aaaaaa', //numbers on dice
+        label_font: 'Arial',
         dice_color: '#202020',
+        use_avatar_style: false,
+        avatar_face_texture: null,
+        avatar_number_outline: '#000000',
+        avatar_inner_color: '#000000',
+        avatar_rim_color: '#1a3010',
         ambient_light_color: 0xf0f0f0,
         spot_light_color: 0xefefef,
         desk_color: '#101010', //canvas background
@@ -485,6 +491,24 @@ const DICE = (function() {
         }
         return notation;
     }
+
+    that.setTheme = function(options) {
+        if (options.dice_color !== undefined) vars.dice_color = options.dice_color;
+        if (options.label_color !== undefined) vars.label_color = options.label_color;
+        if (options.label_font !== undefined) vars.label_font = options.label_font;
+        if (options.use_avatar_style !== undefined) vars.use_avatar_style = options.use_avatar_style;
+        if (options.avatar_face_texture !== undefined) vars.avatar_face_texture = options.avatar_face_texture;
+        if (options.avatar_number_outline !== undefined) vars.avatar_number_outline = options.avatar_number_outline;
+        if (options.avatar_inner_color !== undefined) vars.avatar_inner_color = options.avatar_inner_color;
+        if (options.avatar_rim_color !== undefined) vars.avatar_rim_color = options.avatar_rim_color;
+        if (options.ambient_light_color !== undefined) vars.ambient_light_color = options.ambient_light_color;
+        if (options.spot_light_color !== undefined) vars.spot_light_color = options.spot_light_color;
+        if (options.shininess !== undefined) vars.material_options.shininess = options.shininess;
+        if (options.specular !== undefined) vars.material_options.specular = options.specular;
+        threeD_dice.dice_material = null;
+        threeD_dice.d4_material = null;
+        threeD_dice.d100_material = null;
+    }
     
     // PRIVATE FUNCTIONS
 
@@ -554,12 +578,21 @@ const DICE = (function() {
             var context = canvas.getContext("2d");
             var ts = calc_texture_size(size + size * 2 * margin) * 2;
             canvas.width = canvas.height = ts;
-            context.font = ts / (1 + 2 * margin) + "pt Arial";
-            context.fillStyle = back_color;
-            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.font = ts / (1 + 2 * margin) + "pt " + vars.label_font;
+            if (vars.use_avatar_style && vars.avatar_face_texture) {
+                context.drawImage(vars.avatar_face_texture, 0, 0, ts, ts);
+            } else {
+                context.fillStyle = back_color;
+                context.fillRect(0, 0, canvas.width, canvas.height);
+            }
             context.textAlign = "center";
             context.textBaseline = "middle";
             context.fillStyle = color;
+            if (vars.use_avatar_style) {
+                context.lineWidth = ts * 0.028;
+                context.strokeStyle = vars.avatar_number_outline;
+                context.strokeText(text, canvas.width / 2, canvas.height / 2);
+            }
             context.fillText(text, canvas.width / 2, canvas.height / 2);
             if (text == '6' || text == '9') {
                 context.fillText('  .', canvas.width / 2, canvas.height / 2);
@@ -581,13 +614,23 @@ const DICE = (function() {
             var context = canvas.getContext("2d");
             var ts = calc_texture_size(size + margin) * 2;
             canvas.width = canvas.height = ts;
-            context.font = (ts - margin) * 0.5 + "pt Arial";
-            context.fillStyle = back_color;
-            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.font = (ts - margin) * 0.5 + "pt " + vars.label_font;
+            if (vars.use_avatar_style && vars.avatar_face_texture) {
+                context.drawImage(vars.avatar_face_texture, 0, 0, ts, ts);
+            } else {
+                context.fillStyle = back_color;
+                context.fillRect(0, 0, canvas.width, canvas.height);
+            }
             context.textAlign = "center";
             context.textBaseline = "middle";
             context.fillStyle = color;
             for (var i in text) {
+                if (vars.use_avatar_style) {
+                    context.lineWidth = ts * 0.028;
+                    context.strokeStyle = vars.avatar_number_outline;
+                    context.strokeText(text[i], canvas.width / 2,
+                            canvas.height / 2 - ts * 0.3);
+                }
                 context.fillText(text[i], canvas.width / 2,
                         canvas.height / 2 - ts * 0.3);
                 context.translate(canvas.width / 2, canvas.height / 2);

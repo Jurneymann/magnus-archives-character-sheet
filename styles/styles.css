@@ -33,6 +33,53 @@ body {
   margin: 0 auto;
 }
 
+.dice-customiser-panel {
+  margin: 20px 0;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-medium);
+}
+
+.dice-customiser-panel summary {
+  cursor: pointer;
+  padding: 14px 18px;
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.dice-customiser-content {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) minmax(120px, 2fr);
+  gap: 12px;
+  padding: 0 18px 18px;
+  align-items: center;
+}
+
+.dice-customiser-content label {
+  color: var(--color-text);
+}
+
+.dice-customiser-content select,
+.dice-customiser-content input[type="color"] {
+  width: 100%;
+  min-height: 34px;
+  box-sizing: border-box;
+}
+
+.dice-customiser-content .dice-matte-picker {
+  grid-column: 1 / -1;
+}
+
+.avatar-dice-options {
+  display: contents;
+}
+
+@media (max-width: 600px) {
+  .dice-customiser-content {
+    grid-template-columns: 1fr;
+  }
+}
+
 main {
   padding: 20px;
 }
