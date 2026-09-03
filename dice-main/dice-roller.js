@@ -78,21 +78,36 @@ console.warn = function (message) {
 console.log("✓ Dice roller initialized (shader warnings suppressed)");
 
 const DICE_BACKGROUNDS = [
-  ["", "The Statement"], ["archive.jpg", "The Archive"],
-  ["institute.jpg", "The Institute"], ["logo.jpg", "The Icon"],
-  ["library.jpg", "The Library"], ["hallway.jpg", "The Corridor"],
-  ["darkroom.jpg", "The Darkroom"], ["windowface.jpg", "The Spectre"],
-  ["mirror.jpg", "The Beast"], ["eater.jpg", "The Creature"],
-  ["ensnared.jpg", "The Ensnared"], ["spiders.jpg", "The Swarm"],
-  ["graffiti.jpg", "The Message"], ["alleyway.jpg", "The Alleyway"],
-  ["pursuit.jpg", "The Pursuit"], ["shadow.jpg", "The Shadow"],
-  ["trapdoor.jpg", "The Passage"], ["cavern.jpg", "The Cavern"],
-  ["coffin.jpg", "The Coffin"], ["body.jpg", "The Remains"],
-  ["choke.jpg", "The Attack"], ["doorway.jpg", "The Threshold"],
-  ["wasteland.jpg", "The Wasteland"], ["bluesky.jpg", "The Sky"],
-  ["manwhowasntthere.jpg", "The Imposter"], ["archivist.jpg", "The Archivist"],
-  ["nikola.jpg", "The Ringmaster"], ["weaver.jpg", "The Weaver"],
-  ["mrspider.jpg", "Mr. Spider"], ["feast.jpg", "The Feast"],
+  ["", "The Statement"],
+  ["archive.jpg", "The Archive"],
+  ["institute.jpg", "The Institute"],
+  ["logo.jpg", "The Icon"],
+  ["library.jpg", "The Library"],
+  ["hallway.jpg", "The Corridor"],
+  ["darkroom.jpg", "The Darkroom"],
+  ["windowface.jpg", "The Spectre"],
+  ["mirror.jpg", "The Beast"],
+  ["eater.jpg", "The Creature"],
+  ["ensnared.jpg", "The Ensnared"],
+  ["spiders.jpg", "The Swarm"],
+  ["graffiti.jpg", "The Message"],
+  ["alleyway.jpg", "The Alleyway"],
+  ["pursuit.jpg", "The Pursuit"],
+  ["shadow.jpg", "The Shadow"],
+  ["trapdoor.jpg", "The Passage"],
+  ["cavern.jpg", "The Cavern"],
+  ["coffin.jpg", "The Coffin"],
+  ["body.jpg", "The Remains"],
+  ["choke.jpg", "The Attack"],
+  ["doorway.jpg", "The Threshold"],
+  ["wasteland.jpg", "The Wasteland"],
+  ["bluesky.jpg", "The Sky"],
+  ["manwhowasntthere.jpg", "The Imposter"],
+  ["archivist.jpg", "The Archivist"],
+  ["nikola.jpg", "The Ringmaster"],
+  ["weaver.jpg", "The Weaver"],
+  ["mrspider.jpg", "Mr. Spider"],
+  ["feast.jpg", "The Feast"],
 ];
 
 const DICE_CUSTOMISER_DEFAULTS = {
@@ -115,11 +130,29 @@ const AVATAR_PRESETS = {
   ivory: ["The Ancient", "#d8d0c0", "#101010", "#c0b8a8", "#b0a890"],
 };
 
-const AVATAR_TEXTURES = ["", "bonestexture.png", "burningearthtexture.png", "fleshtexture.jpg", "hivetexture.png", "nebulatexture.png", "obsidiantexture.png", "rusttexture.png", "shardtexture.png", "stonetexture.png", "twistedtexture.png", "watchertexture.png", "wavestexture.png", "webbingtexture.png"];
+const AVATAR_TEXTURES = [
+  "",
+  "bonestexture.png",
+  "burningearthtexture.png",
+  "fleshtexture.jpg",
+  "hivetexture.png",
+  "nebulatexture.png",
+  "obsidiantexture.png",
+  "rusttexture.png",
+  "shardtexture.png",
+  "stonetexture.png",
+  "twistedtexture.png",
+  "watchertexture.png",
+  "wavestexture.png",
+  "webbingtexture.png",
+];
 
 function getDiceSettings() {
   try {
-    return { ...DICE_CUSTOMISER_DEFAULTS, ...JSON.parse(localStorage.getItem("magnusDiceCustomiser") || "{}") };
+    return {
+      ...DICE_CUSTOMISER_DEFAULTS,
+      ...JSON.parse(localStorage.getItem("magnusDiceCustomiser") || "{}"),
+    };
   } catch (error) {
     return { ...DICE_CUSTOMISER_DEFAULTS };
   }
@@ -129,13 +162,16 @@ function applyDiceSettings() {
   const settings = getDiceSettings();
   const container = document.getElementById("dice-canvas-container");
   if (container) {
-    container.style.backgroundImage = settings.background ? `url('assets/DiceBackgrounds/${settings.background}')` : "";
+    container.style.backgroundImage = settings.background
+      ? `url('assets/DiceBackgrounds/${settings.background}')`
+      : "";
     container.style.backgroundSize = "cover";
     container.style.backgroundPosition = "center";
   }
   if (typeof DICE !== "undefined" && DICE.setTheme) {
     const lightColor = parseInt(settings.lightColor.replace("#", ""), 16);
-    const preset = AVATAR_PRESETS[settings.avatarPreset] || AVATAR_PRESETS.crimson;
+    const preset =
+      AVATAR_PRESETS[settings.avatarPreset] || AVATAR_PRESETS.crimson;
     const theme = {
       dice_color: settings.diceColor,
       label_color: settings.labelColor,
@@ -153,7 +189,8 @@ function applyDiceSettings() {
       theme.dice_color = preset[1];
       theme.label_color = preset[2];
       const image = new Image();
-      image.onload = () => DICE.setTheme({ ...theme, avatar_face_texture: image });
+      image.onload = () =>
+        DICE.setTheme({ ...theme, avatar_face_texture: image });
       image.onerror = () => DICE.setTheme(theme);
       image.src = "assets/Texture/" + settings.avatarTexture;
     } else {
@@ -173,31 +210,53 @@ function initialiseDiceCustomiser() {
   const avatarPreset = document.getElementById("avatarDicePreset");
   const avatarTexture = document.getElementById("avatarDiceTexture");
   if (!backgroundPicker) return;
-  backgroundPicker.innerHTML = DICE_BACKGROUNDS.map(([file, label]) => `<option value="${file}">${label}</option>`).join("");
+  backgroundPicker.innerHTML = DICE_BACKGROUNDS.map(
+    ([file, label]) => `<option value="${file}">${label}</option>`,
+  ).join("");
   backgroundPicker.value = settings.background;
   colorPicker.value = settings.diceColor;
   labelPicker.value = settings.labelColor;
   lightPicker.value = settings.lightColor;
   mattePicker.checked = settings.matteFinish;
-  const isAvatarPlayer = typeof character !== "undefined" && character.avatar && (character.avatar.isAvatar === true || character.avatar.gmUnlocked === true);
+  const isAvatarPlayer =
+    typeof character !== "undefined" &&
+    character.avatar &&
+    (character.avatar.isAvatar === true ||
+      character.avatar.gmUnlocked === true);
   avatarOptions.style.display = isAvatarPlayer ? "contents" : "none";
-  avatarPreset.innerHTML = Object.entries(AVATAR_PRESETS).map(([id, preset]) => `<option value="${id}">${preset[0]}</option>`).join("");
-  avatarTexture.innerHTML = AVATAR_TEXTURES.map((texture) => `<option value="${texture}">${texture ? texture.replace(/texture|\.(png|jpg)/g, "") : "No texture"}</option>`).join("");
+  avatarPreset.innerHTML = Object.entries(AVATAR_PRESETS)
+    .map(([id, preset]) => `<option value="${id}">${preset[0]}</option>`)
+    .join("");
+  avatarTexture.innerHTML = AVATAR_TEXTURES.map(
+    (texture) =>
+      `<option value="${texture}">${texture ? texture.replace(/texture|\.(png|jpg)/g, "") : "No texture"}</option>`,
+  ).join("");
   avatarPreset.value = settings.avatarPreset;
   avatarTexture.value = settings.avatarTexture;
   const save = () => {
-    localStorage.setItem("magnusDiceCustomiser", JSON.stringify({
-      background: backgroundPicker.value,
-      diceColor: colorPicker.value,
-      labelColor: labelPicker.value,
-      lightColor: lightPicker.value,
-      matteFinish: mattePicker.checked,
-      avatarPreset: avatarPreset.value,
-      avatarTexture: isAvatarPlayer ? avatarTexture.value : "",
-    }));
+    localStorage.setItem(
+      "magnusDiceCustomiser",
+      JSON.stringify({
+        background: backgroundPicker.value,
+        diceColor: colorPicker.value,
+        labelColor: labelPicker.value,
+        lightColor: lightPicker.value,
+        matteFinish: mattePicker.checked,
+        avatarPreset: avatarPreset.value,
+        avatarTexture: isAvatarPlayer ? avatarTexture.value : "",
+      }),
+    );
     applyDiceSettings();
   };
-  [backgroundPicker, colorPicker, labelPicker, lightPicker, mattePicker, avatarPreset, avatarTexture].forEach((input) => input.addEventListener("input", save));
+  [
+    backgroundPicker,
+    colorPicker,
+    labelPicker,
+    lightPicker,
+    mattePicker,
+    avatarPreset,
+    avatarTexture,
+  ].forEach((input) => input.addEventListener("input", save));
   applyDiceSettings();
 }
 
@@ -276,7 +335,7 @@ function rollDice(diceType) {
   console.log("Manual row element:", manualRow);
   console.log(
     "Manual row display BEFORE:",
-    manualRow ? manualRow.style.display : "NULL"
+    manualRow ? manualRow.style.display : "NULL",
   );
 
   if (rollButton) {
@@ -353,7 +412,7 @@ function rollDice(diceType) {
   console.log("Manual row element:", manualRow);
   console.log(
     "Manual row display BEFORE:",
-    manualRow ? manualRow.style.display : "NULL"
+    manualRow ? manualRow.style.display : "NULL",
   );
 
   if (rollButton) {
@@ -430,7 +489,7 @@ function displayRollResult(rollValue) {
   if (manualRow) {
     console.log(
       "IN displayRollResult BEFORE - manualRow.style.display:",
-      manualRow.style.display
+      manualRow.style.display,
     );
     console.log("Flag manualInputShouldBeHidden:", manualInputShouldBeHidden);
 
@@ -438,7 +497,7 @@ function displayRollResult(rollValue) {
 
     console.log(
       "IN displayRollResult AFTER - manualRow.style.display:",
-      manualRow.style.display
+      manualRow.style.display,
     );
     console.log("✓ Manual input confirmed hidden in displayRollResult");
 
